@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bejoma Pessoal</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#9e2630">
+<meta name="apple-mobile-web-app-title" content="Bejoma Pessoal">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f3f5;--card:#fff;--text:#241a14;--sub:#6b625a;--line:#e4e1dc;--soft:#f5efe6;--accent:#c27a00;--pri:#9e2630;--good:#16834a;--bad:#c83b32}
+html[data-t=dark]{--bg:#14110f;--card:#1e1916;--text:#f1e9df;--sub:#b3a89b;--line:#352d27;--soft:#2a221c;--accent:#e0a030;--pri:#c2323d;--good:#3ecf86;--bad:#ff7066}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0 auto;max-width:640px;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:0 12px calc(84px + env(safe-area-inset-bottom,0px))}
+button,input,select,textarea{font-family:inherit}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--pri);color:#fff;margin:0 -12px;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 14px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:38px;height:38px;border-radius:11px;background:#fff;color:#9e2630;display:grid;place-items:center;font:400 1.2rem Pacifico,cursive;flex:none}
+.brand b{display:block;font:400 1.25rem/1.15 Pacifico,'Brush Script MT',cursive}
+.brand small{display:block;opacity:.85;font-size:.78rem}
+.cx{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:12px;padding:7px 12px;text-align:right;flex:none}
+.cx small{display:block;font-size:.7rem;opacity:.85}.cx b{font-size:1rem}.cx.neg b{color:#ffd0cc}
+.sn{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;margin:0 -12px 12px;padding:10px 12px;background:var(--bg);border-bottom:1px solid var(--line);scrollbar-width:none}
+.sn button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--sub);border-radius:999px;padding:8px 14px;font-weight:600;font-size:.88rem}
+.sn button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.tb{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;max-width:640px;margin:0 auto;background:var(--card);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+.tb button{flex:1;border:0;background:none;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:600;padding:4px 0}
+.tb svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tb button.on{color:var(--pri)}
+.pg,.sp{display:none}.pg.on,.sp.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+h2{margin:0 0 10px;font-size:1rem;font-weight:700}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--sub);margin:12px 0 4px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:1rem;background:var(--card);color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pri);outline-offset:1px}
+button.b{width:100%;margin-top:14px;padding:13px;border:0;border-radius:11px;background:var(--pri);color:#fff;font-weight:700;font-size:1rem}
+button.sec{background:var(--soft);color:var(--text)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
+.item:first-of-type{border-top:0}
+.item small{display:block;color:var(--sub);margin-top:2px}
+.l{display:flex;gap:10px;align-items:center;min-width:0}
+.mini{padding:7px 10px;font-size:.8rem;border-radius:9px;border:0;background:var(--soft);color:var(--text);font-weight:600}
+.dng{background:rgba(200,59,50,.12);color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--soft);border-radius:11px;padding:10px}
+.stat .k{font-size:.74rem;color:var(--sub);font-weight:600}
+.stat .v{font-size:1rem;font-weight:700;margin-top:2px}
+.bar{height:7px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--accent)}
+.ck{width:28px;height:28px;border-radius:8px;border:2px solid var(--line);background:var(--card);flex:none;font-weight:800;color:#fff}
+.ck.on{background:var(--good);border-color:var(--good)}
+.empty{color:var(--sub);padding:6px 0}.good{color:var(--good)}.bad{color:var(--bad)}
+.bt{display:flex;gap:4px;flex:none}
+.strip{display:flex;gap:4px;flex-basis:100%;margin-top:4px}
+.dd{flex:1;max-width:44px;height:30px;border-radius:9px;border:2px solid var(--line);background:var(--card);font-size:.7rem;font-weight:800;color:var(--sub);padding:0}
+.dd.on{background:var(--good);border-color:var(--good);color:#fff}.dd.hj{border-color:var(--accent)}.dd.off{opacity:.35}
+.cxc .big{font-size:1.9rem;font-weight:800;margin:6px 0 0}
+.cxc .two{display:flex;gap:8px;margin-top:10px}.cxc .two div{flex:1;background:var(--soft);border-radius:11px;padding:8px 10px}
+.cxc .two small{display:block;color:var(--sub);font-size:.74rem}
+.modal{display:none;position:fixed;inset:0;background:rgba(20,14,10,.6);z-index:20;overflow:auto;padding:16px}.modal.on{display:block}.modal .card{max-width:560px;margin:20px auto}
+#ts{display:none;position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));max-width:616px;margin:0 auto;background:#2b1b10;color:#fff;border-radius:12px;padding:12px 14px;z-index:30;align-items:center;justify-content:space-between;gap:10px}#ts.on{display:flex}
+#ts button{background:#fff;color:#2b1b10;border:0;border-radius:10px;padding:8px 12px;font-weight:800;flex:none}
+#lk{display:none;position:fixed;inset:0;z-index:50;background:linear-gradient(135deg,#9e2630,#e98500);align-items:center;justify-content:center;padding:20px}#lk.on{display:flex}#lk .card{width:100%;max-width:340px;text-align:center}#lk input{text-align:center;font-size:1.6rem;letter-spacing:.4em}
+#rel{display:none;color:#222}
+#rel table{width:100%;border-collapse:collapse;margin:6px 0 12px}
+#rel th,#rel td{border:1px solid #ccc;padding:6px 8px;text-align:left;font-size:.9rem}
+#rel th{background:#f4ece0}
+#rel h3{color:#9e2630;margin:14px 0 4px;border-bottom:2px solid #9e2630;padding-bottom:2px}
+.sig{margin-top:40px;border-top:1px solid #333;width:240px;padding-top:6px}
+@media print{html[data-t=dark] body{background:#fff}}
+@media print{body>*:not(#rel){display:none!important}#rel{display:block}body{background:#fff;padding:0;max-width:none}}
+
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="logo">B</div><div><b>Bejoma Pessoal</b><small id="hd"></small></div></div><button class="cx" id="cxB" onclick="go('din','caixa')"><small>Caixa pessoal</small><b id="cxTop"></b></button></header>
+<main>
+<div class="pg on" id="p-hoje">
+<div id="agH"></div>
+<div id="pgH"></div>
+<div id="bk"></div>
+<div id="pdH"></div>
+<div id="rm"></div>
+<div id="crH"></div>
+<div id="bjH"></div>
+<div class="sn" id="sn-hoje"></div>
+<div class="sp on" id="s-hoje-resumo">
+<div id="cxH"></div>
+<div id="lm"></div>
+<div class="card"><div class="grid">
+<div class="stat"><div class="k">Tarefas hoje</div><div class="v" id="sT"></div></div>
+<div class="stat"><div class="k">Hábitos</div><div class="v" id="sH"></div></div>
+<div class="stat"><div class="k">Atividades</div><div class="v" id="sA"></div></div>
+</div></div>
+<div class="card" id="mtHc"><h2>Metas</h2><div id="mtH"></div></div>
+<div class="card"><h2>Despesa rápida</h2><div style="display:flex;gap:8px"><input id="qV" type="text" inputmode="decimal" placeholder="Kz" style="flex:1"><input id="qD" placeholder="O que comprou?" style="flex:2"></div><div style="display:flex;gap:8px;margin-top:8px"><select id="qC" style="flex:1"></select><select id="qF" style="flex:1"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Express</option></select></div><button class="b" onclick="qAdd()">Registar despesa</button></div>
+<div class="card" id="jnC"><h2>⏱️ Jornada de hoje</h2><div id="jnB"></div></div>
+<div class="card"><h2>⭐ Foco de hoje</h2><div id="fcL"></div></div>
+<div class="card"><h2>Para fazer hoje</h2><div id="hT"></div></div>
+<div class="card" id="hSc"><h2>Sem prazo</h2><div id="hS"></div></div>
+</div>
+<div class="sp" id="s-hoje-habitos">
+<div class="card"><h2>Hábitos de hoje</h2><div id="hH"></div>
+<label>Novo hábito</label><input id="hN" placeholder="ex.: Ler 15 minutos">
+<div id="hNF"></div>
+<button class="b sec" onclick="hAdd()">Adicionar hábito</button></div>
+</div>
+<div class="sp" id="s-hoje-revisao">
+<div class="card"><h2>Revisão do dia</h2><label style="margin-top:0">Como foi o dia?</label><div class="strip" id="rvB"></div><label>Notas</label><textarea id="rvT" rows="3" style="width:100%;border:2px solid var(--line);border-radius:14px;padding:10px;font:inherit" placeholder="O que correu bem? O que fica para amanhã?" oninput="rvSave()"></textarea></div>
+</div>
+</div>
+<div class="pg" id="p-plan">
+
+<div class="sn" id="sn-plan"></div>
+<div class="sp on" id="s-plan-agenda">
+<div id="agB"></div>
+<div class="card"><h2>Agenda</h2><select id="agV" onchange="R()"><option value="0">Hoje</option><option value="1">Amanhã</option><option value="7">Próximos 7 dias</option></select><div id="agS" style="margin-top:10px"></div><div id="agL" style="margin-top:8px"></div><div id="agM"></div></div>
+<div class="card"><h2>Novo bloco de horário</h2><p class="empty">Marque trabalho, descanso, refeições, estudo… Pode repetir todos os dias, só em certos dias, ou num dia só.</p><div id="agNF"></div><button class="b" onclick="bAdd()">Guardar bloco</button></div>
+</div>
+<div class="sp" id="s-plan-tarefas">
+<div class="card"><h2>Nova tarefa</h2>
+<label>O que tenho de fazer?</label><input id="tT" placeholder="ex.: Pagar a Tia Eliza">
+<label>Categoria</label><select id="tC"></select>
+<label>Prazo (opcional)</label><input id="tP" type="date">
+<label>Hora (opcional)</label><input id="tHr" type="time">
+<label>Repetir</label><select id="tRp"><option value="">Não repete</option><option value="dia">🔁 Todos os dias</option><option value="sem">🔁 Todas as semanas</option><option value="mes">🔁 Todos os meses</option></select>
+<label>Prioridade</label><select id="tR"><option value="2">🟡 Média</option><option value="3">🔴 Alta</option><option value="1">🟢 Baixa</option></select>
+<button class="b" onclick="tAdd()">Guardar tarefa</button></div>
+<div class="card"><h2>Planeamento</h2><select id="plP" onchange="R()"><option value="1">Amanhã</option><option value="7" selected>Próximos 7 dias</option><option value="30">Próximos 30 dias</option></select><div id="plL" style="margin-top:8px"></div></div>
+<div class="card"><h2>Por fazer</h2><div id="tL"></div></div>
+<div class="card"><h2>Concluídas</h2><div id="tF"></div></div>
+</div>
+<div class="sp" id="s-plan-ativ">
+<div class="card"><h2>⏱️ Cronómetro</h2><div id="cr"></div></div>
+<div class="card"><h2>Registar atividade</h2>
+<label>O que fiz?</label><input id="aT" placeholder="ex.: Estudei matemática">
+<label>Categoria</label><select id="aC"></select>
+<label>Data</label><input id="aD" type="date">
+<label>Duração (minutos)</label><input id="aM" type="number" inputmode="numeric" min="0" placeholder="ex.: 45">
+<button class="b" onclick="aAdd()">Guardar atividade</button></div>
+<div class="card"><h2>Últimos 7 dias</h2><div id="aS"></div></div>
+<div class="card"><h2>Metas</h2><div id="mtL"></div>
+<label>Nova meta</label><select id="mtC"></select>
+<select id="mtP" style="margin-top:8px"><option value="sem">Por semana (últimos 7 dias)</option><option value="dia">Por dia</option></select>
+<label>Meta (horas)</label><input id="mtV" type="text" inputmode="decimal" placeholder="ex.: 5">
+<button class="b sec" onclick="mtAdd()">Guardar meta</button></div>
+<div class="card"><h2>Registos recentes</h2><div id="aL"></div></div>
+</div>
+</div>
+<div class="pg" id="p-din">
+
+<div class="sn" id="sn-din"></div>
+<div class="sp on" id="s-din-caixa">
+<div class="card"><div class="grid">
+<div class="stat"><div class="k">Caixa</div><div class="v" id="vSS"></div></div>
+<div class="stat"><div class="k">💵 Dinheiro</div><div class="v" id="vSD"></div></div>
+<div class="stat"><div class="k">📱 Express</div><div class="v" id="vSE"></div></div>
+</div>
+<div class="grid" style="grid-template-columns:1fr 1fr;margin-top:8px">
+<div class="stat"><div class="k">Entrou este mês</div><div class="v good" id="vM1"></div></div>
+<div class="stat"><div class="k">Saiu este mês</div><div class="v bad" id="vM2"></div></div>
+</div></div>
+<div class="card"><h2>Novo valor</h2>
+<label>Tipo</label><select id="vT" onchange="vTipo()"><option value="saida">➖ Saída (gastei)</option><option value="entrada">➕ Entrada (recebi)</option></select>
+<label>Descrição</label><input id="vDs" placeholder="ex.: Almoço">
+<label>Valor (Kz)</label><input id="vV" type="text" inputmode="decimal" placeholder="ex.: 500">
+<label>Onde está o dinheiro</label><select id="vF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
+<div id="vCw"><label>Categoria</label><select id="vC"></select></div>
+<label>Data</label><input id="vDt" type="date">
+<button class="b" onclick="vAdd()">Guardar valor</button></div>
+<div class="card"><h2>Movimentos recentes</h2><div id="vL"></div></div>
+<div class="card"><h2>Saídas deste mês</h2><div id="vR"></div></div>
+<div class="card"><h2>Trocar Dinheiro ↔ Express</h2><div id="trL"></div>
+<label>O que fez?</label><select id="trD"><option value="mcx>din">Levantei do Express (Express → Dinheiro)</option><option value="din>mcx">Pus dinheiro no Express (Dinheiro → Express)</option></select>
+<label>Valor trocado (Kz)</label><input id="trV" type="text" inputmode="decimal" placeholder="ex.: 10000">
+<label>Taxa paga (Kz, opcional)</label><input id="trX" type="text" inputmode="decimal" placeholder="ex.: 100">
+<button class="b sec" onclick="trAdd()">Registar troca</button>
+<p class="empty">A troca não conta como entrada nem como saída. Só muda onde está o dinheiro. A taxa conta como saída.</p></div>
+<div class="card"><h2>Limite diário de gastos</h2><p class="empty" id="lmT"></p>
+<label>Limite por dia (Kz). Deixe vazio para desligar</label><input id="lmV" type="text" inputmode="decimal" placeholder="ex.: 3000">
+<button class="b sec" onclick="lmSave()">Guardar limite</button></div>
+</div>
+<div class="sp" id="s-din-compras">
+<div class="card"><h2>Lista de compras</h2><div id="cpT"></div><div id="cpL" style="margin-top:8px"></div></div>
+<div class="card"><h2>Registar compra</h2><p class="empty" id="cpSel"></p><p class="empty" id="cpAf"></p><label>Total pago (Kz)</label><input id="cpPg" type="text" inputmode="decimal" oninput="cpPrev()"><label>Pagou com</label><select id="cpF" onchange="cpPrev()"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
+<button class="b" onclick="cpComprar()">Registar compra dos itens marcados</button><p class="empty">Desconta o total pago da caixa pessoal e passa os itens para "comprados".</p></div>
+<div class="card"><h2>Novo item</h2><label style="margin-top:0">Item</label><input id="cpN" placeholder="ex.: Arroz, detergente, gás">
+<div style="display:flex;gap:10px"><div style="flex:1"><label>Quantidade</label><input id="cpQ" placeholder="ex.: 2 kg"></div><div style="flex:1"><label>Preço (Kz)</label><input id="cpP" type="text" inputmode="decimal" placeholder="estimado"></div></div>
+<label>Comprar no dia (opcional)</label><input id="cpD" type="date">
+<label>Categoria</label><select id="cpC"><option>Casa</option><option>Comida</option><option>Limpeza</option><option>Higiene</option><option>Outros</option></select>
+<label>Repetir</label><select id="cpR"><option value="">Compra única</option><option value="1">🔁 Todas as semanas</option></select>
+<button class="b" onclick="cpAdd()">Adicionar à lista</button></div>
+</div>
+<div class="sp" id="s-din-contas">
+<div class="card"><h2>Contas da casa</h2><div id="ctL"></div><label>Nova conta (renda, luz, água, internet…)</label><input id="ctN" placeholder="ex.: Renda">
+<div style="display:flex;gap:10px"><div style="flex:1"><label>Valor (Kz)</label><input id="ctV" type="text" inputmode="decimal"></div><div style="flex:1"><label>Dia do mês</label><input id="ctDia" type="number" min="1" max="31" placeholder="ex.: 5"></div></div>
+<label>Pagar com</label><select id="ctF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
+<button class="b sec" onclick="ctAdd()">Guardar conta</button></div>
+<div class="card"><h2>Dívidas</h2>
+<div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><div class="k">Eu devo</div><div class="v bad" id="dD"></div></div><div class="stat"><div class="k">Devem-me</div><div class="v good" id="dM"></div></div></div>
+<div id="dL" style="margin-top:8px"></div>
+<label>Nova dívida</label><select id="dT"><option value="devo">Eu devo a alguém</option><option value="devem">Alguém deve-me</option></select>
+<input id="dQ" placeholder="Nome (ex.: Tia Eliza)" style="margin-top:8px"><input id="dV" type="text" inputmode="decimal" placeholder="Valor (Kz)" style="margin-top:8px">
+<label>Prazo (opcional)</label><input id="dP" type="date">
+<button class="b sec" onclick="dAdd()">Guardar dívida</button>
+<p class="empty">Registar a dívida não mexe no saldo. O saldo só muda quando registar um pagamento.</p></div>
+</div>
+<div class="sp" id="s-din-bj">
+<div class="card"><h2>Pedir dinheiro à Bejoma Gestão</h2><p class="empty">A Bejoma Gestão é o fundo principal. Ao pedir, esta app abre a Bejoma Gestão para você aprovar lá. O dinheiro só entra aqui depois de aprovar e de escrever o código.</p><div id="pgL"></div>
+<label>Valor (Kz)</label><input id="pgV" type="text" inputmode="decimal" placeholder="ex.: 20000">
+<label>Entra aqui em</label><select id="pgF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
+<label>Para quê? (opcional)</label><input id="pgD" placeholder="ex.: Compras da casa">
+<button class="b" onclick="pgCriar()">Pedir à Bejoma Gestão</button></div>
+<div class="card"><h2>Pedidos da Bejoma Gestão</h2><p class="empty">Quando a Bejoma Gestão pede dinheiro, ele só sai daqui depois de você aprovar. Ao aprovar, recebe um código para escrever na Bejoma Gestão.</p><div id="pdL"></div>
+<label>Aprovações dadas</label><div id="apL"></div>
+<button class="b sec" onclick="$('pdF').click()">Importar pedido (ficheiro)</button><input id="pdF" type="file" style="display:none" onchange="bjFile(this)"></div>
+<div class="card"><h2>Enviar para a Bejoma Gestão</h2><p class="empty" id="pbT"></p>
+<label>Valor (Kz)</label><input id="pbV" type="text" inputmode="decimal" placeholder="ex.: 15000">
+<label>De onde sai o dinheiro</label><select id="pbF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
+<label>Descrição (opcional)</label><input id="pbD" placeholder="ex.: Dinheiro para stock">
+<button class="b sec" onclick="pbEnviar()">Enviar para a Bejoma Gestão</button>
+<p class="empty">Sai do seu saldo aqui e entra na Caixa da Bejoma Gestão. Não conta como gasto nem no limite diário.</p></div>
+<div class="card"><h2>Retirada da Bejoma Gestão</h2><p class="empty" id="rtT"></p>
+<label>Valor retirado (Kz)</label><input id="rtV" type="text" inputmode="decimal" placeholder="ex.: 20000">
+<label>Onde ficou o dinheiro</label><select id="rtF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
+<button class="b sec" onclick="rtAdd()">Registar retirada</button>
+<div id="foT"></div>
+<p class="empty">Soma ao seu saldo aqui e fica na fila para avisar a Bejoma Gestão, que regista a saída da Caixa.</p>
+<label>Vindas da Bejoma Gestão</label><div id="bjP"></div>
+<button class="b sec" onclick="$('bjF').click()">Importar ficheiro da Bejoma Gestão</button><input id="bjF" type="file" style="display:none" onchange="bjFile(this)"></div>
+<div class="card"><h2>Ligação à Bejoma Gestão</h2><p class="empty">Abra a Bejoma Gestão no navegador, copie o endereço da barra e cole aqui. É preciso só uma vez. Serve para esta app abrir a Bejoma Gestão sozinha quando pede dinheiro.</p><input id="ugI" placeholder="https://…"><button class="b sec" onclick="ugSave()">Guardar endereço</button><button class="b sec" onclick="ugGo('')">Abrir a Bejoma Gestão</button><p class="empty" id="ugT"></p><label>Endereço desta app (a Bejoma Gestão aprende-o sozinha no primeiro pedido)</label><input id="ugSelf" readonly><button class="b sec" onclick="ugCopiar()">Copiar endereço desta app</button></div>
+</div>
+</div>
+<div class="pg" id="p-ana">
+
+<div class="sn" id="sn-ana"></div>
+<div class="sp on" id="s-ana-resumo">
+<div class="card"><label style="margin-top:0">Período</label><select id="rP" onchange="R()"><option value="7">Últimos 7 dias</option><option value="m">Este mês</option><option value="p">Mês passado</option></select></div>
+<div id="rX"></div>
+</div>
+<div class="sp" id="s-ana-pesq">
+<div class="card"><label style="margin-top:0">Pesquisar em tudo</label><input id="qS" type="search" placeholder="ex.: Eliza, almoço, estudos" oninput="pesq()"></div>
+<div class="card"><div id="qR"></div></div>
+</div>
+</div>
+<div class="pg" id="p-mais">
+
+<div class="sn" id="sn-mais"></div>
+<div class="sp on" id="s-mais-cat">
+<div class="card"><h2>Categorias de tarefas e atividades</h2><div id="mC"></div>
+<label>Nova categoria</label><input id="cN" placeholder="ex.: Igreja">
+<button class="b sec" onclick="cAdd('cats','cN')">Adicionar categoria</button></div>
+<div class="card"><h2>Categorias dos valores</h2><div id="mV"></div>
+<label>Nova categoria</label><input id="vN" placeholder="ex.: Telefone">
+<button class="b sec" onclick="cAdd('vcats','vN')">Adicionar categoria</button></div>
+</div>
+<div class="sp" id="s-mais-dados">
+<div class="card"><h2>Relatório da semana</h2>
+<p class="empty">Atividades, tarefas e hábitos dos últimos 7 dias. Na janela que abrir, escolha "Guardar como PDF".</p>
+<button class="b" onclick="pdf()">Guardar em PDF</button></div>
+<div class="card"><h2>Cópia de segurança</h2>
+<p class="empty">Guarde uma cópia de vez em quando. Se trocar de telemóvel, importe-a.</p><p class="empty" id="uc"><b></b></p>
+<button class="b" onclick="exp()">Exportar cópia</button>
+<button class="b sec" onclick="$('imp').click()">Importar ficheiro</button>
+<button class="b sec" onclick="cPaste()">Importar colando texto</button>
+<input id="imp" type="file" style="display:none" onchange="imp(this)"></div>
+<div class="card"><h2>Apagados</h2><p class="empty">Ficam aqui 30 dias. Pode restaurar o que apagou por engano.</p><div id="lx"></div>
+<button class="b sec" onclick="lVaz()">Esvaziar Apagados</button></div>
+<div class="card"><h2>PIN</h2><p class="empty" id="pnT"></p><button class="b sec" id="pnB" onclick="pinCfg()"></button></div>
+</div>
+<div class="sp" id="s-mais-cfg">
+<div class="card"><h2>Aspeto</h2><select id="tmS" onchange="D.tema=this.value;save(1);R()"><option value="auto">Automático (como o telemóvel)</option><option value="claro">Claro</option><option value="escuro">Escuro</option></select></div>
+<div class="card"><h2>Lembretes ao abrir</h2><p class="empty">Mostra no topo de Hoje o que está atrasado ou a vencer.</p><button class="b sec" id="lbT" onclick="lbTog()"></button></div>
+<div class="card"><h2>Alertas e calendário</h2><p class="empty" id="agN"></p><p class="empty">Os avisos tocam enquanto a app estiver aberta. Para ser avisado com a app fechada, exporte para o calendário do telemóvel.</p>
+<button class="b sec" onclick="agNotif()">Ativar notificações</button><button class="b sec" onclick="agIcs()">📅 Exportar para o calendário</button>
+<label>Máximo de horas de trabalho por dia (0 = sem limite)</label><input id="agMx" type="text" inputmode="decimal" placeholder="ex.: 10" onchange="D.maxTrab=parseFloat(String(this.value).replace(',','.'))||0;save(1);R()"></div>
+</div>
+</div>
+</main>
+<nav class="tb" id="tb"></nav>
+
+<div id="rel"></div>
+<div class="modal" id="ed"><div class="card" id="edB"></div></div>
+<div id="ts"></div>
+<div id="lk"><div class="card"><h2 style="font-size:1.3rem">Bejoma Pessoal</h2><p class="empty">Escreva o seu PIN</p>
+<input id="lkP" type="password" inputmode="numeric" maxlength="6" autocomplete="off" onkeydown="if(event.key==='Enter')pinTry()">
+<p id="lkM" class="bad" style="min-height:1.2em;margin:8px 0 0"></p>
+<button class="b" onclick="pinTry()">Entrar</button>
+<button class="mini" style="margin-top:12px" onclick="pinEsq()">Esqueci o PIN</button></div></div>
+
+<script>
+const K='rotina_v1',NOME='Benjamim José Manuel';
+const $=i=>document.getElementById(i);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const dstr=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const td=()=>dstr(new Date());
+const add=(ds,k)=>{const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()+k);return dstr(d)};
+const fmt=ds=>ds?ds.split('-').reverse().join('/'):'';
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const hm=m=>m<60?m+'min':Math.floor(m/60)+'h'+(m%60?' '+m%60+'min':'');
+let D={};try{D=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
+const DEF=()=>({tarefas:[],ativ:[],habitos:[],feitos:{},valores:[],cats:['Trabalho','Estudos','Casa','Saúde','Família','Lazer','Outros'],vcats:['Comida','Transporte','Casa','Saúde','Estudos','Lazer','Outros'],lixo:[],ultCopia:'',alt:0,dividas:[],limite:0,lemb:true,metas:[],cron:null,trocas:[],tema:'auto',bj:[],fora:[],ped:[],apr:[],blocos:[],dia:{},maxTrab:0,compras:[],contas:[],pedS:[],aprG:[],urlG:''});
+D=Object.assign(DEF(),D);D.lixo=(D.lixo||[]).filter(e=>e.em>=add(td(),-30));
+const money=n=>{n=Math.round(n*100)/100;const a=Math.abs(n).toFixed(2).split('.');return (n<0?'-':'')+a[0].replace(/\B(?=(\d{3})+(?!\d))/g,' ')+(a[1]==='00'?'':','+a[1])+' Kz'};
+const save=q=>{if(!q)D.alt=(D.alt||0)+1;try{localStorage.setItem(K,JSON.stringify(D))}catch(e){alert('Não foi possível guardar neste navegador.')}};
+const ck=(on,fn)=>`<button class="ck${on?' on':''}" onclick="${fn}">${on?'✓':''}</button>`;
+const PRI=['','🟢','🟡','🔴'];
+
+const NAV=[['hoje', 'Hoje', [['resumo', 'Resumo'], ['habitos', 'Hábitos'], ['revisao', 'Revisão do dia']], '<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>'], ['plan', 'Planear', [['agenda', 'Agenda'], ['tarefas', 'Tarefas'], ['ativ', 'Atividades']], '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'], ['din', 'Dinheiro', [['caixa', 'Caixa'], ['compras', 'Compras'], ['contas', 'Contas e dívidas'], ['bj', 'Bejoma Gestão']], '<path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1.2"/>'], ['ana', 'Análise', [['resumo', 'Resumo'], ['pesq', 'Pesquisar']], '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'], ['mais', 'Mais', [['cat', 'Categorias'], ['dados', 'Dados e segurança'], ['cfg', 'Definições']], '<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>']];
+const SUBP={};
+function go(p,s){const A={agenda:['plan','agenda'],tarefas:['plan','tarefas'],ativ:['plan','ativ'],compras:['din','compras'],valores:['din','bj'],resumo:['ana','resumo'],pesq:['ana','pesq']};
+if(A[p]){s=s||A[p][1];p=A[p][0]}
+const n=NAV.find(x=>x[0]===p)||NAV[0];s=s||SUBP[n[0]]||n[2][0][0];SUBP[n[0]]=s;
+document.querySelectorAll('.pg').forEach(e=>e.classList.toggle('on',e.id==='p-'+n[0]));
+document.querySelectorAll('#p-'+n[0]+' .sp').forEach(e=>e.classList.toggle('on',e.id==='s-'+n[0]+'-'+s));
+$('sn-'+n[0]).innerHTML=n[2].map(x=>`<button class="${x[0]===s?'on':''}" onclick="go('${n[0]}','${x[0]}')">${x[1]}</button>`).join('');
+document.querySelectorAll('#tb button').forEach(b=>b.classList.toggle('on',b.dataset.p===n[0]));window.scrollTo(0,0)}
+function navBuild(){$('tb').innerHTML=NAV.map(n=>`<button data-p="${n[0]}" onclick="go('${n[0]}')"><svg viewBox="0 0 24 24">${n[3]}</svg>${n[1]}</button>`).join('');go('hoje')}
+/* ---- caixa pessoal ---- */
+const cxTot=()=>sf('din')+sf('mcx'),cxMsg=()=>' · Caixa: '+money(cxTot());
+function CX(){const h=td(),S=cxTot(),hj=D.valores.filter(v=>v.data===h),sa=hj.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((q,v)=>q+v.valor,0),en=hj.filter(v=>v.tipo==='entrada').reduce((q,v)=>q+v.valor,0);
+$('cxTop').textContent=money(S);$('cxB').classList.toggle('neg',S<0);
+$('cxH').innerHTML=`<div class="card cxc"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Caixa pessoal</h2><button class="mini" onclick="go('din','caixa')">Abrir</button></div><div class="big ${S<0?'bad':''}">${money(S)}</div><div class="two"><div><small>💵 Dinheiro</small><b>${money(sf('din'))}</b></div><div><small>📱 Express</small><b>${money(sf('mcx'))}</b></div></div><div class="item" style="margin-top:10px"><span>Hoje entrou <b class="good">${money(en)}</b></span><span>saiu <b class="bad">${money(sa)}</b></span></div>${hj.slice(-4).reverse().map(v=>`<div class="item"><div>${esc(v.desc)}<small>${esc(v.cat)} · ${FN[v.forma]}</small></div><b class="${v.tipo==='entrada'?'good':'bad'}">${v.tipo==='entrada'?'+':'−'}${money(v.valor)}</b></div>`).join('')}</div>`}
+function cpPrev(){const sel=D.compras.filter(c=>!c.feito&&c.sel),es=sel.reduce((q,c)=>q+c.preco,0),tx=String($('cpPg').value).replace(',','.').trim(),v=tx===''?es:parseFloat(tx),f=$('cpF').value,s=sf(f);
+$('cpAf').innerHTML=v>0?`Caixa em ${FN[f]}: ${money(s)} → depois da compra: <b class="${s-v<0?'bad':'good'}">${money(s-v)}</b>`:`Caixa pessoal: <b>${money(cxTot())}</b>`}
+function cpUm(id){const c=D.compras.find(x=>x.id===id);if(!c)return;EI=id;$('edB').innerHTML=`<h2>Comprei: ${esc(c.t)}</h2><p class="empty">Caixa pessoal agora: ${money(cxTot())}</p><label>Preço pago (Kz)</label><input id="cuV" type="text" inputmode="decimal" value="${c.preco}"><label>Pagou com</label><select id="cuF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select><button class="b" onclick="cpUmOk()">Descontar da caixa</button><button class="b sec" onclick="eClose()">Cancelar</button>`;$('ed').classList.add('on')}
+function cpUmOk(){const c=D.compras.find(x=>x.id===EI);if(!c)return eClose();const v=parseFloat(String($('cuV').value).replace(',','.'));if(!(v>0))return alert('Indique o preço pago.');
+if(!saidaRapida('Compras: '+c.t,v,catCasa(),$('cuF').value))return;
+c.feito=true;c.sel=false;c.fim=td();if(c.rep)D.compras.push({id:uid(),t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,sel:false,feito:false});save();eClose();R();toast('Compra registada: −'+money(v)+cxMsg())}
+
+/* ---- tarefas ---- */
+const ord=(a,b)=>((a.prazo||'9')<(b.prazo||'9')?-1:(a.prazo||'9')>(b.prazo||'9')?1:b.pri-a.pri);
+function tItem(x){const at=!x.feita&&x.prazo&&x.prazo<td();
+return `<div class="item"><div class="l">${ck(x.feita,`tTog('${x.id}')`)}<div><span${x.feita?' style="text-decoration:line-through;opacity:.6"':''}>${PRI[x.pri]} ${esc(x.t)}</span><small class="${at?'bad':''}">${esc(x.cat)}${x.rep?' · 🔁 '+RP[x.rep]:''}${x.prazo?' · '+(at?'atrasada · ':'')+fmt(x.prazo):''}${x.hora?' · ⏰ '+x.hora:''}</small></div></div><div class="bt">${x.feita?'':`<button class="mini" onclick="fTog('${x.id}')">${x.foco===td()?'⭐':'☆'}</button>`}${eb('tarefas',x.id)}<button class="mini dng" onclick="tDel('${x.id}')">✕</button></div></div>`}
+function tAdd(){const t=$('tT').value.trim();if(!t)return alert('Escreva a tarefa.');D.tarefas.push({id:uid(),t,cat:$('tC').value,prazo:$('tP').value,hora:$('tHr').value,pri:+$('tR').value,rep:$('tRp').value,feita:false});$('tT').value='';$('tP').value='';$('tHr').value='';$('tRp').value='';save();R()}
+const RP={dia:'diária',sem:'semanal',mes:'mensal'};
+function addM(ds,n){const d=new Date(ds+'T12:00:00'),dia=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);d.setDate(Math.min(dia,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));return dstr(d)}
+function tTog(id){const x=D.tarefas.find(a=>a.id===id);if(!x)return;x.feita=!x.feita;x.fim=x.feita?td():'';
+if(x.feita&&x.rep&&!x.prox){let n=x.prazo||td();do{n=x.rep==='dia'?add(n,1):x.rep==='sem'?add(n,7):addM(n,1)}while(n<=td());const nx=Object.assign({},x,{id:uid(),prazo:n,feita:false,fim:'',prox:''});D.tarefas.push(nx);x.prox=nx.id}
+else if(!x.feita&&x.prox){const nx=D.tarefas.find(a=>a.id===x.prox);if(nx&&!nx.feita)D.tarefas=D.tarefas.filter(a=>a.id!==x.prox);x.prox=''}
+save();R()}
+function tDel(id){lix('tarefas',id)}
+
+/* ---- hábitos ---- */
+const feito=(h,ds)=>(D.feitos[ds]||[]).indexOf(h)>=0;
+const DN=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],DL=['D','S','T','Q','Q','S','S'];
+const wd=ds=>new Date(ds+'T12:00:00').getDay(),wk=ds=>add(ds,-((wd(ds)+6)%7));
+const hDue=(x,ds)=>!x.freq||x.freq==='dia'||x.freq==='vezes'||(x.dias||[]).indexOf(wd(ds))>=0;
+const wkDone=(x,ds)=>{const a=wk(ds);let n=0;for(let i=0;i<7;i++)if(feito(x.id,add(a,i)))n++;return n};
+function hSt(x){if(x.freq==='vezes'){const n=x.n||3;let c=0,w=wk(td());if(wkDone(x,w)>=n)c=1;w=add(w,-7);while(c<520&&wkDone(x,w)>=n){c++;w=add(w,-7)}return{c,u:'semana'}}
+let c=0,d=td(),last=-99;if(hDue(x,d)&&!feito(x.id,d))d=add(d,-1);
+for(let i=0;i<400;i++){if(!hDue(x,d)){if(feito(x.id,d))c++}else if(feito(x.id,d))c++;else{if(i-last<7)break;last=i}d=add(d,-1)}return{c,u:'dia'}}
+function hFrm(p){return `<label>Frequência</label><select id="${p}F" onchange="hFr('${p}')"><option value="dia">Todos os dias</option><option value="dias">Certos dias da semana</option><option value="vezes">X vezes por semana</option></select><div id="${p}Dw" style="display:none"><label>Em que dias?</label><div class="strip">${[1,2,3,4,5,6,0].map(i=>`<label style="margin:0;display:flex;flex-direction:column;align-items:center;font-size:.7rem;flex:1">${DN[i]}<input type="checkbox" id="${p}D${i}" style="width:22px;height:22px"></label>`).join('')}</div></div><div id="${p}Nw" style="display:none"><label>Quantas vezes por semana?</label><select id="${p}N">${[1,2,3,4,5,6].map(i=>`<option>${i}</option>`).join('')}</select></div>`}
+function hFr(p){$(p+'Dw').style.display=$(p+'F').value==='dias'?'block':'none';$(p+'Nw').style.display=$(p+'F').value==='vezes'?'block':'none'}
+function hRd(p){const f=$(p+'F').value,dias=[0,1,2,3,4,5,6].filter(i=>$(p+'D'+i).checked);if(f==='dias'&&!dias.length){alert('Escolha pelo menos um dia da semana.');return null}return{freq:f,dias:f==='dias'?dias:[],n:f==='vezes'?(+$(p+'N').value||3):0}}
+function hSet(p,x){$(p+'F').value=x.freq||'dia';[0,1,2,3,4,5,6].forEach(i=>{$(p+'D'+i).checked=(x.dias||[]).indexOf(i)>=0});$(p+'N').value=x.n||3;hFr(p)}
+function hEdit(id){const x=D.habitos.find(a=>a.id===id);if(!x)return;EI=id;$('edB').innerHTML='<h2>Editar hábito</h2><label>Nome</label><input id="heN">'+hFrm('he')+'<button class="b" onclick="hSave()">Guardar alterações</button><button class="b sec" onclick="eClose()">Cancelar</button>';$('heN').value=x.nome;hSet('he',x);$('ed').classList.add('on')}
+function hSave(){const x=D.habitos.find(a=>a.id===EI);if(!x)return eClose();const n=$('heN').value.trim();if(!n)return alert('Escreva o nome.');const f=hRd('he');if(!f)return;Object.assign(x,{nome:n},f);save();eClose();R()}
+function hAdd(){const n=$('hN').value.trim();if(!n)return alert('Escreva o hábito.');const f=hRd('hn');if(!f)return;D.habitos.push(Object.assign({id:uid(),nome:n},f));$('hN').value='';$('hnF').value='dia';hFr('hn');save();R()}
+function hTog(id,ds){const d=ds||td(),l=D.feitos[d]||(D.feitos[d]=[]),i=l.indexOf(id);if(i>=0)l.splice(i,1);else l.push(id);save();R()}
+function hDel(id){lix('habitos',id)}
+
+/* ---- atividades ---- */
+function aAdd(){const t=$('aT').value.trim(),m=parseInt($('aM').value,10)||0;if(!t)return alert('Escreva o que fez.');if(m<=0)return alert('Indique a duração em minutos.');D.ativ.push({id:uid(),t,cat:$('aC').value,data:$('aD').value||td(),min:m});$('aT').value='';$('aM').value='';save();R()}
+function aDel(id){lix('ativ',id)}
+const sem=()=>D.ativ.filter(a=>a.data>=add(td(),-6)&&a.data<=td());
+function porCat(l){const m={};l.forEach(a=>m[a.cat]=(m[a.cat]||0)+a.min);return Object.keys(m).map(k=>[k,m[k]]).sort((a,b)=>b[1]-a[1])}
+
+/* ---- apagados / editar / lembrete ---- */
+const LB={tarefas:'Tarefa',ativ:'Atividade',valores:'Valor',habitos:'Hábito',dividas:'Dívida',metas:'Meta',trocas:'Troca',blocos:'Bloco',compras:'Compra',contas:'Conta'};let tmr,EK,EI,EL;
+function toast(m,u){const e=$('ts');e.innerHTML='<span>'+esc(m)+'</span>'+(u?'<button onclick="'+u+'">Desfazer</button>':'');e.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>e.classList.remove('on'),7000)}
+function lix(k,id,ex){const i=D[k].findIndex(x=>x.id===id);if(i<0)return;const it=D[k].splice(i,1)[0],lid=uid();D.lixo.push({id:lid,k,item:it,em:td()});save();R();toast(LB[k]+' movido para Apagados.'+(ex?' '+ex(it):''),"lRest('"+lid+"')")}
+function lRest(id){const i=D.lixo.findIndex(x=>x.id===id);if(i<0)return;const e=D.lixo.splice(i,1)[0];D[e.k].push(e.item);save();R();$('ts').classList.remove('on')}
+function lPerm(id){if(!confirm('Apagar para sempre? Não dá para recuperar.'))return;D.lixo=D.lixo.filter(x=>x.id!==id);save();R()}
+function lVaz(){if(!D.lixo.length||!confirm('Esvaziar Apagados? Não dá para recuperar.'))return;D.lixo=[];save();R()}
+const eb=(k,id)=>`<button class="mini" onclick="${k==='habitos'?'hEdit':'eOpen'}('${k==='habitos'?'':k+"','"}${id}')">✎</button>`;
+const EF={tarefas:[['t','O que tenho de fazer?','text'],['cat','Categoria','cat'],['prazo','Prazo (opcional)','date'],['hora','Hora (opcional)','time'],['rep','Repetir','rep'],['pri','Prioridade','pri']],ativ:[['t','O que fiz?','text'],['cat','Categoria','cat'],['data','Data','date'],['min','Duração (minutos)','number']],valores:[['desc','Descrição','text'],['valor','Valor (Kz)','money'],['forma','Onde está o dinheiro','forma'],['cat','Categoria','vcat'],['data','Data','date']],habitos:[['nome','Nome do hábito','text']],dividas:[['quem','Nome','text'],['valor','Valor total (Kz)','money'],['prazo','Prazo (opcional)','date']],compras:[['t','Item','text'],['qtd','Quantidade (opcional)','opt'],['preco','Preço estimado (Kz)','money'],['dia','Comprar no dia (opcional)','date']],contas:[['nome','Nome','text'],['valor','Valor (Kz)','money'],['dia','Dia do mês (1 a 31)','number']]};
+function fld(f,x,i){const v=x[f[0]],sel=a=>`<select id="e${i}">`+a.map(o=>`<option value="${esc(o[0])}"${String(o[0])===String(v)?' selected':''}>${esc(o[1])}</option>`).join('')+'</select>';
+if(f[2]==='cat')return sel([...new Set(D.cats.concat(v))].map(c=>[c,c]));
+if(f[2]==='vcat')return sel([...new Set(D.vcats.concat(v))].map(c=>[c,c]));
+if(f[2]==='rep')return sel([['','Não repete'],['dia','🔁 Todos os dias'],['sem','🔁 Todas as semanas'],['mes','🔁 Todos os meses']]);
+if(f[2]==='pri')return sel([[3,'🔴 Alta'],[2,'🟡 Média'],[1,'🟢 Baixa']]);
+if(f[2]==='forma')return sel([['din','💵 Dinheiro'],['mcx','📱 Multicaixa Express']]);
+return `<input id="e${i}" type="${f[2]==='date'?'date':f[2]==='time'?'time':f[2]==='number'?'number':'text'}"${f[2]==='money'?' inputmode="decimal"':''} value="${esc(v)}">`}
+function eOpen(k,id){const x=D[k].find(a=>a.id===id);if(!x)return;EK=k;EI=id;EL=EF[k].filter(f=>!(k==='valores'&&x.tipo==='entrada'&&f[0]==='cat'));
+$('edB').innerHTML='<h2>Editar '+LB[k].toLowerCase()+'</h2>'+EL.map((f,i)=>'<label>'+f[1]+'</label>'+fld(f,x,i)).join('')+'<button class="b" onclick="eSave()">Guardar alterações</button><button class="b sec" onclick="eClose()">Cancelar</button>';$('ed').classList.add('on')}
+function eClose(){$('ed').classList.remove('on')}
+function eSave(){const x=D[EK].find(a=>a.id===EI);if(!x)return eClose();const n={};
+for(let i=0;i<EL.length;i++){const f=EL[i],v=$('e'+i).value.trim();
+if(f[2]==='text'){if(!v)return alert('Preencha o texto.');n[f[0]]=v}
+else if(f[2]==='money'){const m=parseFloat(v.replace(',','.'));if(!(m>0))return alert('Indique um valor válido.');n[f[0]]=m}
+else if(f[2]==='number'){const m=parseInt(v,10);if(!(m>0))return alert('Indique a duração em minutos.');n[f[0]]=m}
+else if(f[2]==='date'){if(!v&&f[0]!=='prazo'&&f[0]!=='dia')return alert('Indique a data.');n[f[0]]=v}
+else n[f[0]]=f[2]==='pri'?+v:v}
+Object.assign(x,n);save();eClose();R();toast('Alterações guardadas.')}
+function bkTxt(){const n=D.tarefas.length+D.ativ.length+D.valores.length+D.habitos.length;if(!n)return '';if(!D.ultCopia)return 'Ainda não fez nenhuma cópia de segurança.';const d=Math.round((new Date(td()+'T12:00:00')-new Date(D.ultCopia+'T12:00:00'))/864e5);return d>=7&&D.alt>0?'A última cópia foi há '+d+' dias e já fez '+D.alt+' alteração(ões) desde então.':''}
+
+let RM_OFF=false;function rmOff(){RM_OFF=true;R()}function lbTog(){D.lemb=D.lemb===false;save();R()}
+/* ---- dívidas / limite ---- */
+const rest=d=>d.valor-(d.pago||0),gastoDia=ds=>D.valores.filter(v=>v.tipo==='saida'&&!pB(v)&&v.data===ds).reduce((a,v)=>a+v.valor,0);
+function lmSave(){const t=String($('lmV').value).replace(',','.').trim(),n=t===''?0:parseFloat(t);if(isNaN(n)||n<0)return alert('Indique um valor válido.');D.limite=n;save();R();toast(n?'Limite guardado.':'Limite desligado.')}
+function dAdd(){const q=$('dQ').value.trim(),v=parseFloat(String($('dV').value).replace(',','.'));if(!q)return alert('Escreva o nome.');if(!(v>0))return alert('Indique o valor.');D.dividas.push({id:uid(),tipo:$('dT').value,quem:q,valor:v,pago:0,data:td(),prazo:$('dP').value});$('dQ').value='';$('dV').value='';$('dP').value='';save();R()}
+function dDel(id){lix('dividas',id)}
+function dPag(id){const d=D.dividas.find(x=>x.id===id);if(!d)return;EI=id;$('edB').innerHTML=`<h2>${d.tipo==='devo'?'Pagar a ':'Receber de '}${esc(d.quem)}</h2><p class="empty">Em falta: ${money(rest(d))}</p><label>Valor (Kz)</label><input id="pV" type="text" inputmode="decimal" value="${rest(d)}"><label>Onde está o dinheiro</label><select id="pF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select><label>Registar também em Valores?</label><select id="pR"><option value="1">Sim (atualiza o saldo)</option><option value="0">Não</option></select><button class="b" onclick="dPagOk()">Confirmar</button><button class="b sec" onclick="eClose()">Cancelar</button>`;$('ed').classList.add('on')}
+function dPagOk(){const d=D.dividas.find(x=>x.id===EI);if(!d)return eClose();const v=parseFloat(String($('pV').value).replace(',','.')),f=$('pF').value,sai=d.tipo==='devo';
+if(!(v>0))return alert('Indique o valor.');if(v>rest(d)+0.005)return alert('O valor é maior do que o que falta ('+money(rest(d))+').');
+if($('pR').value==='1'){if(sai){const s=sf(f);if(v>s+0.005&&!confirm('Em '+FN[f]+' só tem '+money(s)+'. Registar mesmo assim?'))return}
+D.valores.push({id:uid(),tipo:sai?'saida':'entrada',desc:(sai?'Paguei a ':'Recebi de ')+d.quem,valor:v,cat:sai?(D.vcats.indexOf('Outros')>=0?'Outros':D.vcats[0]):'Entrada',data:td(),forma:f})}
+d.pago=(d.pago||0)+v;save();eClose();R();toast(rest(d)<0.005?'Dívida saldada. ✓':'Pagamento registado.')}
+/* ---- resumo ---- */
+const PN={'7':'Últimos 7 dias',m:'Este mês',p:'Mês passado'};
+const mS=(ds,k)=>addM(ds.slice(0,8)+'01',k),nd=(a,b)=>Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/864e5)+1;
+function per(){const v=$('rP').value,h=td();
+if(v==='m'){const i=mS(h,0),n=nd(i,h),pi=mS(h,-1),pf=add(pi,n-1),lim=add(i,-1);return [i,h,pi,pf>lim?lim:pf]}
+if(v==='p'){const i=mS(h,-1);return [i,add(mS(h,0),-1),mS(h,-2),add(i,-1)]}
+return [add(h,-6),h,add(h,-13),add(h,-7)]}
+function est(a,b){const A=D.ativ.filter(x=>x.data>=a&&x.data<=b),V=D.valores.filter(x=>x.data>=a&&x.data<=b),ids=D.habitos.map(x=>x.id),n=nd(a,b);let hf=0,dl=0,ex=0,hv=[];
+for(let i=0;i<n;i++){const d=add(a,i);if(D.limite>0&&gastoDia(d)>D.limite)dl++;if(D.dia[d]&&D.dia[d].hum)hv.push(D.dia[d].hum);D.habitos.forEach(x=>{if(x.freq==='vezes')ex+=(x.n||3)/7;else if(hDue(x,d))ex++;if(feito(x.id,d)&&(x.freq==='vezes'||hDue(x,d)))hf++})}
+return{min:A.reduce((q,x)=>q+x.min,0),pc:porCat(A),tf:D.tarefas.filter(t=>t.feita&&t.fim>=a&&t.fim<=b).length,hp:ex?Math.min(100,Math.round(hf/ex*100)):0,e:V.filter(x=>x.tipo==='entrada').reduce((q,x)=>q+x.valor,0),s:V.filter(x=>x.tipo==='saida'&&!pB(x)).reduce((q,x)=>q+x.valor,0),av:hv.length?hv.reduce((q,x)=>q+x,0)/hv.length:0,pb:V.filter(pB).reduce((q,x)=>q+x.valor,0),vc:vCat(V),dl,rt:V.filter(x=>x.origem==='bejoma').reduce((q,x)=>q+x.valor,0)}}
+const dlt=(c,p,f,up)=>{const d=c-p;if(!c&&!p)return '';if(!d)return 'igual ao período anterior';return `<span class="${(d>0)===up?'good':'bad'}">${d>0?'▲ ':'▼ '}${f(Math.abs(d))}</span> vs período anterior`};
+const rw=(l,v,d)=>`<div class="item"><div>${l}<small>${d||''}</small></div><b>${v}</b></div>`;
+const br=(l,v,m,f)=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${esc(l)}</span><b>${f(v)}</b></div><div class="bar"><i style="width:${Math.round(v/m*100)}%"></i></div></div>`;
+function resumo(){const [a,b,pa,pb]=per(),c=est(a,b),p=est(pa,pb),T=D.dividas.filter(d=>rest(d)>0.005),dv=T.filter(d=>d.tipo==='devo').reduce((q,d)=>q+rest(d),0),dm=T.filter(d=>d.tipo==='devem').reduce((q,d)=>q+rest(d),0),ts=D.tarefas.filter(t=>!t.feita&&t.prazo&&t.prazo<td()).length;
+const fr=(PN[$('rP').value]||PN['7'])+': '+(c.min?hm(c.min)+' de atividades':'sem atividades')+', '+c.tf+' tarefa(s) concluída(s), hábitos a '+c.hp+'%'+(c.e||c.s?', entraram '+money(c.e)+' e saíram '+money(c.s):'')+'.';
+return `<div class="card"><h2>Em resumo</h2><p style="margin:0 0 6px">${fr}</p><small class="empty">${fmt(a)} a ${fmt(b)} · comparado com ${fmt(pa)} a ${fmt(pb)}</small></div>
+<div class="card"><h2>Atividades</h2>${rw('Tempo total',hm(c.min),dlt(c.min,p.min,hm,true))}${c.pc.map(x=>br(x[0],x[1],c.pc[0][1],hm)).join('')}</div>
+<div class="card"><h2>Tarefas e hábitos</h2>${rw('Tarefas concluídas',c.tf,dlt(c.tf,p.tf,String,true))}${rw('Tarefas atrasadas agora',`<span class="${ts?'bad':''}">${ts}</span>`)}${c.av?rw('Avaliação média dos dias',c.av.toFixed(1)+' / 5',p.av?dlt(+c.av.toFixed(1),+p.av.toFixed(1),x=>x.toFixed(1),true):''):''}${rw('Hábitos cumpridos',c.hp+'%',dlt(c.hp,p.hp,x=>x+'%',true))}</div>
+<div class="card"><h2>Valores</h2>${rw('Entrou',`<span class="good">${money(c.e)}</span>`,dlt(c.e,p.e,money,true))}${rw('Saiu',`<span class="bad">${money(c.s)}</span>`,dlt(c.s,p.s,money,false))}${c.pb||p.pb?rw('Enviado à Bejoma Gestão',money(c.pb),dlt(c.pb,p.pb,money,false)):''}${c.rt||p.rt?rw('Retiradas da Bejoma Gestão',money(c.rt),dlt(c.rt,p.rt,money,true)):''}${rw('Diferença (entrou − saiu)',`<span class="${c.e>=c.s?'good':'bad'}">${money(c.e-c.s)}</span>`)}${D.limite>0?rw('Dias acima do limite',c.dl,dlt(c.dl,p.dl,String,false)):''}${c.vc.length?'<label>Saídas por categoria</label>'+c.vc.map(x=>br(x[0],x[1],c.vc[0][1],money)).join(''):''}</div>
+<div class="card"><h2>Dívidas agora</h2>${rw('Eu devo',`<span class="bad">${money(dv)}</span>`)}${rw('Devem-me',`<span class="good">${money(dm)}</span>`)}</div>`}
+/* ---- PIN ---- */
+let HID=0;
+async function hp(p,s){const t=s+':'+p;try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){let h=5381;for(const c of t)h=(h*33^c.charCodeAt(0))>>>0;return 'f'+h}}
+const chk=async v=>!!D.pin&&(await hp(String(v),D.pin.s))===D.pin.h;
+function lock(){$('lkP').value='';$('lkM').textContent='';$('lk').classList.add('on');setTimeout(()=>$('lkP').focus(),50)}
+const bq=()=>{try{return JSON.parse(localStorage.getItem('rotina_bloq'))||{}}catch(e){return{}}};
+async function pinTry(){const B=bq(),w=Math.ceil(((B.ate||0)-Date.now())/1000);if(w>0){$('lkM').textContent='Muitas tentativas. Aguarde '+w+' s.';return}
+if(await chk($('lkP').value)){localStorage.removeItem('rotina_bloq');$('lk').classList.remove('on');R();return}
+B.n=(B.n||0)+1;let m='PIN errado.';if(B.n>=5){B.ate=Date.now()+30000;B.n=0;m='PIN errado 5 vezes. Aguarde 30 s.'}
+try{localStorage.setItem('rotina_bloq',JSON.stringify(B))}catch(e){}$('lkP').value='';$('lkM').textContent=m}
+function pinEsq(){if(!confirm('Sem o PIN, a única forma de entrar é apagar todos os dados deste telemóvel. Só faça isto se tiver uma cópia de segurança para importar depois.\n\nApagar tudo?'))return;if(!confirm('Tem a certeza? Isto não se pode desfazer.'))return;try{localStorage.removeItem(K);localStorage.removeItem('rotina_bloq')}catch(e){}location.reload()}
+function pinCfg(){const i=(id,l)=>`<label>${l}</label><input id="${id}" type="password" inputmode="numeric" maxlength="6" autocomplete="off">`;
+$('edB').innerHTML='<h2>PIN</h2>'+(D.pin?i('pA','PIN atual'):'')+i('pN','Novo PIN (4 a 6 números)')+i('pM','Repetir o novo PIN')+'<button class="b" onclick="pinSave()">Guardar PIN</button>'+(D.pin?'<button class="b sec" onclick="pinOff()">Desligar PIN</button>':'')+'<button class="b sec" onclick="eClose()">Cancelar</button><p class="empty">O PIN impede que outra pessoa abra a app, mas não encripta os dados. Se o esquecer, só apagando tudo e importando uma cópia. Faça uma cópia antes.</p>';$('ed').classList.add('on')}
+async function pinSave(){if(D.pin&&!(await chk($('pA').value)))return alert('PIN atual errado.');const n=$('pN').value;if(!/^\d{4,6}$/.test(n))return alert('O PIN deve ter 4 a 6 números.');if(n!==$('pM').value)return alert('Os dois PIN não coincidem.');const sl=uid();D.pin={s:sl,h:await hp(n,sl)};save();eClose();R();toast('PIN guardado.')}
+async function pinOff(){if(!(await chk($('pA').value)))return alert('PIN atual errado.');delete D.pin;save();eClose();R();toast('PIN desligado.')}
+/* ---- retirada / metas / cronómetro ---- */
+function rtAdd(){const v=parseFloat(String($('rtV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const f=$('rtF').value,id='rt'+uid();
+D.valores.push({id:uid(),tipo:'entrada',desc:'Retirada Bejoma',valor:v,cat:'Retirada Bejoma',data:td(),forma:f,origem:'bejoma',bid:id});
+D.fora.push({id:id,tipo:'retirada',data:td(),desc:'Retirada (feita na Bejoma Pessoal)',valor:v,forma:f});
+try{const q=JSON.parse(localStorage.getItem('bejoma_inbox')||'[]')||[];q.push(D.fora[D.fora.length-1]);localStorage.setItem('bejoma_inbox',JSON.stringify(q))}catch(e){}
+$('rtV').value='';save();R();toast('Retirada registada: +'+money(v)+'. Falta avisar a Bejoma Gestão.')}
+const mtDone=m=>{const h=td(),a=m.per==='dia'?h:add(h,-6);return D.ativ.filter(x=>x.cat===m.cat&&x.data>=a&&x.data<=h).reduce((q,x)=>q+x.min,0)};
+function mtAdd(){const c=$('mtC').value,pe=$('mtP').value,hr=parseFloat(String($('mtV').value).replace(',','.'));if(!(hr>0))return alert('Indique as horas da meta.');if(D.metas.some(m=>m.cat===c&&m.per===pe))return alert('Já existe uma meta assim para essa categoria.');D.metas.push({id:uid(),cat:c,per:pe,min:Math.round(hr*60)});$('mtV').value='';save();R()}
+function mtDel(id){lix('metas',id)}
+const mtRow=(m,full)=>{const d=mtDone(m),pc=Math.min(100,Math.round(d/m.min*100)),ok=d>=m.min;return `<div style="margin:8px 0"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(m.cat)} · ${m.per==='dia'?'por dia':'por semana'}</span><b class="${ok?'good':''}">${hm(d)} / ${hm(m.min)}</b></div><div class="bar"><i style="width:${pc}%;background:${ok?'var(--good)':'var(--accent)'}"></i></div><small class="${ok?'good':''}">${ok?'Meta atingida ✓':'Faltam '+hm(m.min-d)}</small>${full?` <button class="mini dng" style="float:right" onclick="mtDel('${m.id}')">✕</button>`:''}</div>`};
+const fT=ms=>{const q=Math.max(0,Math.floor(ms/1000));return pad(Math.floor(q/3600))+':'+pad(Math.floor(q%3600/60))+':'+pad(q%60)};
+function crIni(){const t=$('crN').value.trim();if(!t)return alert('Escreva o que vai fazer.');D.cron={t,cat:$('crC').value,ini:Date.now()};save();R()}
+function crFim(){const c=D.cron;if(!c)return;const ms=Date.now()-c.ini;if(ms>12*3600000&&!confirm('O cronómetro está a correr há '+fT(ms)+'. Guardar mesmo assim?'))return;const m=Math.max(1,Math.round(ms/60000));D.ativ.push({id:uid(),t:c.t,cat:c.cat,data:dstr(new Date(c.ini)),min:m});D.cron=null;save();R();toast('Guardado: '+c.t+' · '+hm(m))}
+function crDesc(){if(!D.cron||!confirm('Descartar este tempo sem guardar?'))return;D.cron=null;save();R()}
+setInterval(()=>{if(!D.cron)return;['crT','crT2'].forEach(i=>{const e=document.getElementById(i);if(e)e.textContent=fT(Date.now()-D.cron.ini)})},1000);
+/* ---- troca / pesquisa / aspeto ---- */
+function trAdd(){const pr=$('trD').value.split('>'),de=pr[0],para=pr[1],v=parseFloat(String($('trV').value).replace(',','.')),tx=parseFloat(String($('trX').value).replace(',','.'))||0;if(!(v>0))return alert('Indique o valor.');const sd=sf(de);if(v+tx>sd+0.005&&!confirm('Em '+FN[de]+' só tem '+money(sd)+'.\n\nRegistar mesmo assim?'))return;
+D.trocas.push({id:uid(),de,para,valor:v,data:td(),desc:FN[de]+' → '+FN[para]});
+if(tx>0)D.valores.push({id:uid(),tipo:'saida',desc:'Taxa da troca',valor:tx,cat:D.vcats.indexOf('Outros')>=0?'Outros':D.vcats[0],data:td(),forma:de});
+$('trV').value='';$('trX').value='';save();R();toast('Troca registada: '+money(v))}
+function trDel(id){lix('trocas',id,()=>'O saldo volta ao que era antes da troca.')}
+const norm=x=>String(x==null?'':x).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+function pesq(){const q=norm($('qS').value).trim();if(!q){$('qR').innerHTML='<div class="empty">Escreva para procurar em tarefas, atividades, valores, dívidas e hábitos.</div>';return}
+const L=[];
+D.tarefas.forEach(x=>{if(norm(x.t+' '+x.cat).indexOf(q)>=0)L.push(['tarefas',x.id,x.t,x.cat+(x.prazo?' · '+fmt(x.prazo):'')+(x.feita?' · feita':'')])});
+D.ativ.forEach(x=>{if(norm(x.t+' '+x.cat).indexOf(q)>=0)L.push(['ativ',x.id,x.t,x.cat+' · '+fmt(x.data)+' · '+hm(x.min)])});
+D.valores.forEach(x=>{if(norm(x.desc+' '+x.cat+' '+x.valor).indexOf(q)>=0)L.push(['valores',x.id,x.desc,(x.tipo==='entrada'?'+':'−')+money(x.valor)+' · '+x.cat+' · '+fmt(x.data)])});
+D.dividas.forEach(x=>{if(norm(x.quem).indexOf(q)>=0)L.push(['dividas',x.id,x.quem,(x.tipo==='devo'?'Devo · ':'Devem-me · ')+(rest(x)>0.005?'falta '+money(rest(x)):'saldada')])});
+D.habitos.forEach(x=>{if(norm(x.nome).indexOf(q)>=0)L.push(['habitos',x.id,x.nome,''])});
+$('qR').innerHTML=L.length?'<div class="empty">'+L.length+' resultado(s)'+(L.length>30?' (mostro 30)':'')+'</div>'+L.slice(0,30).map(i=>`<div class="item"><div><b>${esc(i[2])}</b><small>${LB[i[0]]}${i[3]?' · '+esc(i[3]):''}</small></div><div class="bt">${eb(i[0],i[1])}</div></div>`).join(''):'<div class="empty">Nada encontrado.</div>'}
+function tema(){const t=D.tema||'auto',dk=t==='escuro'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.t=dk?'dark':'light';const m=document.querySelector('meta[name=theme-color]');if(m)m.content=dk?'#14110f':'#9e2630'}
+/* ---- pedidos de dinheiro da Bejoma Gestão (precisam de aprovação) ---- */
+function pdClean(a){return(Array.isArray(a)?a:[]).filter(i=>i&&typeof i.id==='string'&&i.id&&i.id.length<40&&+i.valor>0&&/^\d{4}-\d\d-\d\d$/.test(i.data||'')).map(i=>({id:i.id,data:i.data,desc:String(i.desc||'').slice(0,60),valor:+i.valor,forma:i.forma==='mcx'?'mcx':'din'}))}
+function pdIn(){try{return pdClean(JSON.parse(localStorage.getItem('rotina_pedidos')))}catch(e){return[]}}
+function pdPut(a){try{localStorage.setItem('rotina_pedidos',JSON.stringify(a))}catch(e){}}
+function pdPend(){return pdIn().filter(i=>D.ped.indexOf(i.id)<0)}
+function pdLoad(x){const a=pdIn(),novos=pdClean(x.pedidos).filter(i=>!a.some(y=>y.id===i.id)&&D.ped.indexOf(i.id)<0);novos.forEach(i=>a.push(i));pdPut(a);R();toast(novos.length?novos.length+' pedido(s) da Bejoma Gestão por aprovar.':'Sem pedidos novos neste ficheiro.')}
+function PD(){const L=pdPend(),tot=L.reduce((q,i)=>q+i.valor,0);
+$('pdL').innerHTML=L.length?L.map(i=>`<div class="item"><div><b>${esc(i.desc||'Pedido da Bejoma Gestão')}</b><small>${fmt(i.data)} · entra na Bejoma Gestão em ${FN[i.forma]}</small></div><div style="text-align:right"><b>${money(i.valor)}</b><br><span class="bt" style="justify-content:flex-end;margin-top:4px"><button class="mini" onclick="pdAbrir('${i.id}')">Aprovar</button><button class="mini dng" onclick="pdNao('${i.id}')">Recusar</button></span></div></div>`).join(''):'<div class="empty">Sem pedidos por aprovar.</div>';
+$('apL').innerHTML=D.apr.length?D.apr.slice(-5).reverse().map(a=>`<div class="item"><div><b>${money(a.valor)} · ${esc(a.desc)}</b><small>${fmt(a.data)} · código <b>${esc(a.code)}</b>${a.env?'':' · por enviar'}</small></div>${a.env?'':'<div class="bt"><button class="mini" data-i="'+a.id+'" onclick="aprAbrir(this.dataset.i)">Abrir Gestão</button></div>'}</div>`).join(''):'<div class="empty">Ainda não aprovou nada.</div>';
+$('pdH').innerHTML=L.length?`<div class="card" style="border:2px solid var(--accent)"><b>🔔 ${L.length} pedido(s) de dinheiro da Bejoma Gestão</b><p class="empty" style="margin:4px 0 8px">${money(tot)} · precisa da sua aprovação</p><button class="mini" onclick="go('valores')">Ver pedidos</button></div>`:''}
+var PDI='';
+function pdAbrir(id){const p=pdPend().find(x=>x.id===id);if(!p)return;PDI=id;$('edB').innerHTML=`<h2>Aprovar pedido</h2><p>A Bejoma Gestão pede <b>${money(p.valor)}</b>${p.desc?' ('+esc(p.desc)+')':''}.</p><label>De onde sai o dinheiro</label><select id="paF"><option value="din"${p.forma==='din'?' selected':''}>💵 Dinheiro</option><option value="mcx"${p.forma==='mcx'?' selected':''}>📱 Multicaixa Express</option></select>${D.pin?'<label>Escreva o seu PIN para aprovar</label><input id="paP" type="password" inputmode="numeric" maxlength="6" autocomplete="off">':''}<button class="b" onclick="pdAprovar()">Aprovar e gerar código</button><button class="b sec" onclick="eClose()">Cancelar</button><p class="empty">O dinheiro sai do seu saldo agora. A Bejoma Gestão só o recebe quando escrever o código.</p>`;$('ed').classList.add('on')}
+async function pdAprovar(){const p=pdPend().find(x=>x.id===PDI);if(!p)return eClose();const de=$('paF').value;
+if(D.pin&&!(await chk($('paP').value)))return alert('PIN errado.');
+const sd=sf(de);if(p.valor>sd+0.005&&!confirm('Em '+FN[de]+' só tem '+money(sd)+'.\n\nAprovar mesmo assim?'))return;
+let c;try{c=1000+(crypto.getRandomValues(new Uint32Array(1))[0]%9000)}catch(e){c=1000+Math.floor(Math.random()*9000)}const code=String(c),h=await hp(code,'ap'+p.id),ap={id:p.id,valor:p.valor,forma:p.forma,desc:p.desc||'Pedido da Bejoma Gestão',data:td(),h,code,env:false};
+D.valores.push({id:uid(),tipo:'saida',desc:'Enviado para a Bejoma Gestão · '+ap.desc,valor:p.valor,cat:'Bejoma',data:td(),forma:de,origem:'paraBejoma',bid:p.id});D.ped.push(p.id);D.apr.push(ap);
+try{const q=JSON.parse(localStorage.getItem('bejoma_aprov')||'[]')||[];if(!q.some(y=>y&&y.id===ap.id))q.push({id:ap.id,valor:ap.valor,forma:ap.forma,h:ap.h});localStorage.setItem('bejoma_aprov',JSON.stringify(q))}catch(e){}
+save();R();$('edB').innerHTML=`<h2>Aprovado</h2><p class="empty" style="text-align:center">Código de aprovação</p><div style="font-size:2.6rem;font-weight:800;letter-spacing:.25em;text-align:center;margin:6px 0">${code}</div><p class="empty">Guarde este código. Na Bejoma Gestão vai escrevê-lo para o dinheiro entrar na Caixa. Também fica na lista "Aprovações dadas".</p><button class="b" onclick="aprAbrir('${p.id}')">Abrir a Bejoma Gestão e escrever o código</button><button class="b sec" onclick="aprEnviar()">Enviar por ficheiro</button><button class="b sec" onclick="eClose()">Fechar</button>`;$('ed').classList.add('on')}
+function pdNao(id){if(!confirm('Recusar este pedido?\n\nA Bejoma Gestão continua a mostrá-lo como pendente até você o cancelar lá.'))return;D.ped.push(id);save();R()}
+function aprAbrir(id){const a=D.apr.find(x=>x.id===id);if(!a)return;const u=(D.pedV&&D.pedV[id])||D.urlG;
+if(!u)return alert('Falta o endereço da Bejoma Gestão (Dinheiro → Bejoma Gestão → Ligação). Use "Enviar por ficheiro".');
+a.env=true;save();location.href=u.split('#')[0]+'#aprov='+b64e({id:a.id,valor:a.valor,forma:a.forma,h:a.h,pessoal:location.href.split('#')[0]})}
+async function aprEnviar(){const it=D.apr.filter(a=>!a.env);if(!it.length){eClose();return alert('Não há aprovações por enviar.')}
+const nm='aprovacao-pessoal-'+td()+'.json',j=JSON.stringify({aprTransfer:1,de:'rotina',criado:td(),aprovacoes:it.map(a=>({id:a.id,valor:a.valor,forma:a.forma,h:a.h}))});let ok=false;
+try{const fl=new File([j],nm,{type:'text/plain'});if(navigator.canShare&&navigator.canShare({files:[fl]})){await navigator.share({files:[fl],title:nm});ok=true}}catch(e){if(e&&e.name==='AbortError')return}
+if(!ok){try{const u=URL.createObjectURL(new Blob([j],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download=nm;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},4000)}catch(e){return alert('Não foi possível criar o ficheiro neste navegador.')}}
+try{const q=JSON.parse(localStorage.getItem('bejoma_aprov')||'[]')||[];it.forEach(a=>{if(!q.some(y=>y&&y.id===a.id))q.push({id:a.id,valor:a.valor,forma:a.forma,h:a.h})});localStorage.setItem('bejoma_aprov',JSON.stringify(q))}catch(e){}
+it.forEach(a=>a.env=true);save();eClose();R();toast('Aprovação enviada. Na Bejoma Gestão, escreva o código.')}
+/* ---- compras, contas da casa, despesa rápida, pedir dinheiro à Bejoma Gestão ---- */
+const catCasa=()=>D.vcats.indexOf('Casa')>=0?'Casa':D.vcats[0];
+function saidaRapida(desc,v,cat,f,data){data=data||td();const sd=sf(f);if(v>sd+0.005&&!confirm('Em '+FN[f]+' só tem '+money(sd)+'.\n\nRegistar mesmo assim?'))return false;
+if(D.limite>0){const g=gastoDia(data);if(g+v>D.limite&&!confirm('Com esta saída, o gasto de '+fmt(data)+' fica em '+money(g+v)+', acima do limite de '+money(D.limite)+'.\n\nRegistar mesmo assim?'))return false}
+D.valores.push({id:uid(),tipo:'saida',desc,valor:v,cat,data,forma:f});return true}
+function qAdd(){const v=parseFloat(String($('qV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const d=$('qD').value.trim()||'Despesa';if(saidaRapida(d,v,$('qC').value||catCasa(),$('qF').value)){$('qV').value='';$('qD').value='';save();R();toast('Despesa registada: −'+money(v)+cxMsg())}}
+function cpAdd(){const t=$('cpN').value.trim(),p=parseFloat(String($('cpP').value).replace(',','.'));if(!t)return alert('Escreva o item.');if(!(p>0))return alert('Indique o preço estimado.');D.compras.push({id:uid(),t,qtd:$('cpQ').value.trim(),preco:p,dia:$('cpD').value,cat:$('cpC').value,rep:$('cpR').value,sel:false,feito:false});['cpN','cpQ','cpP','cpD'].forEach(i=>{$(i).value=''});save();R()}
+function cpSel(id){const c=D.compras.find(x=>x.id===id);if(!c)return;c.sel=!c.sel;save(1);R()}
+function cpDel(id){lix('compras',id)}
+function cpComprar(){const sel=D.compras.filter(c=>!c.feito&&c.sel);if(!sel.length)return alert('Marque os itens que comprou.');const es=sel.reduce((q,c)=>q+c.preco,0),tx=String($('cpPg').value).replace(',','.').trim(),v=tx===''?es:parseFloat(tx);if(!(v>0))return alert('Indique o total pago.');
+const d='Compras: '+sel.map(c=>c.t).join(', ').slice(0,60);if(!saidaRapida(d,v,catCasa(),$('cpF').value))return;
+sel.forEach(c=>{c.feito=true;c.sel=false;c.fim=td();if(c.rep)D.compras.push({id:uid(),t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,sel:false,feito:false})});$('cpPg').value='';save();R();toast('Compra registada: −'+money(v)+cxMsg())}
+function ctDue(c,h){const ult=new Date(+h.slice(0,4),+h.slice(5,7),0).getDate();return h.slice(0,8)+pad(Math.min(Math.max(1,+c.dia||1),ult))}
+function ctAdd(){const n=$('ctN').value.trim(),v=parseFloat(String($('ctV').value).replace(',','.')),d=parseInt($('ctDia').value,10);if(!n)return alert('Escreva o nome da conta.');if(!(v>0))return alert('Indique o valor.');if(!(d>=1&&d<=31))return alert('Indique o dia do mês (1 a 31).');D.contas.push({id:uid(),nome:n,valor:v,dia:d,pago:''});['ctN','ctV','ctDia'].forEach(i=>{$(i).value=''});save();R()}
+function ctDel(id){lix('contas',id)}
+function ctPagar(id){const c=D.contas.find(x=>x.id===id);if(!c)return;if(saidaRapida(c.nome,c.valor,catCasa(),$('ctF').value)){c.pago=td().slice(0,7);save();R();toast('Conta paga: −'+money(c.valor)+cxMsg())}}
+const b64e=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const b64d=t=>JSON.parse(decodeURIComponent(escape(atob(String(t).replace(/-/g,'+').replace(/_/g,'/')))));
+function ugCopiar(){const u=location.href.split('#')[0];try{navigator.clipboard.writeText(u).then(()=>toast('Endereço copiado.')).catch(()=>prompt('Copie este endereço:',u))}catch(e){prompt('Copie este endereço:',u)}}
+function ugSave(){const u=$('ugI').value.trim();if(u&&!/^https?:\/\//i.test(u))return alert('O endereço deve começar por http:// ou https://');D.urlG=u;save(1);R();toast(u?'Endereço guardado.':'Endereço apagado.')}
+function ugGo(hash){if(!D.urlG){alert('Primeiro indique o endereço da Bejoma Gestão em Dinheiro → Bejoma Gestão → Ligação.');return false}location.href=D.urlG.split('#')[0]+(hash?'#'+hash:'');return true}
+function pgCriar(){const v=parseFloat(String($('pgV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const p={id:'q'+uid(),data:td(),desc:$('pgD').value.trim().slice(0,60),valor:v,forma:$('pgF').value==='mcx'?'mcx':'din',estado:'pendente'};D.pedS.push(p);$('pgV').value='';$('pgD').value='';save();R();pgAbrir(p.id)}
+function pgAbrir(id){const p=D.pedS.find(x=>x.id===id);if(!p)return;ugGo('pedido='+b64e({id:p.id,valor:p.valor,forma:p.forma,desc:p.desc,data:p.data,volta:location.href.split('#')[0]}))}
+function pgCanc(id){if(!confirm('Cancelar este pedido?'))return;const p=D.pedS.find(x=>x.id===id);if(p){p.estado='cancelado';D.aprG=D.aprG.filter(x=>x.id!==id);save();R()}}
+var PGL={n:0,until:0};
+async function pgCodigo(id){const p=D.pedS.find(x=>x.id===id&&x.estado==='pendente');if(!p)return;const a=D.aprG.find(x=>x.id===id&&Math.abs(x.valor-p.valor)<0.005);if(!a)return alert('Ainda não há aprovação da Bejoma Gestão para este pedido.');
+const w=Math.ceil((PGL.until-Date.now())/1000);if(w>0)return alert('Aguarde '+w+' s para tentar de novo.');
+const c=prompt('Escreva o código de aprovação que a Bejoma Gestão mostrou:');if(c===null)return;
+if((await hp(c.trim(),'ap'+id))!==a.h){PGL.n++;if(PGL.n>=3){PGL.n=0;PGL.until=Date.now()+30000;return alert('Código errado 3 vezes. Aguarde 30 s.')}return alert('Código errado. Tente de novo.')}
+PGL.n=0;if(!D.valores.some(v=>v.bid==='ap'+id))D.valores.push({id:uid(),tipo:'entrada',desc:'Retirada Bejoma'+(p.desc?' · '+p.desc:''),valor:p.valor,cat:'Retirada Bejoma',data:td(),forma:p.forma,origem:'bejoma',bid:'ap'+id});p.estado='recebido';D.aprG=D.aprG.filter(x=>x.id!==id);save();R();toast('Código certo. Recebido: +'+money(p.valor))}
+function hashIn(){const h=location.hash||'';
+if(h.indexOf('#pedidog=')===0){let q;try{q=b64d(h.slice(9))}catch(e){q=null}try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+if(!q||typeof q.id!=='string'||!q.id||q.id.length>40||!(+q.valor>0))return alert('O pedido recebido não é válido.');
+if(/^https?:\/\//i.test(q.volta||'')){D.pedV=D.pedV||{};D.pedV[q.id]=String(q.volta).slice(0,300);if(!D.urlG)D.urlG=String(q.volta).slice(0,300)}
+const a=pdIn();if(D.ped.indexOf(q.id)<0&&!a.some(y=>y.id===q.id)){a.push({id:q.id,data:/^\d{4}-\d\d-\d\d$/.test(q.data||'')?q.data:td(),desc:String(q.desc||'').slice(0,60),valor:+q.valor,forma:q.forma==='mcx'?'mcx':'din'});pdPut(pdClean(a))}
+save(1);R();go('valores');setTimeout(()=>pdAbrir(q.id),150);return}
+if(h.indexOf('#aprov=')!==0)return;let a;try{a=b64d(h.slice(7))}catch(e){a=null}try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+if(!a||typeof a.id!=='string'||!(+a.valor>0)||typeof a.h!=='string')return alert('A aprovação recebida não é válida.');
+if(a.gestao&&!D.urlG)D.urlG=String(a.gestao);if(!D.aprG.some(x=>x.id===a.id))D.aprG.push({id:a.id,valor:+a.valor,forma:a.forma==='mcx'?'mcx':'din',h:a.h});save(1);R();go('valores');toast('✅ A Bejoma Gestão aprovou. Escreva o código para receber o dinheiro.')}
+function NV(){const h=td();
+const catQ=$('qC').value;$('qC').innerHTML=D.vcats.map(c=>`<option>${esc(c)}</option>`).join('');$('qC').value=catQ||(D.vcats.indexOf('Comida')>=0?'Comida':D.vcats[0]);
+const pe=D.compras.filter(c=>!c.feito).sort((a,b)=>(a.dia||'9')<(b.dia||'9')?-1:1),est=pe.reduce((q,c)=>q+c.preco,0),sel=pe.filter(c=>c.sel),es=sel.reduce((q,c)=>q+c.preco,0),sd=sf('din')+sf('mcx');
+$('cpT').innerHTML=`<div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><div class="k">Por comprar</div><div class="v">${money(est)}</div><small>${pe.length} item(ns)</small></div><div class="stat"><div class="k">Caixa</div><div class="v ${est>sd?'bad':'good'}">${money(sd)}</div></div></div>${est>sd?`<div class="bad" style="margin-top:6px">⚠️ A lista custa mais do que o seu saldo (faltam ${money(est-sd)}).</div>`:''}`;
+const row=c=>`<div class="item"><div class="l">${ck(c.sel,`cpSel('${c.id}')`)}<div>${esc(c.t)}${c.qtd?' · '+esc(c.qtd):''}<small class="${c.dia&&c.dia<h?'bad':''}">${esc(c.cat)}${c.dia?' · '+fmt(c.dia):''}${c.rep?' · 🔁 semanal':''} · ${money(c.preco)}</small></div></div><div class="bt"><button class="mini" onclick="cpUm('${c.id}')">Comprei</button>${eb('compras',c.id)}<button class="mini dng" onclick="cpDel('${c.id}')">✕</button></div></div>`,co=D.compras.filter(c=>c.feito).slice(-6).reverse();
+$('cpL').innerHTML=(pe.length?pe.map(row).join(''):'<div class="empty">Lista vazia. Acrescente o que precisa comprar.</div>')+(co.length?'<small class="empty">Comprados recentemente</small>'+co.map(c=>`<div class="item"><div>${esc(c.t)}<small>${fmt(c.fim)} · ${money(c.preco)}</small></div></div>`).join(''):'');
+$('cpSel').textContent=sel.length?sel.length+' item(ns) marcado(s) · estimado '+money(es):'Marque acima os itens que comprou.';$('cpPg').placeholder=es?'em branco = '+money(es):'';cpPrev();
+$('ctL').innerHTML=D.contas.length?D.contas.slice().sort((a,b)=>a.dia-b.dia).map(c=>{const ds=ctDue(c,h),pg=c.pago===h.slice(0,7),df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1),st=pg?'✅ Paga este mês':df<0?'⚠️ atrasada '+(-df)+' dia(s)':df===0?'vence hoje':'vence '+fmt(ds)+' · em '+df+' dia(s)';
+return `<div class="item"><div><b>${esc(c.nome)}</b><small class="${!pg&&df<0?'bad':''}">${money(c.valor)} · dia ${c.dia} · ${st}</small></div><div class="bt">${pg?'':`<button class="mini" onclick="ctPagar('${c.id}')">Pagar</button>`}${eb('contas',c.id)}<button class="mini dng" onclick="ctDel('${c.id}')">✕</button></div></div>`}).join(''):'<div class="empty">Sem contas. Acrescente a renda, a luz, a água, a internet…</div>';
+const L=D.pedS.filter(p=>p.estado==='pendente'),ap=p=>D.aprG.some(x=>x.id===p.id&&Math.abs(x.valor-p.valor)<0.005);
+$('pgL').innerHTML=L.length?L.map(p=>`<div class="item"><div><b>${esc(p.desc||'Pedido')}</b><small>${fmt(p.data)} · entra em ${FN[p.forma]} · ${ap(p)?'✅ aprovado, falta o código':'⏳ aguarda aprovação na Bejoma Gestão'}</small></div><div style="text-align:right"><b>${money(p.valor)}</b><br><span class="bt" style="justify-content:flex-end;margin-top:4px">${ap(p)?`<button class="mini" onclick="pgCodigo('${p.id}')">Escrever código</button>`:`<button class="mini" onclick="pgAbrir('${p.id}')">Abrir Bejoma Gestão</button>`}<button class="mini dng" onclick="pgCanc('${p.id}')">Cancelar</button></span></div></div>`).join(''):'<div class="empty">Sem pedidos pendentes.</div>';
+$('pgH').innerHTML=L.length?`<div class="card" style="border:2px solid var(--accent)"><b>${L.some(ap)?'✅ A Bejoma Gestão aprovou. Falta escrever o código.':'⏳ '+L.length+' pedido(s) à Bejoma Gestão por aprovar'}</b><p class="empty" style="margin:4px 0 8px">${money(L.reduce((q,p)=>q+p.valor,0))}</p><button class="mini" onclick="go('valores')">Ver pedidos</button></div>`:'';
+if(document.activeElement!==$('ugI'))$('ugI').value=D.urlG||'';$('ugT').textContent=D.urlG?'Ligada a: '+D.urlG:'Ainda não ligada.';$('ugSelf').value=location.href.split('#')[0]}
+/* ---- agenda / horários / alertas ---- */
+const TP={trabalho:['💼','Trabalho'],descanso:['😴','Descanso'],refeicao:['🍽️','Refeição'],estudo:['📚','Estudo'],pessoal:['🏃','Pessoal'],outro:['📌','Outro']};
+const h2m=x=>{const a=String(x||'').split(':');return(+a[0]||0)*60+(+a[1]||0)},m2h=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
+const bDur=b=>{const i=h2m(b.ini),f=h2m(b.fim);return f>i?f-i:f+1440-i};
+const dlab=ds=>{const t=new Date(ds+'T12:00:00').toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'}),h=td();return(ds===h?'Hoje · ':ds===add(h,1)?'Amanhã · ':'')+t.charAt(0).toUpperCase()+t.slice(1)};
+function bDay(ds){return D.blocos.filter(b=>b.data?b.data===ds:(b.dias||[]).indexOf(wd(ds))>=0)}
+function agDay(ds){const L=bDay(ds).map(b=>{const i=h2m(b.ini),f=h2m(b.fim);return{k:'b',id:b.id,t:b.t,tipo:b.tipo,ini:i,fim:f<=i?f+1440:f,al:b.alerta||0,b}});
+D.tarefas.filter(t=>!t.feita&&t.prazo===ds&&t.hora).forEach(t=>{const i=h2m(t.hora);L.push({k:'t',id:t.id,t:t.t,ini:i,fim:i+30,al:10,tk:t})});return L.sort((a,b)=>a.ini-b.ini)}
+function agSum(ds){const B=bDay(ds),sm=t=>B.filter(b=>b.tipo===t).reduce((q,b)=>q+bDur(b),0),tr=B.filter(b=>b.tipo==='trabalho');return{tr:sm('trabalho'),de:sm('descanso'),n:B.length,lg:tr.length?Math.max.apply(null,tr.map(b=>{const i=h2m(b.ini),f=h2m(b.fim);return f<=i?f+1440:f})):null,cats:[...new Set(tr.map(b=>b.cat).filter(Boolean))]}}
+const agNowMin=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
+function agBan(){const ds=td(),L=agDay(ds),n=agNowMin(),sm=agSum(ds),nx=L.find(i=>i.ini>n);let h='';
+L.filter(i=>i.k==='b'&&i.ini<=n&&n<i.fim).forEach(i=>{const rs=i.fim-n;h+=`<div>🟢 <b>Agora:</b> ${TP[i.tipo][0]} ${esc(i.t)} · até ${m2h(i.fim)} (faltam ${hm(rs)})</div>`;if(i.tipo==='trabalho'&&sm.lg===i.fim&&rs<=30)h+=`<div class="bad">⏳ Largar o trabalho às ${m2h(i.fim)}: faltam ${rs} min</div>`});
+if(nx)h+=`<div>⏭️ <b>A seguir:</b> ${nx.k==='b'?TP[nx.tipo][0]+' ':'⏰ '}${esc(nx.t)} às ${m2h(nx.ini)} · em ${hm(nx.ini-n)}</div>`;
+const html=h?`<div class="card" style="border:2px solid var(--accent)">${h}</div>`:'';['agH','agB'].forEach(i=>{const e=document.getElementById(i);if(e)e.innerHTML=html})}
+function alFired(){try{const o=JSON.parse(localStorage.getItem('rotina_al'));return o&&o.d===td()?o:{d:td(),k:{}}}catch(e){return{d:td(),k:{}}}}
+function alar(tt,body){toast('🔔 '+tt+(body?' · '+body:''));try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}
+try{if('Notification' in window&&Notification.permission==='granted'){const o={body:body||'',tag:'rotina-'+tt,icon:'icon-192.png'};if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(g=>g?g.showNotification(tt,o):new Notification(tt,o)).catch(()=>{});else new Notification(tt,o)}}catch(e){}}
+function agTick(){agBan();const ds=td(),L=agDay(ds),n=agNowMin(),F=alFired(),sm=agSum(ds);let ch=false;
+const fire=(k,tt,body)=>{if(F.k[k])return;F.k[k]=1;ch=true;alar(tt,body)};
+L.forEach(i=>{const hh=m2h(i.ini);
+if(i.al>0&&n>=i.ini-i.al&&n<i.ini)fire(i.k+i.id+'a',(i.k==='b'?TP[i.tipo][0]+' ':'⏰ ')+i.t,'começa às '+hh+' (em '+(i.ini-n)+' min)');
+if(n>=i.ini&&n<i.ini+5&&(i.al>0||i.k==='b'))fire(i.k+i.id+'s','Começa agora: '+i.t,hh+(i.k==='b'?' – '+m2h(i.fim):''));
+if(i.k==='b'&&i.tipo==='trabalho'&&i.fim===sm.lg&&i.fim<1440&&n>=i.fim&&n<i.fim+5)fire('b'+i.id+'e','Hora de largar o trabalho','Terminou o último bloco de trabalho. Descanse!')});
+if(ch)try{localStorage.setItem('rotina_al',JSON.stringify(F))}catch(e){}}
+setInterval(agTick,20000);
+function bFrm(p){return `<label>O que é?</label><input id="${p}T" placeholder="ex.: Trabalho na loja"><label>Tipo</label><select id="${p}Ti">${Object.keys(TP).map(k=>`<option value="${k}">${TP[k][0]} ${TP[k][1]}</option>`).join('')}</select>
+<div style="display:flex;gap:10px"><div style="flex:1"><label>Início</label><input id="${p}I" type="time" value="08:00"></div><div style="flex:1"><label>Fim</label><input id="${p}F" type="time" value="12:00"></div></div>
+<label>Repetição</label><select id="${p}R" onchange="bRp('${p}')"><option value="dia">Todos os dias</option><option value="uteis">Segunda a sexta</option><option value="dias">Dias escolhidos</option><option value="data">Só num dia</option></select>
+<div id="${p}Dw" style="display:none"><div class="strip">${[1,2,3,4,5,6,0].map(i=>`<label style="margin:0;display:flex;flex-direction:column;align-items:center;font-size:.7rem;flex:1">${DN[i]}<input type="checkbox" id="${p}D${i}" style="width:22px;height:22px"></label>`).join('')}</div></div>
+<div id="${p}Dd" style="display:none"><label>Data</label><input id="${p}Dt" type="date"></div>
+<label>Avisar antes</label><select id="${p}A"><option value="0">Sem aviso</option><option value="5">5 min antes</option><option value="10" selected>10 min antes</option><option value="15">15 min antes</option><option value="30">30 min antes</option><option value="60">1 hora antes</option></select>
+<label>Categoria (para contar as horas feitas)</label><select id="${p}C"><option value="">(nenhuma)</option>${D.cats.map(c=>`<option>${esc(c)}</option>`).join('')}</select>`}
+function bRp(p){const v=$(p+'R').value;$(p+'Dw').style.display=v==='dias'?'block':'none';$(p+'Dd').style.display=v==='data'?'block':'none'}
+function bRd(p){const t=$(p+'T').value.trim(),i=$(p+'I').value,f=$(p+'F').value,rp=$(p+'R').value;if(!t){alert('Escreva o nome do bloco.');return null}if(!i||!f){alert('Indique a hora de início e de fim.');return null}if(i===f){alert('O início e o fim não podem ser iguais.');return null}
+let dias=[],data='';if(rp==='dia')dias=[0,1,2,3,4,5,6];else if(rp==='uteis')dias=[1,2,3,4,5];else if(rp==='dias'){dias=[0,1,2,3,4,5,6].filter(k=>$(p+'D'+k).checked);if(!dias.length){alert('Escolha pelo menos um dia da semana.');return null}}else{data=$(p+'Dt').value;if(!data){alert('Escolha a data.');return null}}
+return{t,tipo:$(p+'Ti').value,ini:i,fim:f,dias,data,alerta:+$(p+'A').value,cat:$(p+'C').value}}
+function bSet(p,b){$(p+'T').value=b.t;$(p+'Ti').value=b.tipo;$(p+'I').value=b.ini;$(p+'F').value=b.fim;const d=b.dias||[];$(p+'R').value=b.data?'data':d.length===7?'dia':(d.length===5&&[1,2,3,4,5].every(k=>d.indexOf(k)>=0))?'uteis':'dias';[0,1,2,3,4,5,6].forEach(k=>{$(p+'D'+k).checked=d.indexOf(k)>=0});$(p+'Dt').value=b.data||'';$(p+'A').value=String(b.alerta||0);$(p+'C').value=b.cat||'';bRp(p)}
+function bAdd(){const b=bRd('bn');if(!b)return;D.blocos.push(Object.assign({id:uid()},b));$('bnT').value='';save();R();toast('Bloco guardado.')}
+function bEdit(id){const b=D.blocos.find(x=>x.id===id);if(!b)return;EI=id;$('edB').innerHTML='<h2>Editar bloco</h2>'+bFrm('be')+'<button class="b" onclick="bSave()">Guardar alterações</button><button class="b sec" onclick="eClose()">Cancelar</button>';bSet('be',b);$('ed').classList.add('on')}
+function bSave(){const b=D.blocos.find(x=>x.id===EI);if(!b)return eClose();const n=bRd('be');if(!n)return;Object.assign(b,n);save();eClose();R()}
+function bModelo(){if(D.blocos.length||!confirm('Criar uma rotina de exemplo (acordar, trabalho, almoço, pausa, exercício e dormir)? Pode editar ou apagar tudo depois.'))return;
+const m=(t,tipo,ini,fim,dias,al)=>D.blocos.push({id:uid(),t,tipo,ini,fim,dias,data:'',alerta:al,cat:''}),A=[0,1,2,3,4,5,6],U=[1,2,3,4,5,6];
+m('Acordar e preparar-me','pessoal','06:30','07:30',A,10);m('Trabalho (manhã)','trabalho','08:00','12:00',U,10);m('Almoço','refeicao','12:00','13:00',A,0);m('Pausa e descanso','descanso','13:00','14:00',U,0);m('Trabalho (tarde)','trabalho','14:00','18:00',U,10);m('Exercício e tempo livre','pessoal','18:00','19:00',A,10);m('Dormir','descanso','22:30','06:30',A,15);save();R()}
+function agNotif(){if(!('Notification' in window))return alert('Este navegador não suporta notificações.');Notification.requestPermission().then(()=>R())}
+function fTog(id){const x=D.tarefas.find(a=>a.id===id);if(!x)return;const h=td();if(x.foco===h)x.foco='';else{if(D.tarefas.filter(t=>!t.feita&&t.foco===h).length>=3)return alert('O foco de hoje tem no máximo 3 tarefas. Tire uma ⭐ primeiro.');x.foco=h}save();R()}
+function rvH(n){const h=td();(D.dia[h]=D.dia[h]||{}).hum=n;save(1);R()}
+function rvSave(){const h=td();(D.dia[h]=D.dia[h]||{}).nota=$('rvT').value;save(1)}
+function agDayHtml(ds){const n=agNowMin(),tdy=ds===td(),L=agDay(ds),sem=D.tarefas.filter(t=>!t.feita&&t.prazo===ds&&!t.hora);
+const it=i=>{if(i.k==='t')return tItem(i.tk);const b=i.b,now=tdy&&i.ini<=n&&n<i.fim,d=b.dias||[],rep=b.data?'só '+fmt(b.data):d.length===7?'todos os dias':(d.length===5&&[1,2,3,4,5].every(k=>d.indexOf(k)>=0))?'seg a sex':d.slice().sort().map(k=>DN[k]).join(', ');
+return `<div class="item"${now?' style="border:2px solid var(--accent);border-radius:14px;padding:8px"':''}><div><b>${TP[b.tipo][0]} ${esc(b.t)}</b><small>${b.ini}–${b.fim} · ${hm(bDur(b))} · ${rep}${b.alerta?' · 🔔 '+b.alerta+' min antes':''}</small></div><div class="bt"><button class="mini" onclick="bEdit('${b.id}')">✎</button><button class="mini dng" onclick="lix('blocos','${b.id}')">✕</button></div></div>`};
+return L.map(it).join('')+(sem.length?'<small class="empty">Sem hora marcada</small>'+sem.map(tItem).join(''):'')}
+function agSumHtml(ds){const s=agSum(ds);if(!s.n)return '';const w=D.maxTrab>0&&s.tr>D.maxTrab*60;return `<div class="grid" style="grid-template-columns:1fr 1fr 1fr"><div class="stat"><div class="k">Trabalho</div><div class="v">${hm(s.tr)}</div></div><div class="stat"><div class="k">Descanso</div><div class="v">${hm(s.de)}</div></div><div class="stat"><div class="k">Largar às</div><div class="v">${s.lg==null?'—':m2h(s.lg)}</div></div></div>${w?`<div class="bad" style="margin-top:6px">⚠️ Passa do máximo de ${D.maxTrab} h de trabalho por dia.</div>`:''}`}
+function AG(){const v=+$('agV').value||0,h=td();
+if(v===7){let tr=0,de=0,html='';for(let i=0;i<7;i++){const ds=add(h,i),s=agSum(ds),x=agDayHtml(ds);tr+=s.tr;de+=s.de;if(x)html+=`<b style="display:block;margin-top:10px">${dlab(ds)}</b>`+x}
+$('agS').innerHTML=tr||de?`<div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><div class="k">Trabalho na semana</div><div class="v">${hm(tr)}</div></div><div class="stat"><div class="k">Descanso</div><div class="v">${hm(de)}</div></div></div>`:'';$('agL').innerHTML=html||'<div class="empty">Nada planeado nos próximos 7 dias.</div>'}
+else{const ds=add(h,v),x=agDayHtml(ds);$('agS').innerHTML=agSumHtml(ds);$('agL').innerHTML=x||'<div class="empty">Nada planeado para '+(v?'amanhã':'hoje')+'. Crie um bloco abaixo.</div>'}
+$('agM').innerHTML=D.blocos.length?'':'<button class="b sec" onclick="bModelo()">Usar modelo de rotina (editável)</button>';
+const cv=$('bnC').value;$('bnC').innerHTML='<option value="">(nenhuma)</option>'+D.cats.map(c=>`<option>${esc(c)}</option>`).join('');$('bnC').value=cv;
+$('agN').textContent='Notificações: '+(!('Notification' in window)?'não suportadas neste navegador.':Notification.permission==='granted'?'ativas.':'desligadas (toque em "Ativar notificações").');
+if(document.activeElement!==$('agMx'))$('agMx').value=D.maxTrab||'';
+agBan();
+const s=agSum(h),jn=$('jnC');jn.style.display=s.n?'block':'none';
+if(s.n){const fe=D.ativ.filter(a=>a.data===h&&s.cats.indexOf(a.cat)>=0).reduce((q,a)=>q+a.min,0),pc=s.tr&&s.cats.length?Math.min(100,Math.round(fe/s.tr*100)):0;
+$('jnB').innerHTML=`<div style="display:flex;justify-content:space-between"><span>💼 Trabalho${s.cats.length?' feito':' planeado'}</span><b>${s.cats.length?hm(fe)+' de ':''}${hm(s.tr)}</b></div>${s.cats.length?`<div class="bar"><i style="width:${pc}%"></i></div>`:''}<div style="display:flex;justify-content:space-between;margin-top:8px"><span>😴 Descanso planeado</span><b>${hm(s.de)}</b></div><div style="display:flex;justify-content:space-between;margin-top:8px"><span>🚪 Largar o trabalho</span><b>${s.lg==null?'—':m2h(s.lg)}</b></div>`}
+const fc=D.tarefas.filter(t=>!t.feita&&t.foco===h);$('fcL').innerHTML=fc.length?fc.map(tItem).join(''):'<div class="empty">Toque em ☆ numa tarefa para a pôr no foco de hoje (no máximo 3).</div>';
+const dd=D.dia[h]||{};$('rvB').innerHTML=['😞','🙁','😐','🙂','😄'].map((e,i)=>`<button class="dd${dd.hum===i+1?' on':''}" style="font-size:1.2rem" onclick="rvH(${i+1})">${e}</button>`).join('');if(document.activeElement!==$('rvT'))$('rvT').value=dd.nota||''}
+function icsEsc(t){return String(t).replace(/\\/g,'\\\\').replace(/[,;]/g,m=>'\\'+m).replace(/\r?\n/g,'\\n')}
+const icsD=(ds,m)=>ds.replace(/-/g,'')+'T'+pad(Math.floor(m/60)%24)+pad(m%60)+'00';
+async function agIcs(){const h=td(),RD=['SU','MO','TU','WE','TH','FR','SA'],nw=new Date(),stp=nw.getUTCFullYear()+pad(nw.getUTCMonth()+1)+pad(nw.getUTCDate())+'T'+pad(nw.getUTCHours())+pad(nw.getUTCMinutes())+pad(nw.getUTCSeconds())+'Z',L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Rotina Diaria do Benjamim//PT','CALSCALE:GREGORIAN','X-WR-CALNAME:Bejoma Pessoal'];let n=0;
+const ev=(id,ds,i,f,t,rule,al)=>{const fe=f<=i?f+1440:f;let ed=ds,fm=fe;if(fe>=1440){ed=add(ds,1);fm=fe-1440}L.push('BEGIN:VEVENT','UID:'+id+'@rotina','DTSTAMP:'+stp,'DTSTART:'+icsD(ds,i),'DTEND:'+icsD(ed,fm),'SUMMARY:'+icsEsc(t));if(rule)L.push('RRULE:'+rule);if(al>0)L.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEsc(t),'TRIGGER:-PT'+al+'M','END:VALARM');L.push('END:VEVENT');n++};
+D.blocos.forEach(b=>{const i=h2m(b.ini),f=h2m(b.fim),nome=TP[b.tipo][0]+' '+b.t;if(b.data){if(b.data>=h)ev(b.id,b.data,i,f,nome,'',b.alerta);return}
+let d=h;for(let k=0;k<7;k++){const dd=add(h,k);if(b.dias.indexOf(wd(dd))>=0){d=dd;break}}ev(b.id,d,i,f,nome,b.dias.length<7?'FREQ=WEEKLY;BYDAY='+b.dias.map(k=>RD[k]).join(','):'FREQ=DAILY',b.alerta)});
+D.tarefas.filter(t=>!t.feita&&t.hora&&t.prazo&&t.prazo>=h).forEach(t=>{const i=h2m(t.hora);ev('t'+t.id,t.prazo,i,i+30,'⏰ '+t.t,'',10)});
+if(!n)return alert('Ainda não há blocos nem tarefas com hora para exportar.');L.push('END:VCALENDAR');
+const j=L.join('\r\n'),nm='agenda-bejoma-pessoal.ics';let ok=false;
+try{const fl=new File([j],nm,{type:'text/calendar'});if(navigator.canShare&&navigator.canShare({files:[fl]})){await navigator.share({files:[fl],title:nm});ok=true}}catch(e){if(e&&e.name==='AbortError')return}
+if(!ok){try{const u=URL.createObjectURL(new Blob([j],{type:'text/calendar'})),a=document.createElement('a');a.href=u;a.download=nm;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},4000)}catch(e){return alert('Não foi possível criar o ficheiro neste navegador.')}}
+toast('Agenda exportada ('+n+' eventos). Abra o ficheiro para a juntar ao calendário do telemóvel, que avisa mesmo com a app fechada.')}
+/* ---- avisar a Bejoma Gestão das retiradas feitas aqui ---- */
+const foraOk=()=>D.fora.filter(i=>D.valores.some(v=>v.bid===i.id));
+async function foraEnviar(){const it=foraOk();if(!it.length){D.fora=[];save();R();return alert('Não há retiradas por avisar.')}
+const nm='pessoal-para-gestao-'+td()+'.json',j=JSON.stringify({bejTransfer:1,de:'rotina',criado:td(),itens:it});let ok=false;
+try{const fl=new File([j],nm,{type:'text/plain'});if(navigator.canShare&&navigator.canShare({files:[fl]})){await navigator.share({files:[fl],title:nm});ok=true}}catch(e){if(e&&e.name==='AbortError')return}
+if(!ok){try{const u=URL.createObjectURL(new Blob([j],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download=nm;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},4000)}catch(e){return alert('Não foi possível criar o ficheiro neste navegador.')}}
+try{const q=JSON.parse(localStorage.getItem('bejoma_inbox')||'[]')||[];it.forEach(i=>{if(!q.some(y=>y&&y.id===i.id))q.push(i)});localStorage.setItem('bejoma_inbox',JSON.stringify(q))}catch(e){}
+D.fora=[];save();R();toast('Enviado à Bejoma Gestão: '+it.length+' retirada(s). Na Bejoma Gestão, importe em Caixa.')}
+/* ---- enviar dinheiro para a Bejoma Gestão ---- */
+function pB(v){return v.origem==='paraBejoma'}
+async function pbEnviar(){const v=parseFloat(String($('pbV').value).replace(',','.')),f=$('pbF').value,d=$('pbD').value.trim().slice(0,50);if(!(v>0))return alert('Indique o valor.');
+const sd=sf(f);if(v>sd+0.005&&!confirm('Em '+FN[f]+' só tem '+money(sd)+'.\n\nEnviar mesmo assim?'))return;
+const it={id:'r'+uid(),data:td(),desc:d||'Da Bejoma Pessoal',valor:v,forma:f},nm='pessoal-para-gestao-'+td()+'.json',j=JSON.stringify({bejTransfer:1,de:'rotina',criado:td(),itens:[it]});let ok=false;
+try{const fl=new File([j],nm,{type:'text/plain'});if(navigator.canShare&&navigator.canShare({files:[fl]})){await navigator.share({files:[fl],title:nm});ok=true}}catch(e){if(e&&e.name==='AbortError')return}
+if(!ok){try{const u=URL.createObjectURL(new Blob([j],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download=nm;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},4000)}catch(e){return alert('Não foi possível criar o ficheiro neste navegador.')}}
+try{const a=JSON.parse(localStorage.getItem('bejoma_inbox')||'[]')||[];a.push(it);localStorage.setItem('bejoma_inbox',JSON.stringify(a))}catch(e){}
+D.valores.push({id:uid(),tipo:'saida',desc:'Enviado para a Bejoma'+(d?' · '+d:''),valor:v,cat:'Bejoma',data:td(),forma:f,origem:'paraBejoma',bid:it.id});
+$('pbV').value='';$('pbD').value='';save();R();toast('Enviado: −'+money(v)+'. Na Bejoma Gestão, importe em Caixa.')}
+/* ---- ligação à Bejoma Gestão ---- */
+let BJL=[];
+const bjClean=a=>(Array.isArray(a)?a:[]).filter(i=>i&&typeof i.id==='string'&&i.id&&i.id.length<40&&+i.valor>0&&/^\d{4}-\d\d-\d\d$/.test(i.data||'')).map(i=>({id:i.id,data:i.data,desc:String(i.desc||'Retirada').slice(0,60),valor:+i.valor,forma:i.forma==='mcx'?'mcx':'din',comida:!!i.comida}));
+const bjIn=()=>{try{return bjClean(JSON.parse(localStorage.getItem('rotina_inbox')))}catch(e){return[]}};
+const bjPend=()=>bjIn().filter(i=>D.bj.indexOf(i.id)<0);
+function bjPut(a){try{localStorage.setItem('rotina_inbox',JSON.stringify(a))}catch(e){}}
+function bjFile(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{el.value='';let n;try{const x=JSON.parse(r.result);if(x&&x.pedTransfer===1){pdLoad(x);return}if(!x||x.rotTransfer!==1)throw 0;n=bjClean(x.itens)}catch(e){return alert('Este ficheiro não é de retiradas da Bejoma Gestão.')}
+const a=bjIn();n.forEach(i=>{if(!a.some(y=>y.id===i.id))a.push(i)});bjPut(a);if(!bjPend().length)return alert('Não há retiradas novas neste ficheiro. As que já importou são ignoradas.');bjRev()};r.readAsText(f)}
+function bjRev(){BJL=bjPend();if(!BJL.length)return toast('Sem retiradas novas da Bejoma Gestão.');
+$('edB').innerHTML='<h2>Retiradas da Bejoma Gestão</h2><p class="empty">Marque as que quer importar como entrada.</p>'+BJL.map((i,k)=>`<div class="item"><label style="display:flex;gap:10px;align-items:center;margin:0;font-size:1rem;color:var(--text);flex:1"><input type="checkbox" id="bq${k}" style="width:22px;height:22px;flex:none"${i.comida?'':' checked'}><span><b>${esc(i.desc)}</b><small style="display:block;color:var(--sub);font-weight:400">${fmt(i.data)} · ${FN[i.forma]}${i.comida?' · comida / gasto pessoal':''}</small></span></label><b>${money(i.valor)}</b></div>`).join('')+'<button class="b" onclick="bjOk()">Importar selecionadas</button><button class="b sec" onclick="bjIgn()">Ignorar todas</button><button class="b sec" onclick="eClose()">Fechar</button>';$('ed').classList.add('on')}
+function bjSeen(ids){ids.forEach(i=>{if(D.bj.indexOf(i)<0)D.bj.push(i)});bjPut(bjIn().filter(i=>D.bj.indexOf(i.id)<0))}
+function bjOk(){let n=0,t=0;const ids=[];BJL.forEach((i,k)=>{if(!$('bq'+k).checked)return;D.valores.push({id:uid(),tipo:'entrada',desc:'Retirada Bejoma'+(i.desc&&i.desc!=='Retirada'?' · '+i.desc:''),valor:i.valor,cat:'Retirada Bejoma',data:i.data,forma:i.forma,origem:'bejoma',bid:i.id});ids.push(i.id);n++;t+=i.valor});
+if(!n)return alert('Nenhuma retirada marcada.');bjSeen(ids);save();eClose();R();toast(n+' retirada(s) importada(s): +'+money(t))}
+function bjIgn(){if(!confirm('Ignorar estas retiradas? Não voltam a aparecer.'))return;bjSeen(BJL.map(i=>i.id));save();eClose();R()}
+/* ---- categorias / cópia ---- */
+function cAdd(k,i){const n=$(i).value.trim();if(!n)return;if(D[k].indexOf(n)>=0)return alert('Essa categoria já existe.');D[k].push(n);$(i).value='';save();R()}
+function cDel(k,i){const n=D[k][i];if(n==null)return;if(D[k].length<=1)return alert('Tem de ficar pelo menos uma categoria.');
+const u=k==='cats'?D.tarefas.filter(t=>t.cat===n).length+D.ativ.filter(a=>a.cat===n).length:D.valores.filter(v=>v.cat===n).length;
+if(!confirm('Apagar a categoria "'+n+'"?'+(u?'\n'+u+' registo(s) já usam este nome e ficam como estão.':'')))return;D[k].splice(i,1);save();R()}
+const catList=(k,id)=>{$(id).innerHTML=D[k].map((c,i)=>`<div class="item"><span>${esc(c)}</span><button class="mini dng" onclick="cDel('${k}',${i})">✕</button></div>`).join('')};
+/* ---- valores (caixa pessoal) ---- */
+const sf=f=>D.valores.reduce((a,v)=>v.forma===f?a+(v.tipo==='entrada'?v.valor:-v.valor):a,0)+D.trocas.reduce((a,t)=>a+(t.para===f?t.valor:0)-(t.de===f?t.valor:0),0);
+const FN={din:'Dinheiro',mcx:'Multicaixa Express'};
+function vTipo(){$('vCw').style.display=$('vT').value==='saida'?'block':'none'}
+function vAdd(){const t=$('vT').value,v=parseFloat(String($('vV').value).replace(',','.')),f=$('vF').value;
+if(!(v>0))return alert('Indique o valor.');
+if(t==='saida'){const s=sf(f);if(v>s+0.005&&!confirm('Em '+FN[f]+' só tem '+money(s)+' e esta saída é de '+money(v)+'.\n\nRegistar mesmo assim? (o saldo ficaria negativo)'))return}
+if(t==='saida'&&D.limite>0){const d=$('vDt').value||td(),g=gastoDia(d);if(g+v>D.limite&&!confirm('Com esta saída, o gasto de '+fmt(d)+' fica em '+money(g+v)+', acima do limite de '+money(D.limite)+'.\n\nRegistar mesmo assim?'))return}
+D.valores.push({id:uid(),tipo:t,desc:$('vDs').value.trim()||(t==='saida'?'Saída':'Entrada'),valor:v,cat:t==='saida'?$('vC').value:'Entrada',data:$('vDt').value||td(),forma:f});
+$('vDs').value='';$('vV').value='';save();R();toast((t==='saida'?'Saída registada: −':'Entrada registada: +')+money(v)+cxMsg())}
+function vDel(id){lix('valores',id,v=>'O saldo '+(v.tipo==='entrada'?'desce ':'sobe ')+money(v.valor)+'.')}
+function vCat(l){const m={};l.filter(v=>v.tipo==='saida'&&!pB(v)).forEach(v=>m[v.cat]=(m[v.cat]||0)+v.valor);return Object.keys(m).map(k=>[k,m[k]]).sort((a,b)=>b[1]-a[1])}
+function bkOk(){D.ultCopia=td();D.alt=0;save(1);R()}
+function bkDl(j,nm){try{const u=URL.createObjectURL(new Blob([j],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download=nm;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},4000);bkOk();toast('Cópia enviada para Transferências.')}catch(e){alert('Não foi possível guardar o ficheiro neste navegador.')}}
+function exp(){const nm='bejoma-pessoal-'+td()+'.json',j=JSON.stringify(Object.assign({},D,{pin:undefined,cron:undefined}));
+if(navigator.share&&window.File){let f;try{f=new File([j],nm,{type:'text/plain'})}catch(e){}
+if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:nm}).then(bkOk).catch(e=>{if(!e||e.name!=='AbortError')bkDl(j,nm)});return}}
+bkDl(j,nm)}
+function cPaste(){$('edB').innerHTML='<h2>Importar colando texto</h2><p class="empty">Cole aqui o texto da cópia.</p><textarea id="pT" style="width:100%;height:160px;border:2px solid var(--line);border-radius:14px;padding:10px"></textarea><button class="b" onclick="ld($(\'pT\').value)">Importar</button><button class="b sec" onclick="eClose()">Cancelar</button>';$('ed').classList.add('on')}
+function ld(t){try{const x=JSON.parse(String(t).trim());if(!x||!Array.isArray(x.tarefas)||!Array.isArray(x.ativ))throw 0;if(!confirm('Substituir os dados atuais pela cópia?'))return;const pn=D.pin,cr=D.cron;D=Object.assign(DEF(),x);delete D.pin;D.cron=cr||null;if(pn)D.pin=pn;D.lixo=D.lixo||[];save();eClose();R()}catch(e){alert('Ficheiro ou texto inválido.')}}
+function imp(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{ld(r.result);el.value=''};r.readAsText(f)}
+
+/* ---- relatório PDF ---- */
+function pdf(){const ini=add(td(),-6),fim=td(),A=sem().sort((a,b)=>a.data<b.data?-1:1),pc=porCat(A),tot=A.reduce((q,a)=>q+a.min,0),E=est(ini,fim),agora=new Date();
+const sg=v=>v.tipo==='entrada'?v.valor:-v.valor,V=D.valores.filter(v=>v.data>=ini&&v.data<=fim),vE=V.filter(v=>v.tipo==='entrada').reduce((q,v)=>q+v.valor,0),vS=V.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((q,v)=>q+v.valor,0),vP=V.filter(v=>v.tipo==='saida'&&pB(v)).reduce((q,v)=>q+v.valor,0),vR=V.filter(v=>v.tipo==='entrada'&&v.origem==='bejoma').reduce((q,v)=>q+v.valor,0),vc=vCat(V),
+sI=D.valores.filter(v=>v.data<ini).reduce((q,v)=>q+sg(v),0),sF=D.valores.filter(v=>v.data>fim).reduce((q,v)=>q+sg(v),0),sT=sf('din')+sf('mcx');
+const tf=D.tarefas.filter(t=>t.feita&&t.fim>=ini),tp=D.tarefas.filter(t=>!t.feita).sort(ord),dias=[0,1,2,3,4,5,6].map(i=>add(ini,i)),rw2=(l,v,b)=>`<tr><td>${b?'<b>'+l+'</b>':l}</td><td>${b?'<b>'+v+'</b>':v}</td></tr>`;
+const ag=dias.map(d=>({d,s:agSum(d)})).filter(x=>x.s.n),hab=h=>{if(h.freq==='vezes')return[dias.filter(d=>feito(h.id,d)).length,h.n||3];const pr=dias.filter(d=>hDue(h,d));return[pr.filter(d=>feito(h.id,d)).length,pr.length]};
+const dv=D.dividas.filter(d=>rest(d)>0.005),dvD=dv.filter(d=>d.tipo==='devo').reduce((q,d)=>q+rest(d),0),dvM=dv.filter(d=>d.tipo==='devem').reduce((q,d)=>q+rest(d),0),rv=dias.filter(d=>D.dia[d]&&(D.dia[d].hum||D.dia[d].nota));
+$('rel').innerHTML=`<h1 style="color:#a93425;margin:0">Bejoma Pessoal</h1><p>Relatório de ${fmt(ini)} a ${fmt(fim)}<br><small>Gerado em ${fmt(td())} às ${pad(agora.getHours())}:${pad(agora.getMinutes())}</small></p>
+<h3>Em resumo</h3><table>${rw2('Tempo de atividades',hm(tot))}${rw2('Tarefas concluídas',E.tf)}${rw2('Hábitos cumpridos',E.hp+'%')}${E.av?rw2('Avaliação média dos dias',E.av.toFixed(1)+' / 5'):''}${rw2('Saldo atual (Dinheiro + Express)',money(sT))}</table>
+${ag.length?`<h3>Agenda e horas (planeado)</h3><table><tr><th>Dia</th><th>Trabalho</th><th>Descanso</th><th>Largar às</th><th>Feito</th></tr>${ag.map(x=>`<tr><td>${DN[wd(x.d)]} ${fmt(x.d)}</td><td>${hm(x.s.tr)}</td><td>${hm(x.s.de)}</td><td>${x.s.lg==null?'—':m2h(x.s.lg)}</td><td>${x.s.cats.length?hm(D.ativ.filter(a=>a.data===x.d&&x.s.cats.indexOf(a.cat)>=0).reduce((q,a)=>q+a.min,0)):'—'}</td></tr>`).join('')}<tr><td><b>Total</b></td><td><b>${hm(ag.reduce((q,x)=>q+x.s.tr,0))}</b></td><td><b>${hm(ag.reduce((q,x)=>q+x.s.de,0))}</b></td><td></td><td></td></tr></table>`:''}
+<h3>Atividades por categoria (${hm(tot)} no total)</h3>${pc.length?`<table><tr><th>Categoria</th><th>Tempo</th></tr>${pc.map(c=>`<tr><td>${esc(c[0])}</td><td>${hm(c[1])}</td></tr>`).join('')}</table>`:'<p>Sem atividades registadas.</p>'}
+<h3>Atividades</h3>${A.length?`<table><tr><th>Data</th><th>O que fiz</th><th>Categoria</th><th>Tempo</th></tr>${A.map(a=>`<tr><td>${fmt(a.data)}</td><td>${esc(a.t)}</td><td>${esc(a.cat)}</td><td>${hm(a.min)}</td></tr>`).join('')}</table>`:'<p>—</p>'}
+${D.metas.length?`<h3>Metas</h3><table><tr><th>Meta</th><th>Feito</th><th>Objetivo</th><th>Estado</th></tr>${D.metas.map(m=>{const d=mtDone(m);return`<tr><td>${esc(m.cat)} · ${m.per==='dia'?'hoje':'7 dias'}</td><td>${hm(d)}</td><td>${hm(m.min)}</td><td>${d>=m.min?'✓ atingida':'faltam '+hm(m.min-d)}</td></tr>`}).join('')}</table>`:''}
+<h3>Tarefas concluídas (${tf.length})</h3>${tf.length?`<table>${tf.map(t=>`<tr><td>${esc(t.t)}</td><td>${fmt(t.fim)}</td></tr>`).join('')}</table>`:'<p>—</p>'}
+<h3>Tarefas por fazer (${tp.length})</h3>${tp.length?`<table>${tp.map(t=>`<tr><td>${esc(t.t)}${t.hora?' · '+t.hora:''}</td><td>${t.prazo?fmt(t.prazo):'sem prazo'}</td></tr>`).join('')}</table>`:'<p>—</p>'}
+<h3>Hábitos (feitos / previstos)</h3>${D.habitos.length?`<table>${D.habitos.map(h=>{const r=hab(h);return`<tr><td>${esc(h.nome)}</td><td>${r[0]} de ${r[1]}</td></tr>`}).join('')}</table>`:'<p>—</p>'}
+<h3>Valores</h3><table>${rw2('Saldo no início (antes de '+fmt(ini)+')',money(sI))}${rw2('+ Entradas',money(vE))}${vR?rw2('&nbsp;&nbsp;das quais retiradas da Bejoma Gestão',money(vR)):''}${rw2('− Saídas',money(vS))}${vP?rw2('− Enviado à Bejoma Gestão',money(vP)):''}${sF?rw2('± Movimentos com data futura',money(sF)):''}${rw2('= Saldo atual (Dinheiro + Express)',money(sT),1)}</table>
+<table>${rw2('Em Dinheiro',money(sf('din')))}${rw2('Em Multicaixa Express',money(sf('mcx')))}</table>${vc.length?`<table><tr><th>Saídas por categoria</th><th>Valor</th></tr>${vc.map(c=>`<tr><td>${esc(c[0])}</td><td>${money(c[1])}</td></tr>`).join('')}</table>`:''}
+<h3>Dívidas em aberto</h3>${dv.length?`<table>${dv.map(d=>`<tr><td>${d.tipo==='devo'?'Devo a':'Deve-me'} ${esc(d.quem)}${d.prazo?' · prazo '+fmt(d.prazo):''}</td><td>${money(rest(d))}</td></tr>`).join('')}${rw2('Total que devo',money(dvD),1)}${rw2('Total que me devem',money(dvM),1)}</table>`:'<p>—</p>'}
+${rv.length?`<h3>Revisão dos dias</h3><table>${rv.map(d=>`<tr><td>${fmt(d)}</td><td>${['','😞','🙁','😐','🙂','😄'][D.dia[d].hum||0]}</td><td>${esc((D.dia[d].nota||'').slice(0,90))}</td></tr>`).join('')}</table>`:''}
+<div class="sig"><b>${esc(NOME)}</b><br>Bejoma Pessoal · Assinatura</div>`;
+window.print()}
+
+/* ---- desenho ---- */
+function R(){
+tema();
+const h=td(),opts=D.cats.map(c=>`<option>${esc(c)}</option>`).join('');
+['tC','aC','mtC'].forEach(i=>{const e=$(i),v=e.value;e.innerHTML=opts;if(v&&D.cats.indexOf(v)>=0)e.value=v});
+{const e=$('vC'),v=e.value;e.innerHTML=D.vcats.map(c=>`<option>${esc(c)}</option>`).join('');if(v&&D.vcats.indexOf(v)>=0)e.value=v}
+if(!$('vDt').value)$('vDt').value=h;vTipo();
+if(!$('aD').value)$('aD').value=h;
+{const t=new Date().toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'});$('hd').textContent=t.charAt(0).toUpperCase()+t.slice(1)}
+// hoje
+const pend=D.tarefas.filter(t=>!t.feita&&t.prazo&&t.prazo<=h).sort(ord),fh=D.tarefas.filter(t=>t.feita&&t.fim===h);
+$('sT').textContent=fh.length+' / '+(pend.length+fh.length);
+const hdu=D.habitos.filter(x=>hDue(x,h)),hf=hdu.filter(x=>feito(x.id,h)).length;$('sH').textContent=hf+' / '+hdu.length;
+$('sA').textContent=hm(D.ativ.filter(a=>a.data===h).reduce((s,a)=>s+a.min,0));
+$('hT').innerHTML=pend.length?pend.map(tItem).join(''):'<div class="empty">Nada pendente para hoje. 🎉</div>';
+{const sp=D.tarefas.filter(t=>!t.feita&&!t.prazo).sort((a,b)=>b.pri-a.pri);$('hSc').style.display=sp.length?'block':'none';$('hS').innerHTML=sp.slice(0,5).map(tItem).join('')+(sp.length>5?`<div class="empty">+ ${sp.length-5} em Tarefas</div>`:'')}
+$('hH').innerHTML=D.habitos.length?D.habitos.map(x=>{const st=hSt(x),fq=x.freq==='dias'?(x.dias||[]).map(i=>DN[i]).join(', '):x.freq==='vezes'?(x.n||3)+'x por semana · esta semana '+wkDone(x,h)+'/'+(x.n||3):'',sub=(st.c?'🔥 '+st.c+' '+(st.u==='semana'?'semana':'dia')+(st.c>1?'s':'')+' seguidos':'Comece hoje')+(fq?' · '+fq:''),dd=[6,5,4,3,2,1,0].map(i=>add(h,-i));
+return `<div class="item" style="flex-wrap:wrap"><div class="l">${ck(feito(x.id,h),`hTog('${x.id}')`)}<div>${esc(x.nome)}<small>${sub}</small></div></div><div class="bt">${eb('habitos',x.id)}<button class="mini dng" onclick="hDel('${x.id}')">✕</button></div><div class="strip">${dd.map(d=>`<button class="dd${feito(x.id,d)?' on':''}${d===h?' hj':''}${hDue(x,d)?'':' off'}" onclick="hTog('${x.id}','${d}')">${DL[wd(d)]}</button>`).join('')}</div></div>`}).join('')+'<small class="empty">Toque num dia para marcar ou desmarcar. Uma falha isolada não zera a sequência.</small>':'<div class="empty">Ainda não tem hábitos.</div>';
+// tarefas
+const pl=D.tarefas.filter(t=>!t.feita).sort(ord),fl=D.tarefas.filter(t=>t.feita).sort((a,b)=>a.fim<b.fim?1:-1).slice(0,15);
+$('tL').innerHTML=pl.length?pl.map(tItem).join(''):'<div class="empty">Sem tarefas por fazer.</div>';
+$('tF').innerHTML=fl.length?fl.map(tItem).join(''):'<div class="empty">Ainda nada concluído.</div>';
+// atividades
+const pc=porCat(sem()),mx=pc.length?pc[0][1]:1;
+$('aS').innerHTML=pc.length?pc.map(c=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${esc(c[0])}</span><b>${hm(c[1])}</b></div><div class="bar"><i style="width:${Math.round(c[1]/mx*100)}%"></i></div></div>`).join(''):'<div class="empty">Sem atividades nos últimos 7 dias.</div>';
+const al=D.ativ.slice().sort((a,b)=>a.data<b.data?1:-1).slice(0,20);
+$('aL').innerHTML=al.length?al.map(a=>`<div class="item"><div><b>${esc(a.t)}</b><small>${esc(a.cat)} · ${fmt(a.data)} · ${hm(a.min)}</small></div><div class="bt">${eb('ativ',a.id)}<button class="mini dng" onclick="aDel('${a.id}')">✕</button></div></div>`).join(''):'<div class="empty">Sem registos.</div>';
+catList('cats','mC');catList('vcats','mV');
+{const n=+$('plP').value||7,a=n===1?add(h,1):h,b=add(h,n),G={},at=D.tarefas.filter(t=>!t.feita&&t.prazo&&t.prazo<h).sort(ord);
+D.tarefas.filter(t=>!t.feita&&t.prazo&&t.prazo>=a&&t.prazo<=b).sort(ord).forEach(t=>(G[t.prazo]=G[t.prazo]||[]).push(tItem(t)));
+D.dividas.filter(d=>rest(d)>0.005&&d.prazo&&d.prazo>=a&&d.prazo<=b).forEach(d=>(G[d.prazo]=G[d.prazo]||[]).push(`<div class="item"><div>🤝 ${d.tipo==='devo'?'Pagar a ':'Receber de '}${esc(d.quem)}<small>${money(rest(d))}</small></div></div>`));
+const lb=d=>{const t=new Date(d+'T12:00:00').toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'});return (d===h?'Hoje · ':d===add(h,1)?'Amanhã · ':'')+t.charAt(0).toUpperCase()+t.slice(1)};
+$('plL').innerHTML=(at.length?'<b class="bad">⚠️ Atrasadas</b>'+at.map(tItem).join(''):'')+Object.keys(G).sort().map(d=>`<b style="display:block;margin-top:10px">${lb(d)}</b>`+G[d].join('')).join('')||'<div class="empty">Nada marcado para este período.</div>'}pesq();PD();AG();NV();CX();$('tmS').value=D.tema||'auto';
+$('trL').innerHTML=D.trocas.slice(-5).reverse().map(t=>`<div class="item"><div><b>${esc(t.desc)}</b><small>${fmt(t.data)}</small></div><div style="text-align:right"><b>${money(t.valor)}</b><br><button class="mini dng" onclick="trDel('${t.id}')">✕</button></div></div>`).join('');
+$('mtL').innerHTML=D.metas.length?D.metas.map(m=>mtRow(m,1)).join(''):'<div class="empty">Sem metas. Ex.: 5 h de Estudos por semana.</div>';
+$('mtHc').style.display=D.metas.length?'block':'none';$('mtH').innerHTML=D.metas.map(m=>mtRow(m)).join('');
+$('cr').innerHTML=D.cron?`<div style="text-align:center"><div style="color:var(--sub)">${esc(D.cron.cat)} · ${esc(D.cron.t)}</div><div id="crT" style="font-size:2.2rem;font-weight:800;margin:6px 0">${fT(Date.now()-D.cron.ini)}</div></div><button class="b" onclick="crFim()">⏹ Parar e guardar</button><button class="b sec" onclick="crDesc()">Descartar</button>`:`<label style="margin-top:0">O que vai fazer?</label><input id="crN" placeholder="ex.: Estudar matemática"><label>Categoria</label><select id="crC">${opts}</select><button class="b" onclick="crIni()">▶ Iniciar</button>`;
+$('crH').innerHTML=D.cron?`<div class="card" style="border:2px solid var(--accent)"><b>⏱️ A correr: ${esc(D.cron.t)}</b> <span id="crT2" style="font-weight:800">${fT(Date.now()-D.cron.ini)}</span><br><button class="mini" style="margin-top:8px" onclick="go('ativ')">Abrir cronómetro</button></div>`:'';
+{const p=bjPend(),t=p.reduce((q,i)=>q+i.valor,0);$('bjH').innerHTML=p.length?`<div class="card" style="border:2px solid var(--accent)"><b>💼 ${p.length} retirada(s) nova(s) da Bejoma Gestão</b><p class="empty">${money(t)} por importar.</p><button class="b" onclick="bjRev()">Rever e importar</button></div>`:'';
+$('bjP').innerHTML=p.length?`<p style="margin:4px 0"><b>${p.length} nova(s)</b> · ${money(t)} por importar</p><button class="b" onclick="bjRev()">Rever e importar</button>`:'<p class="empty" style="margin:4px 0">Sem retiradas novas da Bejoma Gestão.</p>'}
+{const n=foraOk();$('foT').innerHTML=n.length?`<div class="item" style="border:2px solid var(--accent);border-radius:14px;padding:10px;margin:10px 0"><div><b>📤 ${n.length} retirada(s) por avisar à Bejoma Gestão</b><small>${money(n.reduce((q,i)=>q+i.valor,0))} · a Bejoma Gestão ainda não sabe</small></div></div><button class="b" onclick="foraEnviar()">Enviar à Bejoma Gestão</button>`:''}
+$('pbT').textContent='Enviado à Bejoma Gestão este mês: '+money(D.valores.filter(v=>pB(v)&&v.data.slice(0,7)===h.slice(0,7)).reduce((q,v)=>q+v.valor,0));
+$('rtT').textContent='Retiradas este mês: '+money(D.valores.filter(v=>v.origem==='bejoma'&&v.data.slice(0,7)===h.slice(0,7)).reduce((q,v)=>q+v.valor,0));$('pnT').textContent=D.pin?'PIN ligado. É pedido ao abrir e depois de 1 minuto fora da app.':'PIN desligado.';$('pnB').textContent=D.pin?'Mudar ou desligar o PIN':'Definir PIN';$('rX').innerHTML=resumo();
+{const g=gastoDia(h),L=D.limite||0;$('lmT').textContent=L>0?'Hoje gastou '+money(g)+' de '+money(L)+'.':'Sem limite definido.';if(!$('lmV').value&&L)$('lmV').value=L;
+$('lm').innerHTML=L>0?`<div class="card"><h2>Gasto de hoje</h2><div style="display:flex;justify-content:space-between"><b class="${g>L?'bad':''}">${money(g)}</b><span>limite ${money(L)}</span></div><div class="bar"><i style="width:${Math.min(100,Math.round(g/L*100))}%;background:${g>L?'var(--bad)':g>L*.8?'#e0a000':'var(--good)'}"></i></div><small class="${g>L?'bad':''}">${g>L?'Passou '+money(g-L)+' do limite.':'Ainda pode gastar '+money(L-g)+'.'}</small></div>`:''}
+{const atr=D.tarefas.filter(t=>!t.feita&&t.prazo&&t.prazo<h).length,hj=D.tarefas.filter(t=>!t.feita&&t.prazo===h).length,am=D.tarefas.filter(t=>!t.feita&&t.prazo===add(h,1)).length,hn=D.habitos.filter(x=>x.freq!=='vezes'&&hDue(x,h)&&!feito(x.id,h)).length,Ls=[];
+if(atr)Ls.push(`<span class="bad">⚠️ ${atr} tarefa(s) atrasada(s)</span>`);if(hj)Ls.push(`✅ ${hj} tarefa(s) para hoje`);
+D.dividas.filter(d=>rest(d)>0.005&&d.prazo&&d.prazo<=h).forEach(d=>Ls.push(`<span class="${d.prazo<h?'bad':''}">🤝 ${d.tipo==='devo'?'Pagar a ':'Cobrar a '}${esc(d.quem)}: ${money(rest(d))} (${d.prazo<h?'atrasada':'hoje'})</span>`));
+if(hn&&new Date().getHours()>=18)Ls.push(`🔥 Faltam ${hn} hábito(s) de hoje`);if(am)Ls.push(`📅 Amanhã: ${am} tarefa(s)`);if(foraOk().length)Ls.push(`📤 ${foraOk().length} retirada(s) por avisar à Bejoma Gestão`);
+{const cc=D.compras.filter(c=>!c.feito&&c.dia&&c.dia<=h);if(cc.length)Ls.push('🛒 '+cc.length+' item(ns) para comprar ('+money(cc.reduce((q,c)=>q+c.preco,0))+')');
+D.contas.forEach(c=>{if(c.pago===h.slice(0,7))return;const ds=ctDue(c,h),df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1);if(df<=3)Ls.push(`<span class="${df<0?'bad':''}">🏠 ${esc(c.nome)} ${df<0?'atrasada':df===0?'vence hoje':'vence em '+df+' dia(s)'}: ${money(c.valor)}</span>`)})}
+$('rm').innerHTML=D.lemb!==false&&!RM_OFF&&Ls.length?`<div class="card" style="border:2px solid var(--accent)"><h2>Lembretes</h2>${Ls.map(l=>'<div class="item">'+l+'</div>').join('')}<button class="mini" style="margin-top:8px" onclick="rmOff()">Ok, vi</button></div>`:'';
+$('lbT').textContent=D.lemb!==false?'Ligados (tocar para desligar)':'Desligados (tocar para ligar)'}
+{const ab=D.dividas.filter(d=>rest(d)>0.005).sort((a,b)=>(a.prazo||'9')<(b.prazo||'9')?-1:1),sd=D.dividas.filter(d=>rest(d)<=0.005).slice(-5).reverse(),sm=t=>ab.filter(d=>d.tipo===t).reduce((a,d)=>a+rest(d),0);
+$('dD').textContent=money(sm('devo'));$('dM').textContent=money(sm('devem'));
+const it=d=>{const ab=rest(d)>0.005,at=ab&&d.prazo&&d.prazo<h;return `<div class="item"><div><b>${d.tipo==='devo'?'Devo a ':'Deve-me: '}${esc(d.quem)}</b><small class="${at?'bad':''}">${ab?'Falta '+money(rest(d))+(d.pago?' de '+money(d.valor):'')+(d.prazo?' · prazo '+fmt(d.prazo)+(at?' · atrasada':''):''):'✓ Saldada · '+money(d.valor)}</small></div><div class="bt">${ab?`<button class="mini" onclick="dPag('${d.id}')">${d.tipo==='devo'?'Pagar':'Receber'}</button>`:''}${eb('dividas',d.id)}<button class="mini dng" onclick="dDel('${d.id}')">✕</button></div></div>`};
+$('dL').innerHTML=ab.length||sd.length?ab.concat(sd).map(it).join(''):'<div class="empty">Sem dívidas registadas.</div>'}
+{const t=bkTxt();$('bk').innerHTML=t?`<div class="card" style="border:2px solid var(--accent)"><b>💾 Hora de guardar uma cópia</b><p class="empty">${t}</p><button class="b" onclick="exp()">Guardar cópia agora</button></div>`:'';
+$('uc').innerHTML=D.ultCopia?'<b>Última cópia:</b> '+fmt(D.ultCopia)+(D.alt?' · '+D.alt+' alteração(ões) desde então':' · tudo guardado'):'<b>Ainda sem cópia.</b>';
+$('lx').innerHTML=D.lixo.length?D.lixo.slice().reverse().map(e=>`<div class="item"><div><b>${esc(e.item.t||e.item.desc||e.item.nome||e.item.quem||e.item.cat)}</b><small>${LB[e.k]}${e.k==='valores'||e.k==='dividas'||e.k==='trocas'?' · '+money(e.item.valor):''} · apagado a ${fmt(e.em)}</small></div><div class="bt"><button class="mini" onclick="lRest('${e.id}')">↩ Restaurar</button><button class="mini dng" onclick="lPerm('${e.id}')">✕</button></div></div>`).join(''):'<div class="empty">Nada apagado.</div>'}
+// valores
+{const S=sf('din')+sf('mcx'),mes=D.valores.filter(v=>v.data.slice(0,7)===h.slice(0,7)),me=mes.filter(v=>v.tipo==='entrada').reduce((a,v)=>a+v.valor,0),ms=mes.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((a,v)=>a+v.valor,0);
+$('vSS').textContent=money(S);$('vSS').className='v '+(S<0?'bad':'');$('vSD').textContent=money(sf('din'));$('vSD').className='v '+(sf('din')<0?'bad':'');$('vSE').textContent=money(sf('mcx'));$('vSE').className='v '+(sf('mcx')<0?'bad':'');
+$('vM1').textContent=money(me);$('vM2').textContent=money(ms);
+const vc=vCat(mes),mx2=vc.length?vc[0][1]:1;
+$('vR').innerHTML=vc.length?vc.map(c=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${esc(c[0])}</span><b>${money(c[1])}</b></div><div class="bar"><i style="width:${Math.round(c[1]/mx2*100)}%"></i></div></div>`).join(''):'<div class="empty">Sem saídas este mês.</div>';
+const vl=D.valores.slice().reverse().sort((a,b)=>a.data<b.data?1:a.data>b.data?-1:0).slice(0,20);
+$('vL').innerHTML=vl.length?vl.map(v=>`<div class="item"><div><b>${esc(v.desc)}</b><small>${esc(v.cat)} · ${fmt(v.data)} · ${FN[v.forma]}</small></div><div style="text-align:right"><b class="${v.tipo==='entrada'?'good':'bad'}">${v.tipo==='entrada'?'+':'−'}${money(v.valor)}</b><br><span class="bt" style="justify-content:flex-end;margin-top:4px">${eb('valores',v.id)}<button class="mini dng" onclick="vDel('${v.id}')">✕</button></span></div></div>`).join(''):'<div class="empty">Sem movimentos.</div>'}
+}
+$('hNF').innerHTML=hFrm('hn');
+$('agNF').innerHTML=bFrm('bn');bRp('bn');
+navBuild();R();agTick();hashIn();window.addEventListener('hashchange',hashIn);
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden){HID=Date.now();return}if(D.pin&&HID&&Date.now()-HID>60000)lock();RM_OFF=false;agTick();R()});
+if(D.pin)lock();
+window.addEventListener('storage',e=>{if(e.key==='rotina_inbox')R()});
+</script>
+</body>
+</html>
