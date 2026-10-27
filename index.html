@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bejoma Pessoal</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -74,9 +74,21 @@ button.sec{background:var(--soft);color:var(--text)}
 @media print{html[data-t=dark] body{background:#fff}}
 @media print{body>*:not(#rel){display:none!important}#rel{display:block}body{background:#fff;padding:0;max-width:none}}
 
+#sp{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 0%,#c2323d 0%,#9e2630 45%,#5e1219 100%);color:#fff;animation:spOut .5s ease 2s forwards}
+#sp .spb{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:24px}
+#sp .spl{position:relative;width:112px;height:112px;display:grid;place-items:center;animation:spIn .8s cubic-bezier(.2,.8,.2,1) both}
+#sp .spl span{width:84px;height:84px;border-radius:24px;background:#fff;color:#9e2630;display:grid;place-items:center;font:400 2.6rem Pacifico,'Brush Script MT',cursive;box-shadow:0 10px 40px rgba(0,0,0,.35);animation:spPulse 1.6s ease-in-out .8s infinite}
+#sp .spr{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#ffc15a;stroke-width:3;stroke-linecap:round;stroke-dasharray:90 262;animation:spSpin 1.4s linear infinite}
+#sp b{font:400 1.7rem Pacifico,'Brush Script MT',cursive;animation:spUp .7s ease .35s both}
+#sp small{opacity:.9;min-height:1.2em;animation:spUp .7s ease .5s both}
+#sp .spp{width:180px;height:4px;border-radius:4px;background:rgba(255,255,255,.22);overflow:hidden;animation:spUp .7s ease .6s both}
+#sp .spp i{display:block;height:100%;background:linear-gradient(90deg,#ffc15a,#fff);transform-origin:left;animation:spBar 1.9s cubic-bezier(.5,0,.2,1) both}
+@keyframes spIn{from{opacity:0;transform:scale(.6)}}@keyframes spUp{from{opacity:0;transform:translateY(10px)}}@keyframes spSpin{to{transform:rotate(360deg)}}@keyframes spPulse{50%{transform:scale(1.05)}}@keyframes spBar{from{transform:scaleX(0)}}@keyframes spOut{to{opacity:0;visibility:hidden;transform:scale(1.04)}}
+@media(prefers-reduced-motion:reduce){#sp *{animation:none!important}}
 </style>
 </head>
 <body>
+<div id="sp"><div class="spb"><div class="spl"><span>B</span><svg class="spr" viewBox="0 0 120 120"><circle cx="60" cy="60" r="56"/></svg></div><b>Bejoma Pessoal</b><small id="spT">A verificar a segurança…</small><div class="spp"><i></i></div></div></div>
 <header class="top"><div class="brand"><div class="logo">B</div><div><b>Bejoma Pessoal</b><small id="hd"></small></div></div><button class="cx" id="cxB" onclick="go('din','caixa')"><small>Caixa pessoal</small><b id="cxTop"></b></button></header>
 <main>
 <div class="pg on" id="p-hoje">
@@ -266,11 +278,10 @@ button.sec{background:var(--soft);color:var(--text)}
 <p class="empty">Guarde uma cópia de vez em quando. Se trocar de telemóvel, importe-a.</p><p class="empty" id="uc"><b></b></p>
 <button class="b" onclick="exp()">Exportar cópia</button>
 <button class="b sec" onclick="$('imp').click()">Importar ficheiro</button>
-<button class="b sec" onclick="cPaste()">Importar colando texto</button>
 <input id="imp" type="file" style="display:none" onchange="imp(this)"></div>
 <div class="card"><h2>Apagados</h2><p class="empty">Ficam aqui 30 dias. Pode restaurar o que apagou por engano.</p><div id="lx"></div>
 <button class="b sec" onclick="lVaz()">Esvaziar Apagados</button></div>
-<div class="card"><h2>PIN</h2><p class="empty" id="pnT"></p><button class="b sec" id="pnB" onclick="pinCfg()"></button></div>
+<div class="card"><h2>PIN</h2><p class="empty" id="pnT"></p><button class="b sec" id="pnB" onclick="pinCfg()"></button><button class="b sec" onclick="if(D.pin)lock();else alert('Defina primeiro um PIN.')">Bloquear agora</button></div>
 </div>
 <div class="sp" id="s-mais-cfg">
 <div class="card"><h2>Aspeto</h2><select id="tmS" onchange="D.tema=this.value;save(1);R()"><option value="auto">Automático (como o telemóvel)</option><option value="claro">Claro</option><option value="escuro">Escuro</option></select></div>
@@ -286,11 +297,16 @@ button.sec{background:var(--soft);color:var(--text)}
 <div id="rel"></div>
 <div class="modal" id="ed"><div class="card" id="edB"></div></div>
 <div id="ts"></div>
-<div id="lk"><div class="card"><h2 style="font-size:1.3rem">Bejoma Pessoal</h2><p class="empty">Escreva o seu PIN</p>
+<div id="lk"><div class="card" id="lkC"><h2 style="font-size:1.3rem">Bejoma Pessoal</h2><p class="empty">Escreva o seu PIN</p>
 <input id="lkP" type="password" inputmode="numeric" maxlength="6" autocomplete="off" onkeydown="if(event.key==='Enter')pinTry()">
 <p id="lkM" class="bad" style="min-height:1.2em;margin:8px 0 0"></p>
 <button class="b" onclick="pinTry()">Entrar</button>
-<button class="mini" style="margin-top:12px" onclick="pinEsq()">Esqueci o PIN</button></div></div>
+<button class="mini" style="margin-top:12px" onclick="pinEsq()">Esqueci o PIN</button></div>
+<div class="card" id="lkR" style="display:none"><h2>Recuperar acesso</h2><p class="empty">Escreva o código de recuperação e escolha um PIN novo. Os seus dados ficam guardados.</p>
+<input id="rcC" placeholder="XXXX-XXXX-XXXX" autocomplete="off" autocapitalize="characters" style="font-size:1.1rem;letter-spacing:.1em">
+<input id="rcP" type="password" inputmode="numeric" maxlength="6" placeholder="PIN novo (4 a 6 números)" autocomplete="off" style="font-size:1rem;letter-spacing:.15em;margin-top:8px">
+<input id="rcQ" type="password" inputmode="numeric" maxlength="6" placeholder="Repetir o PIN novo" autocomplete="off" style="font-size:1rem;letter-spacing:.15em;margin-top:8px">
+<p id="rcE" class="bad" style="min-height:1.2em;margin:8px 0 0"></p><button class="b" onclick="rcUsar()">Recuperar</button><button class="mini" style="margin-top:12px" onclick="rcVolta()">Voltar</button></div></div>
 
 <script>
 const K='rotina_v1',NOME='Benjamim José Manuel';
@@ -330,8 +346,8 @@ function cpPrev(){const sel=D.compras.filter(c=>!c.feito&&c.sel),es=sel.reduce((
 $('cpAf').innerHTML=v>0?`Caixa em ${FN[f]}: ${money(s)} → depois da compra: <b class="${s-v<0?'bad':'good'}">${money(s-v)}</b>`:`Caixa pessoal: <b>${money(cxTot())}</b>`}
 function cpUm(id){const c=D.compras.find(x=>x.id===id);if(!c)return;EI=id;$('edB').innerHTML=`<h2>Comprei: ${esc(c.t)}</h2><p class="empty">Caixa pessoal agora: ${money(cxTot())}</p><label>Preço pago (Kz)</label><input id="cuV" type="text" inputmode="decimal" value="${c.preco}"><label>Pagou com</label><select id="cuF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select><button class="b" onclick="cpUmOk()">Descontar da caixa</button><button class="b sec" onclick="eClose()">Cancelar</button>`;$('ed').classList.add('on')}
 function cpUmOk(){const c=D.compras.find(x=>x.id===EI);if(!c)return eClose();const v=parseFloat(String($('cuV').value).replace(',','.'));if(!(v>0))return alert('Indique o preço pago.');
-if(!saidaRapida('Compras: '+c.t,v,catCasa(),$('cuF').value))return;
-c.feito=true;c.sel=false;c.fim=td();if(c.rep)D.compras.push({id:uid(),t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,sel:false,feito:false});save();eClose();R();toast('Compra registada: −'+money(v)+cxMsg())}
+if(!confirm('Registar a compra de '+money(v)+' ('+FN[$('cuF').value]+')?\n\n'+c.t))return;const vid=saidaRapida('Compras: '+c.t,v,catCasa(),$('cuF').value);if(!vid)return;
+c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,sel:false,feito:false})}save();eClose();R();toast('Compra registada: −'+money(v)+cxMsg(),"cpDesf('"+vid+"')")}
 
 /* ---- tarefas ---- */
 const ord=(a,b)=>((a.prazo||'9')<(b.prazo||'9')?-1:(a.prazo||'9')>(b.prazo||'9')?1:b.pri-a.pri);
@@ -373,7 +389,7 @@ function porCat(l){const m={};l.forEach(a=>m[a.cat]=(m[a.cat]||0)+a.min);return 
 
 /* ---- apagados / editar / lembrete ---- */
 const LB={tarefas:'Tarefa',ativ:'Atividade',valores:'Valor',habitos:'Hábito',dividas:'Dívida',metas:'Meta',trocas:'Troca',blocos:'Bloco',compras:'Compra',contas:'Conta'};let tmr,EK,EI,EL;
-function toast(m,u){const e=$('ts');e.innerHTML='<span>'+esc(m)+'</span>'+(u?'<button onclick="'+u+'">Desfazer</button>':'');e.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>e.classList.remove('on'),7000)}
+function toast(m,u){const e=$('ts');e.innerHTML='<span>'+esc(m)+'</span>'+(u?'<button onclick="'+u+'">Desfazer</button>':'');e.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>e.classList.remove('on'),10000)}
 function lix(k,id,ex){const i=D[k].findIndex(x=>x.id===id);if(i<0)return;const it=D[k].splice(i,1)[0],lid=uid();D.lixo.push({id:lid,k,item:it,em:td()});save();R();toast(LB[k]+' movido para Apagados.'+(ex?' '+ex(it):''),"lRest('"+lid+"')")}
 function lRest(id){const i=D.lixo.findIndex(x=>x.id===id);if(i<0)return;const e=D.lixo.splice(i,1)[0];D[e.k].push(e.item);save();R();$('ts').classList.remove('on')}
 function lPerm(id){if(!confirm('Apagar para sempre? Não dá para recuperar.'))return;D.lixo=D.lixo.filter(x=>x.id!==id);save();R()}
@@ -440,13 +456,36 @@ function lock(){$('lkP').value='';$('lkM').textContent='';$('lk').classList.add(
 const bq=()=>{try{return JSON.parse(localStorage.getItem('rotina_bloq'))||{}}catch(e){return{}}};
 async function pinTry(){const B=bq(),w=Math.ceil(((B.ate||0)-Date.now())/1000);if(w>0){$('lkM').textContent='Muitas tentativas. Aguarde '+w+' s.';return}
 if(await chk($('lkP').value)){localStorage.removeItem('rotina_bloq');$('lk').classList.remove('on');R();return}
-B.n=(B.n||0)+1;let m='PIN errado.';if(B.n>=5){B.ate=Date.now()+30000;B.n=0;m='PIN errado 5 vezes. Aguarde 30 s.'}
-try{localStorage.setItem('rotina_bloq',JSON.stringify(B))}catch(e){}$('lkP').value='';$('lkM').textContent=m}
-function pinEsq(){if(!confirm('Sem o PIN, a única forma de entrar é apagar todos os dados deste telemóvel. Só faça isto se tiver uma cópia de segurança para importar depois.\n\nApagar tudo?'))return;if(!confirm('Tem a certeza? Isto não se pode desfazer.'))return;try{localStorage.removeItem(K);localStorage.removeItem('rotina_bloq')}catch(e){}location.reload()}
+const m=bqFail();$('lkP').value='';$('lkM').textContent=m==='Incorreto.'?'PIN errado.':m}
+function pinEsq(){if(D.pin&&D.pin.r){$('lkC').style.display='none';$('lkR').style.display='block';$('rcE').textContent='';setTimeout(()=>$('rcC').focus(),50);return}if(!confirm('Sem o PIN, a única forma de entrar é apagar todos os dados deste telemóvel. Só faça isto se tiver uma cópia de segurança para importar depois.\n\nApagar tudo?'))return;if(!confirm('Tem a certeza? Isto não se pode desfazer.'))return;try{localStorage.removeItem(K);localStorage.removeItem('rotina_bloq')}catch(e){}location.reload()}
 function pinCfg(){const i=(id,l)=>`<label>${l}</label><input id="${id}" type="password" inputmode="numeric" maxlength="6" autocomplete="off">`;
-$('edB').innerHTML='<h2>PIN</h2>'+(D.pin?i('pA','PIN atual'):'')+i('pN','Novo PIN (4 a 6 números)')+i('pM','Repetir o novo PIN')+'<button class="b" onclick="pinSave()">Guardar PIN</button>'+(D.pin?'<button class="b sec" onclick="pinOff()">Desligar PIN</button>':'')+'<button class="b sec" onclick="eClose()">Cancelar</button><p class="empty">O PIN impede que outra pessoa abra a app, mas não encripta os dados. Se o esquecer, só apagando tudo e importando uma cópia. Faça uma cópia antes.</p>';$('ed').classList.add('on')}
-async function pinSave(){if(D.pin&&!(await chk($('pA').value)))return alert('PIN atual errado.');const n=$('pN').value;if(!/^\d{4,6}$/.test(n))return alert('O PIN deve ter 4 a 6 números.');if(n!==$('pM').value)return alert('Os dois PIN não coincidem.');const sl=uid();D.pin={s:sl,h:await hp(n,sl)};save();eClose();R();toast('PIN guardado.')}
+$('edB').innerHTML='<h2>PIN</h2>'+(D.pin?i('pA','PIN atual'):'')+i('pN','Novo PIN (4 a 6 números)')+i('pM','Repetir o novo PIN')+'<button class="b" onclick="pinSave()">Guardar PIN</button>'+(D.pin?'<button class="b sec" onclick="rcNovo()">Gerar novo código de recuperação</button><button class="b sec" onclick="pinOff()">Desligar PIN</button>':'')+'<button class="b sec" onclick="eClose()">Cancelar</button><p class="empty">O PIN impede que outra pessoa abra a app, mas não encripta os dados. Se o esquecer, use o código de recuperação (guarde-o em papel, fora do telemóvel).</p>';$('ed').classList.add('on')}
+async function pinSave(){if(D.pin&&!(await chk($('pA').value)))return alert('PIN atual errado.');const n=$('pN').value;if(!/^\d{4,6}$/.test(n))return alert('O PIN deve ter 4 a 6 números.');if(n!==$('pM').value)return alert('Os dois PIN não coincidem.');const sl=uid(),ov=D.pin&&D.pin.r;D.pin={s:sl,h:await hp(n,sl),r:ov};save();if(ov){eClose();R();toast('PIN guardado.')}else{R();rcMostra(await rcMk())}}
 async function pinOff(){if(!(await chk($('pA').value)))return alert('PIN atual errado.');delete D.pin;save();eClose();R();toast('PIN desligado.')}
+/* ---- recuperação do PIN, desfazer, voltar ---- */
+const rcNorm=t=>String(t).toUpperCase().replace(/[^A-Z0-9]/g,'');
+function rcGen(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';crypto.getRandomValues(new Uint8Array(12)).forEach(x=>c+=A[x%32]);return c.match(/.{4}/g).join('-')}
+async function rcMk(){const c=rcGen(),sl=uid();D.pin.r={s:sl,h:await hp(rcNorm(c),sl)};save();return c}
+function rcMostra(c){$('edB').innerHTML='<h2>Código de recuperação</h2><p class="empty">Se esquecer o PIN, este código abre a app sem apagar os dados. Escreva-o num papel e guarde-o fora do telemóvel. <b>Não volta a aparecer.</b></p><p style="font:800 1.5rem/1.3 monospace;text-align:center;letter-spacing:.08em;user-select:all;margin:14px 0">'+c+'</p><button class="b" onclick="eClose()">Já anotei</button>';$('ed').classList.add('on')}
+async function rcNovo(){if(!(await chk($('pA').value)))return alert('Escreva primeiro o PIN atual.');rcMostra(await rcMk())}
+function bqFail(){const B=bq();B.n=(B.n||0)+1;let m='Incorreto.';if(B.n>=5){B.t=(B.t||0)+1;const w=[30,60,300,900,3600][Math.min(B.t-1,4)];B.ate=Date.now()+w*1000;B.n=0;m='Errou 5 vezes. Aguarde '+(w>=60?w/60+' min':w+' s')+'.'}try{localStorage.setItem('rotina_bloq',JSON.stringify(B))}catch(e){}return m}
+function rcVolta(){$('lkR').style.display='none';$('lkC').style.display='block';$('rcC').value=$('rcP').value=$('rcQ').value=''}
+async function rcUsar(){const B=bq(),w=Math.ceil(((B.ate||0)-Date.now())/1000),E=$('rcE');if(w>0){E.textContent='Muitas tentativas. Aguarde '+w+' s.';return}
+const n=$('rcP').value;if(!/^\d{4,6}$/.test(n)){E.textContent='O PIN novo deve ter 4 a 6 números.';return}if(n!==$('rcQ').value){E.textContent='Os dois PIN não coincidem.';return}
+const r=D.pin&&D.pin.r;if(!r||(await hp(rcNorm($('rcC').value),r.s))!==r.h){E.textContent=bqFail();return}
+try{localStorage.removeItem('rotina_bloq')}catch(e){}const sl=uid();D.pin={s:sl,h:await hp(n,sl)};const c=await rcMk();rcVolta();$('lk').classList.remove('on');R();rcMostra(c)}
+function vUndo(id){D.valores=D.valores.filter(v=>v.id!==id);save();R();$('ts').classList.remove('on')}
+function cpDesf(vid){const it=D.compras.filter(c=>c.vid===vid);if(!it.length&&!D.valores.some(v=>v.id===vid))return;it.forEach(c=>{const r=c.rid;D.compras=D.compras.filter(x=>x.id!==r||x.feito);c.feito=false;c.fim='';c.vid='';c.rid=''});D.valores=D.valores.filter(v=>v.id!==vid);save();R();toast('Compra desfeita. O valor voltou à caixa.')}
+const SAFE=t=>String(t).replace(/[^\w-]/g,'');
+function limpa(o,d){if(!o||typeof o!=='object'||d>6)return;if(Array.isArray(o)){o.forEach(x=>limpa(x,d+1));return}for(const k in o){const v=o[k];if(typeof v==='string'&&/^(id|prox|bid|rid|vid)$/.test(k))o[k]=SAFE(v);else limpa(v,d+1)}}
+function limpaX(x){limpa(x,0);if(x.feitos&&typeof x.feitos==='object'){const f={};for(const k in x.feitos)f[SAFE(k)]=(Array.isArray(x.feitos[k])?x.feitos[k]:[]).map(SAFE);x.feitos=f}if(x.urlG&&!/^https?:\/\//i.test(x.urlG))x.urlG=''}
+let bkT;const bkSt=()=>{try{history.pushState({g:2},'',location.href)}catch(e){}};
+function bkInit(){try{history.replaceState({g:1},'',location.href)}catch(e){}bkSt()}
+function bkUp(){if($('lk').classList.contains('on')){if($('lkR').style.display==='block'){rcVolta();return true}return false}
+if($('ed').classList.contains('on')){eClose();return true}
+const p=document.querySelector('.pg.on').id.slice(2);if(p!=='hoje'){go('hoje');return true}
+if(SUBP.hoje&&SUBP.hoje!=='resumo'){go('hoje','resumo');return true}return false}
+window.addEventListener('popstate',()=>{if(bkUp())return bkSt();toast('Toque outra vez em Voltar para sair.');clearTimeout(bkT);bkT=setTimeout(bkSt,2000)});
 /* ---- retirada / metas / cronómetro ---- */
 function rtAdd(){const v=parseFloat(String($('rtV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const f=$('rtF').value,id='rt'+uid();
 D.valores.push({id:uid(),tipo:'entrada',desc:'Retirada Bejoma',valor:v,cat:'Retirada Bejoma',data:td(),forma:f,origem:'bejoma',bid:id});
@@ -511,14 +550,14 @@ it.forEach(a=>a.env=true);save();eClose();R();toast('Aprovação enviada. Na Bej
 const catCasa=()=>D.vcats.indexOf('Casa')>=0?'Casa':D.vcats[0];
 function saidaRapida(desc,v,cat,f,data){data=data||td();const sd=sf(f);if(v>sd+0.005&&!confirm('Em '+FN[f]+' só tem '+money(sd)+'.\n\nRegistar mesmo assim?'))return false;
 if(D.limite>0){const g=gastoDia(data);if(g+v>D.limite&&!confirm('Com esta saída, o gasto de '+fmt(data)+' fica em '+money(g+v)+', acima do limite de '+money(D.limite)+'.\n\nRegistar mesmo assim?'))return false}
-D.valores.push({id:uid(),tipo:'saida',desc,valor:v,cat,data,forma:f});return true}
-function qAdd(){const v=parseFloat(String($('qV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const d=$('qD').value.trim()||'Despesa';if(saidaRapida(d,v,$('qC').value||catCasa(),$('qF').value)){$('qV').value='';$('qD').value='';save();R();toast('Despesa registada: −'+money(v)+cxMsg())}}
+const id=uid();D.valores.push({id,tipo:'saida',desc,valor:v,cat,data,forma:f});return id}
+function qAdd(){const v=parseFloat(String($('qV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const d=$('qD').value.trim()||'Despesa';const id=saidaRapida(d,v,$('qC').value||catCasa(),$('qF').value);if(id){$('qV').value='';$('qD').value='';save();R();toast('Despesa registada: −'+money(v)+cxMsg(),"vUndo('"+id+"')")}}
 function cpAdd(){const t=$('cpN').value.trim(),p=parseFloat(String($('cpP').value).replace(',','.'));if(!t)return alert('Escreva o item.');if(!(p>0))return alert('Indique o preço estimado.');D.compras.push({id:uid(),t,qtd:$('cpQ').value.trim(),preco:p,dia:$('cpD').value,cat:$('cpC').value,rep:$('cpR').value,sel:false,feito:false});['cpN','cpQ','cpP','cpD'].forEach(i=>{$(i).value=''});save();R()}
 function cpSel(id){const c=D.compras.find(x=>x.id===id);if(!c)return;c.sel=!c.sel;save(1);R()}
 function cpDel(id){lix('compras',id)}
 function cpComprar(){const sel=D.compras.filter(c=>!c.feito&&c.sel);if(!sel.length)return alert('Marque os itens que comprou.');const es=sel.reduce((q,c)=>q+c.preco,0),tx=String($('cpPg').value).replace(',','.').trim(),v=tx===''?es:parseFloat(tx);if(!(v>0))return alert('Indique o total pago.');
-const d='Compras: '+sel.map(c=>c.t).join(', ').slice(0,60);if(!saidaRapida(d,v,catCasa(),$('cpF').value))return;
-sel.forEach(c=>{c.feito=true;c.sel=false;c.fim=td();if(c.rep)D.compras.push({id:uid(),t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,sel:false,feito:false})});$('cpPg').value='';save();R();toast('Compra registada: −'+money(v)+cxMsg())}
+const d='Compras: '+sel.map(c=>c.t).join(', ').slice(0,60);if(!confirm('Registar a compra de '+money(v)+' ('+FN[$('cpF').value]+')?\n\n'+sel.map(c=>c.t).join(', ')))return;const vid=saidaRapida(d,v,catCasa(),$('cpF').value);if(!vid)return;
+sel.forEach(c=>{c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,sel:false,feito:false})}});$('cpPg').value='';save();R();toast('Compra registada: −'+money(v)+cxMsg(),"cpDesf('"+vid+"')")}
 function ctDue(c,h){const ult=new Date(+h.slice(0,4),+h.slice(5,7),0).getDate();return h.slice(0,8)+pad(Math.min(Math.max(1,+c.dia||1),ult))}
 function ctAdd(){const n=$('ctN').value.trim(),v=parseFloat(String($('ctV').value).replace(',','.')),d=parseInt($('ctDia').value,10);if(!n)return alert('Escreva o nome da conta.');if(!(v>0))return alert('Indique o valor.');if(!(d>=1&&d<=31))return alert('Indique o dia do mês (1 a 31).');D.contas.push({id:uid(),nome:n,valor:v,dia:d,pago:''});['ctN','ctV','ctDia'].forEach(i=>{$(i).value=''});save();R()}
 function ctDel(id){lix('contas',id)}
@@ -551,7 +590,7 @@ const catQ=$('qC').value;$('qC').innerHTML=D.vcats.map(c=>`<option>${esc(c)}</op
 const pe=D.compras.filter(c=>!c.feito).sort((a,b)=>(a.dia||'9')<(b.dia||'9')?-1:1),est=pe.reduce((q,c)=>q+c.preco,0),sel=pe.filter(c=>c.sel),es=sel.reduce((q,c)=>q+c.preco,0),sd=sf('din')+sf('mcx');
 $('cpT').innerHTML=`<div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><div class="k">Por comprar</div><div class="v">${money(est)}</div><small>${pe.length} item(ns)</small></div><div class="stat"><div class="k">Caixa</div><div class="v ${est>sd?'bad':'good'}">${money(sd)}</div></div></div>${est>sd?`<div class="bad" style="margin-top:6px">⚠️ A lista custa mais do que o seu saldo (faltam ${money(est-sd)}).</div>`:''}`;
 const row=c=>`<div class="item"><div class="l">${ck(c.sel,`cpSel('${c.id}')`)}<div>${esc(c.t)}${c.qtd?' · '+esc(c.qtd):''}<small class="${c.dia&&c.dia<h?'bad':''}">${esc(c.cat)}${c.dia?' · '+fmt(c.dia):''}${c.rep?' · 🔁 semanal':''} · ${money(c.preco)}</small></div></div><div class="bt"><button class="mini" onclick="cpUm('${c.id}')">Comprei</button>${eb('compras',c.id)}<button class="mini dng" onclick="cpDel('${c.id}')">✕</button></div></div>`,co=D.compras.filter(c=>c.feito).slice(-6).reverse();
-$('cpL').innerHTML=(pe.length?pe.map(row).join(''):'<div class="empty">Lista vazia. Acrescente o que precisa comprar.</div>')+(co.length?'<small class="empty">Comprados recentemente</small>'+co.map(c=>`<div class="item"><div>${esc(c.t)}<small>${fmt(c.fim)} · ${money(c.preco)}</small></div></div>`).join(''):'');
+$('cpL').innerHTML=(pe.length?pe.map(row).join(''):'<div class="empty">Lista vazia. Acrescente o que precisa comprar.</div>')+(co.length?'<small class="empty">Comprados recentemente</small>'+co.map(c=>`<div class="item"><div>${esc(c.t)}<small>${fmt(c.fim)} · ${money(c.preco)}</small></div>${c.vid?`<button class="mini dng" onclick="cpDesf('${c.vid}')">Desfazer</button>`:''}</div>`).join(''):'');
 $('cpSel').textContent=sel.length?sel.length+' item(ns) marcado(s) · estimado '+money(es):'Marque acima os itens que comprou.';$('cpPg').placeholder=es?'em branco = '+money(es):'';cpPrev();
 $('ctL').innerHTML=D.contas.length?D.contas.slice().sort((a,b)=>a.dia-b.dia).map(c=>{const ds=ctDue(c,h),pg=c.pago===h.slice(0,7),df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1),st=pg?'✅ Paga este mês':df<0?'⚠️ atrasada '+(-df)+' dia(s)':df===0?'vence hoje':'vence '+fmt(ds)+' · em '+df+' dia(s)';
 return `<div class="item"><div><b>${esc(c.nome)}</b><small class="${!pg&&df<0?'bad':''}">${money(c.valor)} · dia ${c.dia} · ${st}</small></div><div class="bt">${pg?'':`<button class="mini" onclick="ctPagar('${c.id}')">Pagar</button>`}${eb('contas',c.id)}<button class="mini dng" onclick="ctDel('${c.id}')">✕</button></div></div>`}).join(''):'<div class="empty">Sem contas. Acrescente a renda, a luz, a água, a internet…</div>';
@@ -683,8 +722,8 @@ function vAdd(){const t=$('vT').value,v=parseFloat(String($('vV').value).replace
 if(!(v>0))return alert('Indique o valor.');
 if(t==='saida'){const s=sf(f);if(v>s+0.005&&!confirm('Em '+FN[f]+' só tem '+money(s)+' e esta saída é de '+money(v)+'.\n\nRegistar mesmo assim? (o saldo ficaria negativo)'))return}
 if(t==='saida'&&D.limite>0){const d=$('vDt').value||td(),g=gastoDia(d);if(g+v>D.limite&&!confirm('Com esta saída, o gasto de '+fmt(d)+' fica em '+money(g+v)+', acima do limite de '+money(D.limite)+'.\n\nRegistar mesmo assim?'))return}
-D.valores.push({id:uid(),tipo:t,desc:$('vDs').value.trim()||(t==='saida'?'Saída':'Entrada'),valor:v,cat:t==='saida'?$('vC').value:'Entrada',data:$('vDt').value||td(),forma:f});
-$('vDs').value='';$('vV').value='';save();R();toast((t==='saida'?'Saída registada: −':'Entrada registada: +')+money(v)+cxMsg())}
+const nid=uid();D.valores.push({id:nid,tipo:t,desc:$('vDs').value.trim()||(t==='saida'?'Saída':'Entrada'),valor:v,cat:t==='saida'?$('vC').value:'Entrada',data:$('vDt').value||td(),forma:f});
+$('vDs').value='';$('vV').value='';save();R();toast((t==='saida'?'Saída registada: −':'Entrada registada: +')+money(v)+cxMsg(),"vUndo('"+nid+"')")}
 function vDel(id){lix('valores',id,v=>'O saldo '+(v.tipo==='entrada'?'desce ':'sobe ')+money(v.valor)+'.')}
 function vCat(l){const m={};l.filter(v=>v.tipo==='saida'&&!pB(v)).forEach(v=>m[v.cat]=(m[v.cat]||0)+v.valor);return Object.keys(m).map(k=>[k,m[k]]).sort((a,b)=>b[1]-a[1])}
 function bkOk(){D.ultCopia=td();D.alt=0;save(1);R()}
@@ -693,8 +732,7 @@ function exp(){const nm='bejoma-pessoal-'+td()+'.json',j=JSON.stringify(Object.a
 if(navigator.share&&window.File){let f;try{f=new File([j],nm,{type:'text/plain'})}catch(e){}
 if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:nm}).then(bkOk).catch(e=>{if(!e||e.name!=='AbortError')bkDl(j,nm)});return}}
 bkDl(j,nm)}
-function cPaste(){$('edB').innerHTML='<h2>Importar colando texto</h2><p class="empty">Cole aqui o texto da cópia.</p><textarea id="pT" style="width:100%;height:160px;border:2px solid var(--line);border-radius:14px;padding:10px"></textarea><button class="b" onclick="ld($(\'pT\').value)">Importar</button><button class="b sec" onclick="eClose()">Cancelar</button>';$('ed').classList.add('on')}
-function ld(t){try{const x=JSON.parse(String(t).trim());if(!x||!Array.isArray(x.tarefas)||!Array.isArray(x.ativ))throw 0;if(!confirm('Substituir os dados atuais pela cópia?'))return;const pn=D.pin,cr=D.cron;D=Object.assign(DEF(),x);delete D.pin;D.cron=cr||null;if(pn)D.pin=pn;D.lixo=D.lixo||[];save();eClose();R()}catch(e){alert('Ficheiro ou texto inválido.')}}
+function ld(t){try{const x=JSON.parse(String(t).trim());if(!x||!Array.isArray(x.tarefas)||!Array.isArray(x.ativ))throw 0;if(!confirm('Substituir os dados atuais pela cópia?'))return;limpaX(x);const pn=D.pin,cr=D.cron;D=Object.assign(DEF(),x);delete D.pin;D.cron=cr||null;if(pn)D.pin=pn;D.lixo=D.lixo||[];save();eClose();R()}catch(e){alert('Ficheiro ou texto inválido.')}}
 function imp(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{ld(r.result);el.value=''};r.readAsText(f)}
 
 /* ---- relatório PDF ---- */
@@ -791,11 +829,12 @@ $('vL').innerHTML=vl.length?vl.map(v=>`<div class="item"><div><b>${esc(v.desc)}<
 }
 $('hNF').innerHTML=hFrm('hn');
 $('agNF').innerHTML=bFrm('bn');bRp('bn');
-navBuild();R();agTick();hashIn();window.addEventListener('hashchange',hashIn);
+navBuild();R();agTick();hashIn();window.addEventListener('hashchange',hashIn);bkInit();
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
-document.addEventListener('visibilitychange',()=>{if(document.hidden){HID=Date.now();return}if(D.pin&&HID&&Date.now()-HID>60000)lock();RM_OFF=false;agTick();R()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){HID=Date.now();return}if(D.pin&&HID&&Date.now()-HID>30000)lock();RM_OFF=false;agTick();R()});
 if(D.pin)lock();
 window.addEventListener('storage',e=>{if(e.key==='rotina_inbox')R()});
+(function(){const t=$('spT'),m=['A verificar a segurança…','A carregar os seus dados…','A preparar a caixa e a agenda…'];let i=0;const iv=setInterval(()=>{if(++i<m.length)t.textContent=m[i]},650);setTimeout(()=>{clearInterval(iv);$('sp').remove()},2600)})();
 </script>
 </body>
 </html>
