@@ -31,7 +31,16 @@ button,input,select,textarea{font-family:inherit}
 .tb button{flex:1;border:0;background:none;color:var(--sub);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:600;padding:4px 0}
 .tb svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tb button.on{color:var(--pri)}
-.pg,.sp{display:none}.pg.on,.sp.on{display:block}
+.pg,.sp,.ip{display:none}.pg.on,.sp.on,.ip.on{display:block}
+.sn2{display:flex;gap:6px;overflow-x:auto;margin:0 0 12px;padding-bottom:2px;scrollbar-width:none}
+.sn2 button{flex:none;border:1px solid var(--line);background:var(--soft);color:var(--sub);border-radius:10px;padding:8px 12px;font-weight:600;font-size:.85rem;display:flex;gap:6px;align-items:center}
+.sn2 button.on{background:var(--card);color:var(--pri);border-color:var(--pri)}
+.sn2 button.nw{border-style:dashed}
+.sn2 button b{background:var(--line);color:var(--text);border-radius:999px;padding:0 7px;font-size:.72rem;line-height:1.5}
+.sn2 button.on b{background:var(--pri);color:#fff}
+.bar i.over{background:var(--bad)}
+.sub{display:block;margin:10px 0 2px;color:var(--sub);font-size:.8rem;font-weight:600}
+.row2{display:flex;gap:10px}.row2>div{flex:1}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
 h2{margin:0 0 10px;font-size:1rem;font-weight:700}
 label{display:block;font-size:.8rem;font-weight:600;color:var(--sub);margin:12px 0 4px}
@@ -116,10 +125,15 @@ button.sec{background:var(--soft);color:var(--text)}
 <div class="card" id="hSc"><h2>Sem prazo</h2><div id="hS"></div></div>
 </div>
 <div class="sp" id="s-hoje-habitos">
-<div class="card"><h2>Hábitos de hoje</h2><div id="hH"></div>
-<label>Novo hábito</label><input id="hN" placeholder="ex.: Ler 15 minutos">
+<div class="sn2" id="fd-hab"></div>
+<div class="ip" data-g="hab" data-k="lista">
+<div class="card"><h2>Hábitos de hoje</h2><div id="hH"></div></div>
+</div>
+<div class="ip" data-g="hab" data-k="novo">
+<div class="card"><h2>Novo hábito</h2><label style="margin-top:0">Nome</label><input id="hN" placeholder="ex.: Ler 15 minutos">
 <div id="hNF"></div>
-<button class="b sec" onclick="hAdd()">Adicionar hábito</button></div>
+<button class="b" onclick="hAdd()">Guardar hábito</button></div>
+</div>
 </div>
 <div class="sp" id="s-hoje-revisao">
 <div class="card"><h2>Revisão do dia</h2><label style="margin-top:0">Como foi o dia?</label><div class="strip" id="rvB"></div><label>Notas</label><textarea id="rvT" rows="3" style="width:100%;border:2px solid var(--line);border-radius:14px;padding:10px;font:inherit" placeholder="O que correu bem? O que fica para amanhã?" oninput="rvSave()"></textarea></div>
@@ -129,11 +143,25 @@ button.sec{background:var(--soft);color:var(--text)}
 
 <div class="sn" id="sn-plan"></div>
 <div class="sp on" id="s-plan-agenda">
+<div class="sn2" id="fd-agd"></div>
+<div class="ip" data-g="agd" data-k="ver">
 <div id="agB"></div>
 <div class="card"><h2>Agenda</h2><select id="agV" onchange="R()"><option value="0">Hoje</option><option value="1">Amanhã</option><option value="7">Próximos 7 dias</option></select><div id="agS" style="margin-top:10px"></div><div id="agL" style="margin-top:8px"></div><div id="agM"></div></div>
+</div>
+<div class="ip" data-g="agd" data-k="novo">
 <div class="card"><h2>Novo bloco de horário</h2><p class="empty">Marque trabalho, descanso, refeições, estudo… Pode repetir todos os dias, só em certos dias, ou num dia só.</p><div id="agNF"></div><button class="b" onclick="bAdd()">Guardar bloco</button></div>
 </div>
+</div>
 <div class="sp" id="s-plan-tarefas">
+<div class="sn2" id="fd-tar"></div>
+<div class="ip" data-g="tar" data-k="lista">
+<div class="card"><h2>Por fazer</h2><div id="tL"></div></div>
+<div class="card"><h2>Planeamento</h2><select id="plP" onchange="R()"><option value="1">Amanhã</option><option value="7" selected>Próximos 7 dias</option><option value="30">Próximos 30 dias</option></select><div id="plL" style="margin-top:8px"></div></div>
+</div>
+<div class="ip" data-g="tar" data-k="conc">
+<div class="card"><h2>Concluídas</h2><div id="tF"></div></div>
+</div>
+<div class="ip" data-g="tar" data-k="novo">
 <div class="card"><h2>Nova tarefa</h2>
 <label>O que tenho de fazer?</label><input id="tT" placeholder="ex.: Pagar a Tia Eliza">
 <label>Categoria</label><select id="tC"></select>
@@ -142,11 +170,22 @@ button.sec{background:var(--soft);color:var(--text)}
 <label>Repetir</label><select id="tRp"><option value="">Não repete</option><option value="dia">🔁 Todos os dias</option><option value="sem">🔁 Todas as semanas</option><option value="mes">🔁 Todos os meses</option></select>
 <label>Prioridade</label><select id="tR"><option value="2">🟡 Média</option><option value="3">🔴 Alta</option><option value="1">🟢 Baixa</option></select>
 <button class="b" onclick="tAdd()">Guardar tarefa</button></div>
-<div class="card"><h2>Planeamento</h2><select id="plP" onchange="R()"><option value="1">Amanhã</option><option value="7" selected>Próximos 7 dias</option><option value="30">Próximos 30 dias</option></select><div id="plL" style="margin-top:8px"></div></div>
-<div class="card"><h2>Por fazer</h2><div id="tL"></div></div>
-<div class="card"><h2>Concluídas</h2><div id="tF"></div></div>
+</div>
 </div>
 <div class="sp" id="s-plan-ativ">
+<div class="sn2" id="fd-ati"></div>
+<div class="ip" data-g="ati" data-k="reg">
+<div class="card"><h2>Últimos 7 dias</h2><div id="aS"></div></div>
+<div class="card"><h2>Registos recentes</h2><div id="aL"></div></div>
+</div>
+<div class="ip" data-g="ati" data-k="met">
+<div class="card"><h2>Metas</h2><div id="mtL"></div>
+<label>Nova meta</label><select id="mtC"></select>
+<select id="mtP" style="margin-top:8px"><option value="sem">Por semana (últimos 7 dias)</option><option value="dia">Por dia</option></select>
+<label>Meta (horas)</label><input id="mtV" type="text" inputmode="decimal" placeholder="ex.: 5">
+<button class="b sec" onclick="mtAdd()">Guardar meta</button></div>
+</div>
+<div class="ip" data-g="ati" data-k="novo">
 <div class="card"><h2>⏱️ Cronómetro</h2><div id="cr"></div></div>
 <div class="card"><h2>Registar atividade</h2>
 <label>O que fiz?</label><input id="aT" placeholder="ex.: Estudei matemática">
@@ -154,19 +193,15 @@ button.sec{background:var(--soft);color:var(--text)}
 <label>Data</label><input id="aD" type="date">
 <label>Duração (minutos)</label><input id="aM" type="number" inputmode="numeric" min="0" placeholder="ex.: 45">
 <button class="b" onclick="aAdd()">Guardar atividade</button></div>
-<div class="card"><h2>Últimos 7 dias</h2><div id="aS"></div></div>
-<div class="card"><h2>Metas</h2><div id="mtL"></div>
-<label>Nova meta</label><select id="mtC"></select>
-<select id="mtP" style="margin-top:8px"><option value="sem">Por semana (últimos 7 dias)</option><option value="dia">Por dia</option></select>
-<label>Meta (horas)</label><input id="mtV" type="text" inputmode="decimal" placeholder="ex.: 5">
-<button class="b sec" onclick="mtAdd()">Guardar meta</button></div>
-<div class="card"><h2>Registos recentes</h2><div id="aL"></div></div>
+</div>
 </div>
 </div>
 <div class="pg" id="p-din">
 
 <div class="sn" id="sn-din"></div>
 <div class="sp on" id="s-din-caixa">
+<div class="sn2" id="fd-cx"></div>
+<div class="ip" data-g="cx" data-k="res">
 <div class="card"><div class="grid">
 <div class="stat"><div class="k">Caixa</div><div class="v" id="vSS"></div></div>
 <div class="stat"><div class="k">💵 Dinheiro</div><div class="v" id="vSD"></div></div>
@@ -176,6 +211,10 @@ button.sec{background:var(--soft);color:var(--text)}
 <div class="stat"><div class="k">Entrou este mês</div><div class="v good" id="vM1"></div></div>
 <div class="stat"><div class="k">Saiu este mês</div><div class="v bad" id="vM2"></div></div>
 </div></div>
+<div class="card"><h2>Movimentos recentes</h2><div id="vL"></div></div>
+<div class="card"><h2>Saídas deste mês</h2><div id="vR"></div></div>
+</div>
+<div class="ip" data-g="cx" data-k="novo">
 <div class="card"><h2>Novo valor</h2>
 <label>Tipo</label><select id="vT" onchange="vTipo()"><option value="saida">➖ Saída (gastei)</option><option value="entrada">➕ Entrada (recebi)</option></select>
 <label>Descrição</label><input id="vDs" placeholder="ex.: Almoço">
@@ -184,67 +223,113 @@ button.sec{background:var(--soft);color:var(--text)}
 <div id="vCw"><label>Categoria</label><select id="vC"></select></div>
 <label>Data</label><input id="vDt" type="date">
 <button class="b" onclick="vAdd()">Guardar valor</button></div>
-<div class="card"><h2>Movimentos recentes</h2><div id="vL"></div></div>
-<div class="card"><h2>Saídas deste mês</h2><div id="vR"></div></div>
+</div>
+<div class="ip" data-g="cx" data-k="troca">
 <div class="card"><h2>Trocar Dinheiro ↔ Express</h2><div id="trL"></div>
 <label>O que fez?</label><select id="trD"><option value="mcx>din">Levantei do Express (Express → Dinheiro)</option><option value="din>mcx">Pus dinheiro no Express (Dinheiro → Express)</option></select>
 <label>Valor trocado (Kz)</label><input id="trV" type="text" inputmode="decimal" placeholder="ex.: 10000">
 <label>Taxa paga (Kz, opcional)</label><input id="trX" type="text" inputmode="decimal" placeholder="ex.: 100">
 <button class="b sec" onclick="trAdd()">Registar troca</button>
 <p class="empty">A troca não conta como entrada nem como saída. Só muda onde está o dinheiro. A taxa conta como saída.</p></div>
+</div>
+<div class="ip" data-g="cx" data-k="lim">
 <div class="card"><h2>Limite diário de gastos</h2><p class="empty" id="lmT"></p>
 <label>Limite por dia (Kz). Deixe vazio para desligar</label><input id="lmV" type="text" inputmode="decimal" placeholder="ex.: 3000">
 <button class="b sec" onclick="lmSave()">Guardar limite</button></div>
 </div>
+</div>
 <div class="sp" id="s-din-compras">
+<div class="sn2" id="fd-cp"></div>
+<div class="ip" data-g="cp" data-k="lista">
 <div class="card"><h2>Lista de compras</h2><div id="cpT"></div><div id="cpL" style="margin-top:8px"></div></div>
 <div class="card"><h2>Registar compra</h2><p class="empty" id="cpSel"></p><p class="empty" id="cpAf"></p><label>Total pago (Kz)</label><input id="cpPg" type="text" inputmode="decimal" oninput="cpPrev()"><label>Pagou com</label><select id="cpF" onchange="cpPrev()"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
 <button class="b" onclick="cpComprar()">Registar compra dos itens marcados</button><p class="empty">Desconta o total pago da caixa pessoal e passa os itens para "comprados".</p></div>
-<div class="card"><h2>Novo item</h2><label style="margin-top:0">Item</label><input id="cpN" placeholder="ex.: Arroz, detergente, gás">
+</div>
+<div class="ip" data-g="cp" data-k="casa">
+<div class="card"><div class="row2"><div><button class="b" id="csB1" onclick="csSet('com')">🔄 Com acompanhamento</button></div><div><button class="b sec" id="csB2" onclick="csSet('sem')">📦 Sem acompanhamento</button></div></div><p class="empty" id="csH" style="margin:8px 0 0"></p></div>
+<div id="csCom">
+<div class="card"><div class="grid"><div class="stat"><div class="k">Em casa</div><div class="v" id="csN"></div></div><div class="stat"><div class="k">Já acabaram</div><div class="v" id="csF"></div></div><div class="stat"><div class="k">Duração média</div><div class="v" id="csM"></div></div></div></div>
+<div class="card"><h2>🎯 Focar nas próximas compras</h2><p class="empty" style="margin-top:0">O que está perto de acabar ou já passou da duração habitual.</p><div id="csP"></div></div>
+<div class="card"><h2>Em casa agora</h2><p class="empty" style="margin-top:0">Quando algo acabar, toque em "Acabou". A app guarda a data de entrada e a data de fim.</p><div id="csL"></div></div>
+<div class="card"><h2>⚡ Acabam depressa</h2><p class="empty" style="margin-top:0">Duram 30 dias ou menos. Compre com mais frequência.</p><div id="csCu"></div></div>
+<div class="card"><h2>🐢 Duram muito</h2><p class="empty" style="margin-top:0">Duram mais de 30 dias. Compra mais espaçada.</p><div id="csLo"></div></div>
+<div class="card"><h2>Já acabaram</h2><div id="csA"></div></div>
+<div class="card"><h2>Quanto dura cada coisa</h2><div id="csD"></div></div>
+</div>
+<div id="csSem">
+<div class="card"><div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><div class="k">Itens comprados</div><div class="v" id="csSN"></div></div><div class="stat"><div class="k">Total gasto</div><div class="v" id="csST"></div></div></div></div>
+<div class="card"><h2>O que já comprei para a casa</h2><p class="empty" style="margin-top:0">Coisas que ficam (panela, cortina, balde…), por categoria. Toque em "Acompanhar" se quiser medir quanto duram.</p><div id="csSL"></div></div>
+</div>
+</div>
+<div class="ip" data-g="cp" data-k="novo">
+<div class="card"><h2>Novo item</h2><p class="empty" style="margin-top:0">Fica na pasta "A comprar" até marcar como comprado. Depois passa para "Em casa".</p><label>Item</label><input id="cpN" placeholder="ex.: Arroz, detergente, gás">
 <div style="display:flex;gap:10px"><div style="flex:1"><label>Quantidade</label><input id="cpQ" placeholder="ex.: 2 kg"></div><div style="flex:1"><label>Preço (Kz)</label><input id="cpP" type="text" inputmode="decimal" placeholder="estimado"></div></div>
 <label>Comprar no dia (opcional)</label><input id="cpD" type="date">
-<label>Categoria</label><select id="cpC"><option>Casa</option><option>Comida</option><option>Limpeza</option><option>Higiene</option><option>Outros</option></select>
+<label>Categoria</label><select id="cpC" onchange="cpCatCh()"><option>Comida</option><option>Bebidas</option><option>Limpeza</option><option>Higiene</option><option>Casa</option><option>Outros</option></select>
+<label>Acompanhar quanto tempo dura em casa?</label><select id="cpK"><option value="1">Sim (comida, sabão, produtos que acabam)</option><option value="0">Não (coisas que ficam, como cortina ou panela)</option></select>
 <label>Repetir</label><select id="cpR"><option value="">Compra única</option><option value="1">🔁 Todas as semanas</option></select>
 <button class="b" onclick="cpAdd()">Adicionar à lista</button></div>
 </div>
-<div class="sp" id="s-din-contas">
-<div class="card"><h2>Contas da casa</h2><div id="ctL"></div><label>Nova conta (renda, luz, água, internet…)</label><input id="ctN" placeholder="ex.: Renda">
-<div style="display:flex;gap:10px"><div style="flex:1"><label>Valor (Kz)</label><input id="ctV" type="text" inputmode="decimal"></div><div style="flex:1"><label>Dia do mês</label><input id="ctDia" type="number" min="1" max="31" placeholder="ex.: 5"></div></div>
-<label>Pagar com</label><select id="ctF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
-<button class="b sec" onclick="ctAdd()">Guardar conta</button></div>
-<div class="card"><h2>Dívidas</h2>
-<div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><div class="k">Eu devo</div><div class="v bad" id="dD"></div></div><div class="stat"><div class="k">Devem-me</div><div class="v good" id="dM"></div></div></div>
-<div id="dL" style="margin-top:8px"></div>
-<label>Nova dívida</label><select id="dT"><option value="devo">Eu devo a alguém</option><option value="devem">Alguém deve-me</option></select>
-<input id="dQ" placeholder="Nome (ex.: Tia Eliza)" style="margin-top:8px"><input id="dV" type="text" inputmode="decimal" placeholder="Valor (Kz)" style="margin-top:8px">
+</div>
+<div class="sp" id="s-din-div">
+<div class="card"><div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><div class="k">Eu devo</div><div class="v bad" id="dD"></div></div><div class="stat"><div class="k">Devem-me</div><div class="v good" id="dM"></div></div></div></div>
+<div class="sn2" id="fd-dv"></div>
+<div class="ip" data-g="dv" data-k="devo">
+<div class="card"><h2>Eu devo</h2><div id="dLd"></div></div>
+</div>
+<div class="ip" data-g="dv" data-k="devem">
+<div class="card"><h2>Devem-me</h2><div id="dLm"></div></div>
+</div>
+<div class="ip" data-g="dv" data-k="nova">
+<div class="card"><h2>Nova dívida</h2><label style="margin-top:0">Tipo</label><select id="dT"><option value="devo">Eu devo a alguém</option><option value="devem">Alguém deve-me</option></select>
+<label>Nome</label><input id="dQ" placeholder="Nome (ex.: Tia Eliza)"><label>Valor (Kz)</label><input id="dV" type="text" inputmode="decimal" placeholder="ex.: 10000">
 <label>Prazo (opcional)</label><input id="dP" type="date">
-<button class="b sec" onclick="dAdd()">Guardar dívida</button>
+<button class="b" onclick="dAdd()">Guardar dívida</button>
 <p class="empty">Registar a dívida não mexe no saldo. O saldo só muda quando registar um pagamento.</p></div>
 </div>
+</div>
+<div class="sp" id="s-din-contas">
+<div class="sn2" id="fd-ct"></div>
+<div class="ip" data-g="ct" data-k="lista">
+<div class="card"><h2>Contas da casa</h2><label style="margin-top:0">Pagar com (vale para o botão Pagar)</label><select id="ctF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select><div id="ctL" style="margin-top:8px"></div></div>
+</div>
+<div class="ip" data-g="ct" data-k="nova">
+<div class="card"><h2>Nova conta</h2><label style="margin-top:0">Nome (renda, luz, água, internet…)</label><input id="ctN" placeholder="ex.: Renda">
+<div class="row2"><div><label>Valor (Kz)</label><input id="ctV" type="text" inputmode="decimal"></div><div><label>Dia do mês</label><input id="ctDia" type="number" min="1" max="31" placeholder="ex.: 5"></div></div>
+<div class="row2"><div><label>Começa a pagar em (mês)</label><input id="ctIni" type="month" placeholder="AAAA-MM"></div><div><label>Deixa de pagar em (opcional)</label><input id="ctFim" type="month" placeholder="AAAA-MM"></div></div>
+<p class="empty" style="margin:6px 0 0">Deixe vazio se já paga desde já. Ex.: a renda começa em Janeiro do próximo ano; a energia só volta em Dezembro.</p>
+<label>Já pago até (mês, opcional)</label><input id="ctPa" type="month" placeholder="AAAA-MM">
+<p class="empty" style="margin:6px 0 0">Use se já pagou meses adiantados. Ex.: pagou 10 meses desde maio de 2026 → Fevereiro de 2027. Não mexe na caixa.</p>
+<button class="b" onclick="ctAdd()">Guardar conta</button></div>
+</div>
+</div>
 <div class="sp" id="s-din-bj">
+<div class="sn2" id="fd-bj"></div>
+<div class="ip" data-g="bj" data-k="pedir">
 <div class="card"><h2>Pedir dinheiro à Bejoma Gestão</h2><p class="empty">A Bejoma Gestão é o fundo principal. Ao pedir, esta app abre a Bejoma Gestão para você aprovar lá. O dinheiro só entra aqui depois de aprovar e de escrever o código.</p><div id="pgL"></div>
 <label>Valor (Kz)</label><input id="pgV" type="text" inputmode="decimal" placeholder="ex.: 20000">
 <label>Entra aqui em</label><select id="pgF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
 <label>Para quê? (opcional)</label><input id="pgD" placeholder="ex.: Compras da casa">
 <button class="b" onclick="pgCriar()">Pedir à Bejoma Gestão</button></div>
+<div class="card"><h2>Vindas da Bejoma Gestão</h2><p class="empty" id="rtT"></p><p class="empty" style="margin-top:0">Retiradas registadas na Bejoma Gestão aparecem aqui para importar.</p><div id="foT"></div><div id="bjP"></div>
+<button class="b sec" onclick="$('bjF').click()">Importar ficheiro da Bejoma Gestão</button><input id="bjF" type="file" style="display:none" onchange="bjFile(this)"></div>
+</div>
+<div class="ip" data-g="bj" data-k="pedidos">
 <div class="card"><h2>Pedidos da Bejoma Gestão</h2><p class="empty">Quando a Bejoma Gestão pede dinheiro, ele só sai daqui depois de você aprovar. Ao aprovar, recebe um código para escrever na Bejoma Gestão.</p><div id="pdL"></div>
 <label>Aprovações dadas</label><div id="apL"></div>
 <button class="b sec" onclick="$('pdF').click()">Importar pedido (ficheiro)</button><input id="pdF" type="file" style="display:none" onchange="bjFile(this)"></div>
+</div>
+<div class="ip" data-g="bj" data-k="enviar">
 <div class="card"><h2>Enviar para a Bejoma Gestão</h2><p class="empty" id="pbT"></p>
 <label>Valor (Kz)</label><input id="pbV" type="text" inputmode="decimal" placeholder="ex.: 15000">
 <label>De onde sai o dinheiro</label><select id="pbF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
 <label>Descrição (opcional)</label><input id="pbD" placeholder="ex.: Dinheiro para stock">
 <button class="b sec" onclick="pbEnviar()">Enviar para a Bejoma Gestão</button>
 <p class="empty">Sai do seu saldo aqui e entra na Caixa da Bejoma Gestão. Não conta como gasto nem no limite diário.</p></div>
-<div class="card"><h2>Retirada da Bejoma Gestão</h2><p class="empty" id="rtT"></p>
-<label>Valor retirado (Kz)</label><input id="rtV" type="text" inputmode="decimal" placeholder="ex.: 20000">
-<label>Onde ficou o dinheiro</label><select id="rtF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
-<button class="b sec" onclick="rtAdd()">Registar retirada</button>
-<div id="foT"></div>
-<p class="empty">Soma ao seu saldo aqui e fica na fila para avisar a Bejoma Gestão, que regista a saída da Caixa.</p>
-<label>Vindas da Bejoma Gestão</label><div id="bjP"></div>
-<button class="b sec" onclick="$('bjF').click()">Importar ficheiro da Bejoma Gestão</button><input id="bjF" type="file" style="display:none" onchange="bjFile(this)"></div>
+</div>
+<div class="ip" data-g="bj" data-k="lig">
 <div class="card"><h2>Ligação à Bejoma Gestão</h2><p class="empty">Abra a Bejoma Gestão no navegador, copie o endereço da barra e cole aqui. É preciso só uma vez. Serve para esta app abrir a Bejoma Gestão sozinha quando pede dinheiro.</p><input id="ugI" placeholder="https://…"><button class="b sec" onclick="ugSave()">Guardar endereço</button><button class="b sec" onclick="ugGo('')">Abrir a Bejoma Gestão</button><p class="empty" id="ugT"></p><label>Endereço desta app (a Bejoma Gestão aprende-o sozinha no primeiro pedido)</label><input id="ugSelf" readonly><button class="b sec" onclick="ugCopiar()">Copiar endereço desta app</button></div>
+</div>
 </div>
 </div>
 <div class="pg" id="p-ana">
@@ -282,6 +367,7 @@ button.sec{background:var(--soft);color:var(--text)}
 <div class="card"><h2>Apagados</h2><p class="empty">Ficam aqui 30 dias. Pode restaurar o que apagou por engano.</p><div id="lx"></div>
 <button class="b sec" onclick="lVaz()">Esvaziar Apagados</button></div>
 <div class="card"><h2>PIN</h2><p class="empty" id="pnT"></p><button class="b sec" id="pnB" onclick="pinCfg()"></button><button class="b sec" onclick="if(D.pin)lock();else alert('Defina primeiro um PIN.')">Bloquear agora</button></div>
+<div class="card"><h2>Recomeçar do zero</h2><p class="empty">Apaga tudo o que está guardado nesta app (tarefas, valores, contas, hábitos, PIN…) e deixa-a como nova. Não dá para desfazer. Faça antes uma cópia em "Cópia de segurança", acima.</p><button class="b sec dng" onclick="resetTudo()">🗑️ Reiniciar tudo</button></div>
 </div>
 <div class="sp" id="s-mais-cfg">
 <div class="card"><h2>Aspeto</h2><select id="tmS" onchange="D.tema=this.value;save(1);R()"><option value="auto">Automático (como o telemóvel)</option><option value="claro">Claro</option><option value="escuro">Escuro</option></select></div>
@@ -327,9 +413,9 @@ const save=q=>{if(!q)D.alt=(D.alt||0)+1;try{localStorage.setItem(K,JSON.stringif
 const ck=(on,fn)=>`<button class="ck${on?' on':''}" onclick="${fn}">${on?'✓':''}</button>`;
 const PRI=['','🟢','🟡','🔴'];
 
-const NAV=[['hoje', 'Hoje', [['resumo', 'Resumo'], ['habitos', 'Hábitos'], ['revisao', 'Revisão do dia']], '<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>'], ['plan', 'Planear', [['agenda', 'Agenda'], ['tarefas', 'Tarefas'], ['ativ', 'Atividades']], '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'], ['din', 'Dinheiro', [['caixa', 'Caixa'], ['compras', 'Compras'], ['contas', 'Contas e dívidas'], ['bj', 'Bejoma Gestão']], '<path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1.2"/>'], ['ana', 'Análise', [['resumo', 'Resumo'], ['pesq', 'Pesquisar']], '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'], ['mais', 'Mais', [['cat', 'Categorias'], ['dados', 'Dados e segurança'], ['cfg', 'Definições']], '<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>']];
+const NAV=[['hoje', 'Hoje', [['resumo', 'Resumo'], ['habitos', 'Hábitos'], ['revisao', 'Revisão do dia']], '<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>'], ['plan', 'Planear', [['agenda', 'Agenda'], ['tarefas', 'Tarefas'], ['ativ', 'Atividades']], '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>'], ['din', 'Dinheiro', [['caixa', 'Caixa'], ['compras', 'Compras'], ['div', 'Dívidas'], ['contas', 'Contas da casa'], ['bj', 'Bejoma Gestão']], '<path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1.2"/>'], ['ana', 'Análise', [['resumo', 'Resumo'], ['pesq', 'Pesquisar']], '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'], ['mais', 'Mais', [['cat', 'Categorias'], ['dados', 'Dados e segurança'], ['cfg', 'Definições']], '<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>']];
 const SUBP={};
-function go(p,s){const A={agenda:['plan','agenda'],tarefas:['plan','tarefas'],ativ:['plan','ativ'],compras:['din','compras'],valores:['din','bj'],resumo:['ana','resumo'],pesq:['ana','pesq']};
+function go(p,s){if(p==='valores')ST.bj='pedidos';const A={agenda:['plan','agenda'],tarefas:['plan','tarefas'],ativ:['plan','ativ'],compras:['din','compras'],valores:['din','bj'],resumo:['ana','resumo'],pesq:['ana','pesq']};
 if(A[p]){s=s||A[p][1];p=A[p][0]}
 const n=NAV.find(x=>x[0]===p)||NAV[0];s=s||SUBP[n[0]]||n[2][0][0];SUBP[n[0]]=s;
 document.querySelectorAll('.pg').forEach(e=>e.classList.toggle('on',e.id==='p-'+n[0]));
@@ -347,7 +433,7 @@ $('cpAf').innerHTML=v>0?`Caixa em ${FN[f]}: ${money(s)} → depois da compra: <b
 function cpUm(id){const c=D.compras.find(x=>x.id===id);if(!c)return;EI=id;$('edB').innerHTML=`<h2>Comprei: ${esc(c.t)}</h2><p class="empty">Caixa pessoal agora: ${money(cxTot())}</p><label>Preço pago (Kz)</label><input id="cuV" type="text" inputmode="decimal" value="${c.preco}"><label>Pagou com</label><select id="cuF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select><button class="b" onclick="cpUmOk()">Descontar da caixa</button><button class="b sec" onclick="eClose()">Cancelar</button>`;$('ed').classList.add('on')}
 function cpUmOk(){const c=D.compras.find(x=>x.id===EI);if(!c)return eClose();const v=parseFloat(String($('cuV').value).replace(',','.'));if(!(v>0))return alert('Indique o preço pago.');
 if(!confirm('Registar a compra de '+money(v)+' ('+FN[$('cuF').value]+')?\n\n'+c.t))return;const vid=saidaRapida('Compras: '+c.t,v,catCasa(),$('cuF').value);if(!vid)return;
-c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,sel:false,feito:false})}save();eClose();R();toast('Compra registada: −'+money(v)+cxMsg(),"cpDesf('"+vid+"')")}
+c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,trk:c.trk,sel:false,feito:false})}save();eClose();R();toast('Compra registada: −'+money(v)+cxMsg(),"cpDesf('"+vid+"')")}
 
 /* ---- tarefas ---- */
 const ord=(a,b)=>((a.prazo||'9')<(b.prazo||'9')?-1:(a.prazo||'9')>(b.prazo||'9')?1:b.pri-a.pri);
@@ -389,20 +475,22 @@ function porCat(l){const m={};l.forEach(a=>m[a.cat]=(m[a.cat]||0)+a.min);return 
 
 /* ---- apagados / editar / lembrete ---- */
 const LB={tarefas:'Tarefa',ativ:'Atividade',valores:'Valor',habitos:'Hábito',dividas:'Dívida',metas:'Meta',trocas:'Troca',blocos:'Bloco',compras:'Compra',contas:'Conta'};let tmr,EK,EI,EL;
-function toast(m,u){const e=$('ts');e.innerHTML='<span>'+esc(m)+'</span>'+(u?'<button onclick="'+u+'">Desfazer</button>':'');e.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>e.classList.remove('on'),10000)}
+function toast(m,u,lb){const e=$('ts');e.innerHTML='<span>'+esc(m)+'</span>'+(u?'<button onclick="'+u+'">'+(lb||'Desfazer')+'</button>':'');e.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>e.classList.remove('on'),10000)}
 function lix(k,id,ex){const i=D[k].findIndex(x=>x.id===id);if(i<0)return;const it=D[k].splice(i,1)[0],lid=uid();D.lixo.push({id:lid,k,item:it,em:td()});save();R();toast(LB[k]+' movido para Apagados.'+(ex?' '+ex(it):''),"lRest('"+lid+"')")}
 function lRest(id){const i=D.lixo.findIndex(x=>x.id===id);if(i<0)return;const e=D.lixo.splice(i,1)[0];D[e.k].push(e.item);save();R();$('ts').classList.remove('on')}
 function lPerm(id){if(!confirm('Apagar para sempre? Não dá para recuperar.'))return;D.lixo=D.lixo.filter(x=>x.id!==id);save();R()}
 function lVaz(){if(!D.lixo.length||!confirm('Esvaziar Apagados? Não dá para recuperar.'))return;D.lixo=[];save();R()}
 const eb=(k,id)=>`<button class="mini" onclick="${k==='habitos'?'hEdit':'eOpen'}('${k==='habitos'?'':k+"','"}${id}')">✎</button>`;
-const EF={tarefas:[['t','O que tenho de fazer?','text'],['cat','Categoria','cat'],['prazo','Prazo (opcional)','date'],['hora','Hora (opcional)','time'],['rep','Repetir','rep'],['pri','Prioridade','pri']],ativ:[['t','O que fiz?','text'],['cat','Categoria','cat'],['data','Data','date'],['min','Duração (minutos)','number']],valores:[['desc','Descrição','text'],['valor','Valor (Kz)','money'],['forma','Onde está o dinheiro','forma'],['cat','Categoria','vcat'],['data','Data','date']],habitos:[['nome','Nome do hábito','text']],dividas:[['quem','Nome','text'],['valor','Valor total (Kz)','money'],['prazo','Prazo (opcional)','date']],compras:[['t','Item','text'],['qtd','Quantidade (opcional)','opt'],['preco','Preço estimado (Kz)','money'],['dia','Comprar no dia (opcional)','date']],contas:[['nome','Nome','text'],['valor','Valor (Kz)','money'],['dia','Dia do mês (1 a 31)','number']]};
+const EF={tarefas:[['t','O que tenho de fazer?','text'],['cat','Categoria','cat'],['prazo','Prazo (opcional)','date'],['hora','Hora (opcional)','time'],['rep','Repetir','rep'],['pri','Prioridade','pri']],ativ:[['t','O que fiz?','text'],['cat','Categoria','cat'],['data','Data','date'],['min','Duração (minutos)','number']],valores:[['desc','Descrição','text'],['valor','Valor (Kz)','money'],['forma','Onde está o dinheiro','forma'],['cat','Categoria','vcat'],['data','Data','date']],habitos:[['nome','Nome do hábito','text']],dividas:[['quem','Nome','text'],['valor','Valor total (Kz)','money'],['prazo','Prazo (opcional)','date']],compras:[['t','Item','text'],['qtd','Quantidade (opcional)','opt'],['preco','Preço estimado (Kz)','money'],['dia','Comprar no dia (opcional)','date'],['cat','Categoria','pcat'],['trk','Acompanhar duração em casa','sn']],contas:[['nome','Nome','text'],['valor','Valor (Kz)','money'],['dia','Dia do mês (1 a 31)','number'],['ini','Começa a pagar em (mês)','mes'],['fim','Deixa de pagar em (opcional)','mes'],['pagoAte','Já pago até (mês, opcional)','mes']]};
 function fld(f,x,i){const v=x[f[0]],sel=a=>`<select id="e${i}">`+a.map(o=>`<option value="${esc(o[0])}"${String(o[0])===String(v)?' selected':''}>${esc(o[1])}</option>`).join('')+'</select>';
 if(f[2]==='cat')return sel([...new Set(D.cats.concat(v))].map(c=>[c,c]));
+if(f[2]==='pcat')return sel([...new Set(PC.concat(v))].map(c=>[c,c]));
+if(f[2]==='sn'){const t=cpTrk(x)?'1':'0';return `<select id="e${i}"><option value="1"${t==='1'?' selected':''}>Sim</option><option value="0"${t==='0'?' selected':''}>Não</option></select>`}
 if(f[2]==='vcat')return sel([...new Set(D.vcats.concat(v))].map(c=>[c,c]));
 if(f[2]==='rep')return sel([['','Não repete'],['dia','🔁 Todos os dias'],['sem','🔁 Todas as semanas'],['mes','🔁 Todos os meses']]);
 if(f[2]==='pri')return sel([[3,'🔴 Alta'],[2,'🟡 Média'],[1,'🟢 Baixa']]);
 if(f[2]==='forma')return sel([['din','💵 Dinheiro'],['mcx','📱 Multicaixa Express']]);
-return `<input id="e${i}" type="${f[2]==='date'?'date':f[2]==='time'?'time':f[2]==='number'?'number':'text'}"${f[2]==='money'?' inputmode="decimal"':''} value="${esc(v)}">`}
+return `<input id="e${i}" type="${f[2]==='date'?'date':f[2]==='mes'?'month':f[2]==='time'?'time':f[2]==='number'?'number':'text'}"${f[2]==='money'?' inputmode="decimal"':''} value="${esc(v)}">`}
 function eOpen(k,id){const x=D[k].find(a=>a.id===id);if(!x)return;EK=k;EI=id;EL=EF[k].filter(f=>!(k==='valores'&&x.tipo==='entrada'&&f[0]==='cat'));
 $('edB').innerHTML='<h2>Editar '+LB[k].toLowerCase()+'</h2>'+EL.map((f,i)=>'<label>'+f[1]+'</label>'+fld(f,x,i)).join('')+'<button class="b" onclick="eSave()">Guardar alterações</button><button class="b sec" onclick="eClose()">Cancelar</button>';$('ed').classList.add('on')}
 function eClose(){$('ed').classList.remove('on')}
@@ -412,8 +500,8 @@ if(f[2]==='text'){if(!v)return alert('Preencha o texto.');n[f[0]]=v}
 else if(f[2]==='money'){const m=parseFloat(v.replace(',','.'));if(!(m>0))return alert('Indique um valor válido.');n[f[0]]=m}
 else if(f[2]==='number'){const m=parseInt(v,10);if(!(m>0))return alert('Indique a duração em minutos.');n[f[0]]=m}
 else if(f[2]==='date'){if(!v&&f[0]!=='prazo'&&f[0]!=='dia')return alert('Indique a data.');n[f[0]]=v}
-else n[f[0]]=f[2]==='pri'?+v:v}
-Object.assign(x,n);save();eClose();R();toast('Alterações guardadas.')}
+else n[f[0]]=f[2]==='pri'?+v:f[2]==='sn'?v==='1':v}
+if(EK==='contas'&&n.ini&&n.fim&&n.fim<n.ini)return alert('A data em que deixa de pagar tem de ser depois da data em que começa.');Object.assign(x,n);save();eClose();R();toast('Alterações guardadas.')}
 function bkTxt(){const n=D.tarefas.length+D.ativ.length+D.valores.length+D.habitos.length;if(!n)return '';if(!D.ultCopia)return 'Ainda não fez nenhuma cópia de segurança.';const d=Math.round((new Date(td()+'T12:00:00')-new Date(D.ultCopia+'T12:00:00'))/864e5);return d>=7&&D.alt>0?'A última cópia foi há '+d+' dias e já fez '+D.alt+' alteração(ões) desde então.':''}
 
 let RM_OFF=false;function rmOff(){RM_OFF=true;R()}function lbTog(){D.lemb=D.lemb===false;save();R()}
@@ -475,7 +563,7 @@ const n=$('rcP').value;if(!/^\d{4,6}$/.test(n)){E.textContent='O PIN novo deve t
 const r=D.pin&&D.pin.r;if(!r||(await hp(rcNorm($('rcC').value),r.s))!==r.h){E.textContent=bqFail();return}
 try{localStorage.removeItem('rotina_bloq')}catch(e){}const sl=uid();D.pin={s:sl,h:await hp(n,sl)};const c=await rcMk();rcVolta();$('lk').classList.remove('on');R();rcMostra(c)}
 function vUndo(id){D.valores=D.valores.filter(v=>v.id!==id);save();R();$('ts').classList.remove('on')}
-function cpDesf(vid){const it=D.compras.filter(c=>c.vid===vid);if(!it.length&&!D.valores.some(v=>v.id===vid))return;it.forEach(c=>{const r=c.rid;D.compras=D.compras.filter(x=>x.id!==r||x.feito);c.feito=false;c.fim='';c.vid='';c.rid=''});D.valores=D.valores.filter(v=>v.id!==vid);save();R();toast('Compra desfeita. O valor voltou à caixa.')}
+function cpDesf(vid){const it=D.compras.filter(c=>c.vid===vid);if(!it.length&&!D.valores.some(v=>v.id===vid))return;it.forEach(c=>{const r=c.rid;D.compras=D.compras.filter(x=>x.id!==r||x.feito);c.feito=false;c.fim='';c.acab='';c.vid='';c.rid=''});D.valores=D.valores.filter(v=>v.id!==vid);save();R();toast('Compra desfeita. O valor voltou à caixa.')}
 const SAFE=t=>String(t).replace(/[^\w-]/g,'');
 function limpa(o,d){if(!o||typeof o!=='object'||d>6)return;if(Array.isArray(o)){o.forEach(x=>limpa(x,d+1));return}for(const k in o){const v=o[k];if(typeof v==='string'&&/^(id|prox|bid|rid|vid)$/.test(k))o[k]=SAFE(v);else limpa(v,d+1)}}
 function limpaX(x){limpa(x,0);if(x.feitos&&typeof x.feitos==='object'){const f={};for(const k in x.feitos)f[SAFE(k)]=(Array.isArray(x.feitos[k])?x.feitos[k]:[]).map(SAFE);x.feitos=f}if(x.urlG&&!/^https?:\/\//i.test(x.urlG))x.urlG=''}
@@ -487,11 +575,6 @@ const p=document.querySelector('.pg.on').id.slice(2);if(p!=='hoje'){go('hoje');r
 if(SUBP.hoje&&SUBP.hoje!=='resumo'){go('hoje','resumo');return true}return false}
 window.addEventListener('popstate',()=>{if(bkUp())return bkSt();toast('Toque outra vez em Voltar para sair.');clearTimeout(bkT);bkT=setTimeout(bkSt,2000)});
 /* ---- retirada / metas / cronómetro ---- */
-function rtAdd(){const v=parseFloat(String($('rtV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const f=$('rtF').value,id='rt'+uid();
-D.valores.push({id:uid(),tipo:'entrada',desc:'Retirada Bejoma',valor:v,cat:'Retirada Bejoma',data:td(),forma:f,origem:'bejoma',bid:id});
-D.fora.push({id:id,tipo:'retirada',data:td(),desc:'Retirada (feita na Bejoma Pessoal)',valor:v,forma:f});
-try{const q=JSON.parse(localStorage.getItem('bejoma_inbox')||'[]')||[];q.push(D.fora[D.fora.length-1]);localStorage.setItem('bejoma_inbox',JSON.stringify(q))}catch(e){}
-$('rtV').value='';save();R();toast('Retirada registada: +'+money(v)+'. Falta avisar a Bejoma Gestão.')}
 const mtDone=m=>{const h=td(),a=m.per==='dia'?h:add(h,-6);return D.ativ.filter(x=>x.cat===m.cat&&x.data>=a&&x.data<=h).reduce((q,x)=>q+x.min,0)};
 function mtAdd(){const c=$('mtC').value,pe=$('mtP').value,hr=parseFloat(String($('mtV').value).replace(',','.'));if(!(hr>0))return alert('Indique as horas da meta.');if(D.metas.some(m=>m.cat===c&&m.per===pe))return alert('Já existe uma meta assim para essa categoria.');D.metas.push({id:uid(),cat:c,per:pe,min:Math.round(hr*60)});$('mtV').value='';save();R()}
 function mtDel(id){lix('metas',id)}
@@ -552,16 +635,31 @@ function saidaRapida(desc,v,cat,f,data){data=data||td();const sd=sf(f);if(v>sd+0
 if(D.limite>0){const g=gastoDia(data);if(g+v>D.limite&&!confirm('Com esta saída, o gasto de '+fmt(data)+' fica em '+money(g+v)+', acima do limite de '+money(D.limite)+'.\n\nRegistar mesmo assim?'))return false}
 const id=uid();D.valores.push({id,tipo:'saida',desc,valor:v,cat,data,forma:f});return id}
 function qAdd(){const v=parseFloat(String($('qV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const d=$('qD').value.trim()||'Despesa';const id=saidaRapida(d,v,$('qC').value||catCasa(),$('qF').value);if(id){$('qV').value='';$('qD').value='';save();R();toast('Despesa registada: −'+money(v)+cxMsg(),"vUndo('"+id+"')")}}
-function cpAdd(){const t=$('cpN').value.trim(),p=parseFloat(String($('cpP').value).replace(',','.'));if(!t)return alert('Escreva o item.');if(!(p>0))return alert('Indique o preço estimado.');D.compras.push({id:uid(),t,qtd:$('cpQ').value.trim(),preco:p,dia:$('cpD').value,cat:$('cpC').value,rep:$('cpR').value,sel:false,feito:false});['cpN','cpQ','cpP','cpD'].forEach(i=>{$(i).value=''});save();R()}
+function cpAdd(){const t=$('cpN').value.trim(),p=parseFloat(String($('cpP').value).replace(',','.'));if(!t)return alert('Escreva o item.');if(!(p>0))return alert('Indique o preço estimado.');D.compras.push({id:uid(),t,qtd:$('cpQ').value.trim(),preco:p,dia:$('cpD').value,cat:$('cpC').value,rep:$('cpR').value,trk:$('cpK').value==='1',sel:false,feito:false});['cpN','cpQ','cpP','cpD'].forEach(i=>{$(i).value=''});save();R()}
 function cpSel(id){const c=D.compras.find(x=>x.id===id);if(!c)return;c.sel=!c.sel;save(1);R()}
 function cpDel(id){lix('compras',id)}
 function cpComprar(){const sel=D.compras.filter(c=>!c.feito&&c.sel);if(!sel.length)return alert('Marque os itens que comprou.');const es=sel.reduce((q,c)=>q+c.preco,0),tx=String($('cpPg').value).replace(',','.').trim(),v=tx===''?es:parseFloat(tx);if(!(v>0))return alert('Indique o total pago.');
 const d='Compras: '+sel.map(c=>c.t).join(', ').slice(0,60);if(!confirm('Registar a compra de '+money(v)+' ('+FN[$('cpF').value]+')?\n\n'+sel.map(c=>c.t).join(', ')))return;const vid=saidaRapida(d,v,catCasa(),$('cpF').value);if(!vid)return;
-sel.forEach(c=>{c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,sel:false,feito:false})}});$('cpPg').value='';save();R();toast('Compra registada: −'+money(v)+cxMsg(),"cpDesf('"+vid+"')")}
-function ctDue(c,h){const ult=new Date(+h.slice(0,4),+h.slice(5,7),0).getDate();return h.slice(0,8)+pad(Math.min(Math.max(1,+c.dia||1),ult))}
-function ctAdd(){const n=$('ctN').value.trim(),v=parseFloat(String($('ctV').value).replace(',','.')),d=parseInt($('ctDia').value,10);if(!n)return alert('Escreva o nome da conta.');if(!(v>0))return alert('Indique o valor.');if(!(d>=1&&d<=31))return alert('Indique o dia do mês (1 a 31).');D.contas.push({id:uid(),nome:n,valor:v,dia:d,pago:''});['ctN','ctV','ctDia'].forEach(i=>{$(i).value=''});save();R()}
+sel.forEach(c=>{c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,trk:c.trk,sel:false,feito:false})}});$('cpPg').value='';save();R();toast('Compra registada: −'+money(v)+cxMsg(),"cpDesf('"+vid+"')")}
+const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const ctMes=m=>MESES[+m.slice(5,7)-1]+' '+m.slice(0,4);
+const ctMais=(m,k)=>{const t=+m.slice(5,7)-1+k;return (+m.slice(0,4)+Math.floor(t/12))+'-'+pad(t%12+1)};
+const ctUlt=c=>{const a=c.pago||'',b=c.pagoAte||'';return a>b?a:b};
+function ctProx(c,h){const ym=h.slice(0,7),u=ctUlt(c);let m=(c.ini&&ym<c.ini)?c.ini:ym;if(u&&u>=m)m=ctMais(u,1);return m}
+function ctDue(c,h){const m=ctProx(c,h),ult=new Date(+m.slice(0,4),+m.slice(5,7),0).getDate();return m+'-'+pad(Math.min(Math.max(1,+c.dia||1),ult))}
+function ctAdd(){const n=$('ctN').value.trim(),v=parseFloat(String($('ctV').value).replace(',','.')),d=parseInt($('ctDia').value,10);if(!n)return alert('Escreva o nome da conta.');if(!(v>0))return alert('Indique o valor.');if(!(d>=1&&d<=31))return alert('Indique o dia do mês (1 a 31).');const ini=$('ctIni').value||'',fim=$('ctFim').value||'',pa=$('ctPa').value||'';if(fim&&ini&&fim<ini)return alert('A data em que deixa de pagar tem de ser depois da data em que começa.');D.contas.push({id:uid(),nome:n,valor:v,dia:d,pago:'',pagoAte:pa,ini:ini,fim:fim});['ctN','ctV','ctDia','ctIni','ctFim','ctPa'].forEach(i=>{$(i).value=''});save();R()}
 function ctDel(id){lix('contas',id)}
-function ctPagar(id){const c=D.contas.find(x=>x.id===id);if(!c)return;if(saidaRapida(c.nome,c.valor,catCasa(),$('ctF').value)){c.pago=td().slice(0,7);save();R();toast('Conta paga: −'+money(c.valor)+cxMsg())}}
+async function resetTudo(){
+if(D.pin){const p=prompt('Escreva o seu PIN para continuar:');if(p===null)return;if(!(await chk(p)))return alert('PIN errado.')}
+if(!confirm('Vai apagar TODOS os dados desta app e recomeçar do zero.\n\nIsto não dá para desfazer. Tem a certeza?'))return;
+const t=prompt('Para confirmar, escreva a palavra APAGAR:');if(t===null)return;
+if(t.trim().toUpperCase()!=='APAGAR')return alert('Não escreveu APAGAR. Nada foi apagado.');
+['rotina_bloq','rotina_al','rotina_pedidos','rotina_inbox'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
+D=DEF();try{localStorage.setItem(K,JSON.stringify(D))}catch(e){return alert('Não foi possível apagar neste navegador.')}
+alert('Pronto. A app foi reiniciada do zero.');location.reload()}
+function ctPagar(id){const c=D.contas.find(x=>x.id===id);if(!c)return;EI=id;$('edB').innerHTML='<h2>Pagar '+esc(c.nome)+'</h2><label>Quantos meses quer pagar?</label><input id="cmN" type="number" min="1" max="60" value="1" oninput="ctPrev()"><p class="empty" id="cmP" style="margin:10px 0;line-height:1.6"></p><button class="b" onclick="ctPagarOk()">Confirmar pagamento</button><button class="b sec" onclick="eClose()">Cancelar</button>';$('ed').classList.add('on');ctPrev()}
+function ctPrev(){const c=D.contas.find(x=>x.id===EI);if(!c)return;const n=parseInt($('cmN').value,10);if(!(n>=1&&n<=60)){$('cmP').textContent='Indique de 1 a 60 meses.';return}const s=ctProx(c,td()),e=ctMais(s,n-1);$('cmP').innerHTML=(n===1?'Mês: <b>'+ctMes(s)+'</b>':'De <b>'+ctMes(s)+'</b> a <b>'+ctMes(e)+'</b>')+'<br>Total: <b>'+money(c.valor*n)+'</b> ('+n+' × '+money(c.valor)+')<br>Sai de: '+FN[$('ctF').value]+(c.fim&&e>c.fim?'<br><span class="bad">⚠️ Passa do fim da conta ('+ctMes(c.fim)+').</span>':'')}
+function ctPagarOk(){const c=D.contas.find(x=>x.id===EI);if(!c)return eClose();const n=parseInt($('cmN').value,10);if(!(n>=1&&n<=60))return alert('Indique de 1 a 60 meses.');const s=ctProx(c,td()),e=ctMais(s,n-1);if(c.fim&&e>c.fim)return alert('Esta conta só vai até '+ctMes(c.fim)+'. Escolha menos meses.');const tot=c.valor*n;if(saidaRapida(c.nome+(n>1?' ('+n+' meses)':''),tot,catCasa(),$('ctF').value)){c.pagoAte=e;save();eClose();R();toast('Conta paga: −'+money(tot)+cxMsg())}}
 const b64e=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const b64d=t=>JSON.parse(decodeURIComponent(escape(atob(String(t).replace(/-/g,'+').replace(/_/g,'/')))));
 function ugCopiar(){const u=location.href.split('#')[0];try{navigator.clipboard.writeText(u).then(()=>toast('Endereço copiado.')).catch(()=>prompt('Copie este endereço:',u))}catch(e){prompt('Copie este endereço:',u)}}
@@ -584,19 +682,19 @@ const a=pdIn();if(D.ped.indexOf(q.id)<0&&!a.some(y=>y.id===q.id)){a.push({id:q.i
 save(1);R();go('valores');setTimeout(()=>pdAbrir(q.id),150);return}
 if(h.indexOf('#aprov=')!==0)return;let a;try{a=b64d(h.slice(7))}catch(e){a=null}try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
 if(!a||typeof a.id!=='string'||!(+a.valor>0)||typeof a.h!=='string')return alert('A aprovação recebida não é válida.');
-if(a.gestao&&!D.urlG)D.urlG=String(a.gestao);if(!D.aprG.some(x=>x.id===a.id))D.aprG.push({id:a.id,valor:+a.valor,forma:a.forma==='mcx'?'mcx':'din',h:a.h});save(1);R();go('valores');toast('✅ A Bejoma Gestão aprovou. Escreva o código para receber o dinheiro.')}
+if(a.gestao&&!D.urlG)D.urlG=String(a.gestao);if(!D.aprG.some(x=>x.id===a.id))D.aprG.push({id:a.id,valor:+a.valor,forma:a.forma==='mcx'?'mcx':'din',h:a.h});save(1);R();go('valores');fd('bj','pedir');toast('✅ A Bejoma Gestão aprovou. Escreva o código para receber o dinheiro.')}
 function NV(){const h=td();
 const catQ=$('qC').value;$('qC').innerHTML=D.vcats.map(c=>`<option>${esc(c)}</option>`).join('');$('qC').value=catQ||(D.vcats.indexOf('Comida')>=0?'Comida':D.vcats[0]);
 const pe=D.compras.filter(c=>!c.feito).sort((a,b)=>(a.dia||'9')<(b.dia||'9')?-1:1),est=pe.reduce((q,c)=>q+c.preco,0),sel=pe.filter(c=>c.sel),es=sel.reduce((q,c)=>q+c.preco,0),sd=sf('din')+sf('mcx');
 $('cpT').innerHTML=`<div class="grid" style="grid-template-columns:1fr 1fr"><div class="stat"><div class="k">Por comprar</div><div class="v">${money(est)}</div><small>${pe.length} item(ns)</small></div><div class="stat"><div class="k">Caixa</div><div class="v ${est>sd?'bad':'good'}">${money(sd)}</div></div></div>${est>sd?`<div class="bad" style="margin-top:6px">⚠️ A lista custa mais do que o seu saldo (faltam ${money(est-sd)}).</div>`:''}`;
-const row=c=>`<div class="item"><div class="l">${ck(c.sel,`cpSel('${c.id}')`)}<div>${esc(c.t)}${c.qtd?' · '+esc(c.qtd):''}<small class="${c.dia&&c.dia<h?'bad':''}">${esc(c.cat)}${c.dia?' · '+fmt(c.dia):''}${c.rep?' · 🔁 semanal':''} · ${money(c.preco)}</small></div></div><div class="bt"><button class="mini" onclick="cpUm('${c.id}')">Comprei</button>${eb('compras',c.id)}<button class="mini dng" onclick="cpDel('${c.id}')">✕</button></div></div>`,co=D.compras.filter(c=>c.feito).slice(-6).reverse();
+const row=c=>`<div class="item"><div class="l">${ck(c.sel,`cpSel('${c.id}')`)}<div>${esc(c.t)}${c.qtd?' · '+esc(c.qtd):''}<small class="${c.dia&&c.dia<h?'bad':''}">${esc(c.cat)}${c.dia?' · '+fmt(c.dia):''}${c.rep?' · 🔁 semanal':''} · ${money(c.preco)}</small></div></div><div class="bt"><button class="mini" onclick="cpUm('${c.id}')">Comprei</button>${eb('compras',c.id)}<button class="mini dng" onclick="cpDel('${c.id}')">✕</button></div></div>`,co=[];
 $('cpL').innerHTML=(pe.length?pe.map(row).join(''):'<div class="empty">Lista vazia. Acrescente o que precisa comprar.</div>')+(co.length?'<small class="empty">Comprados recentemente</small>'+co.map(c=>`<div class="item"><div>${esc(c.t)}<small>${fmt(c.fim)} · ${money(c.preco)}</small></div>${c.vid?`<button class="mini dng" onclick="cpDesf('${c.vid}')">Desfazer</button>`:''}</div>`).join(''):'');
 $('cpSel').textContent=sel.length?sel.length+' item(ns) marcado(s) · estimado '+money(es):'Marque acima os itens que comprou.';$('cpPg').placeholder=es?'em branco = '+money(es):'';cpPrev();
-$('ctL').innerHTML=D.contas.length?D.contas.slice().sort((a,b)=>a.dia-b.dia).map(c=>{const ds=ctDue(c,h),pg=c.pago===h.slice(0,7),df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1),st=pg?'✅ Paga este mês':df<0?'⚠️ atrasada '+(-df)+' dia(s)':df===0?'vence hoje':'vence '+fmt(ds)+' · em '+df+' dia(s)';
-return `<div class="item"><div><b>${esc(c.nome)}</b><small class="${!pg&&df<0?'bad':''}">${money(c.valor)} · dia ${c.dia} · ${st}</small></div><div class="bt">${pg?'':`<button class="mini" onclick="ctPagar('${c.id}')">Pagar</button>`}${eb('contas',c.id)}<button class="mini dng" onclick="ctDel('${c.id}')">✕</button></div></div>`}).join(''):'<div class="empty">Sem contas. Acrescente a renda, a luz, a água, a internet…</div>';
+$('ctL').innerHTML=D.contas.length?D.contas.slice().sort((a,b)=>a.dia-b.dia).map(c=>{const ym=h.slice(0,7),pr=ctProx(c,h),ds=ctDue(c,h),u=ctUlt(c),end=!!(c.fim&&pr>c.fim),ahead=!!(u&&u>=ym),fut=!!(c.ini&&ym<c.ini)&&!ahead,df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1),st=end?(c.fim<ym?'⏹ Terminou em '+ctMes(c.fim):'✅ Tudo pago até '+ctMes(c.fim)):ahead?(u===ym?'✅ Paga este mês':'✅ Paga até '+ctMes(u))+' · próximo '+fmt(ds):fut?'⏳ Começa em '+ctMes(c.ini)+' · 1.º pagamento '+fmt(ds):df<0?'⚠️ atrasada '+(-df)+' dia(s)':df===0?'vence hoje':'vence '+fmt(ds)+' · em '+df+' dia(s)';
+return `<div class="item"><div><b>${esc(c.nome)}</b><small class="${!ahead&&!fut&&!end&&df<0?'bad':''}">${money(c.valor)} · dia ${c.dia} · ${st}${c.fim&&!end?' · até '+ctMes(c.fim):''}</small></div><div class="bt">${ahead||fut||end?'':`<button class="mini" onclick="ctPagar('${c.id}')">Pagar</button>`}${eb('contas',c.id)}<button class="mini dng" onclick="ctDel('${c.id}')">✕</button></div></div>`}).join(''):'<div class="empty">Sem contas. Acrescente a renda, a luz, a água, a internet…</div>';
 const L=D.pedS.filter(p=>p.estado==='pendente'),ap=p=>D.aprG.some(x=>x.id===p.id&&Math.abs(x.valor-p.valor)<0.005);
 $('pgL').innerHTML=L.length?L.map(p=>`<div class="item"><div><b>${esc(p.desc||'Pedido')}</b><small>${fmt(p.data)} · entra em ${FN[p.forma]} · ${ap(p)?'✅ aprovado, falta o código':'⏳ aguarda aprovação na Bejoma Gestão'}</small></div><div style="text-align:right"><b>${money(p.valor)}</b><br><span class="bt" style="justify-content:flex-end;margin-top:4px">${ap(p)?`<button class="mini" onclick="pgCodigo('${p.id}')">Escrever código</button>`:`<button class="mini" onclick="pgAbrir('${p.id}')">Abrir Bejoma Gestão</button>`}<button class="mini dng" onclick="pgCanc('${p.id}')">Cancelar</button></span></div></div>`).join(''):'<div class="empty">Sem pedidos pendentes.</div>';
-$('pgH').innerHTML=L.length?`<div class="card" style="border:2px solid var(--accent)"><b>${L.some(ap)?'✅ A Bejoma Gestão aprovou. Falta escrever o código.':'⏳ '+L.length+' pedido(s) à Bejoma Gestão por aprovar'}</b><p class="empty" style="margin:4px 0 8px">${money(L.reduce((q,p)=>q+p.valor,0))}</p><button class="mini" onclick="go('valores')">Ver pedidos</button></div>`:'';
+$('pgH').innerHTML=L.length?`<div class="card" style="border:2px solid var(--accent)"><b>${L.some(ap)?'✅ A Bejoma Gestão aprovou. Falta escrever o código.':'⏳ '+L.length+' pedido(s) à Bejoma Gestão por aprovar'}</b><p class="empty" style="margin:4px 0 8px">${money(L.reduce((q,p)=>q+p.valor,0))}</p><button class="mini" onclick="go('valores');fd('bj','pedir')">Ver pedidos</button></div>`:'';
 if(document.activeElement!==$('ugI'))$('ugI').value=D.urlG||'';$('ugT').textContent=D.urlG?'Ligada a: '+D.urlG:'Ainda não ligada.';$('ugSelf').value=location.href.split('#')[0]}
 /* ---- agenda / horários / alertas ---- */
 const TP={trabalho:['💼','Trabalho'],descanso:['😴','Descanso'],refeicao:['🍽️','Refeição'],estudo:['📚','Estudo'],pessoal:['🏃','Pessoal'],outro:['📌','Outro']};
@@ -800,7 +898,7 @@ $('crH').innerHTML=D.cron?`<div class="card" style="border:2px solid var(--accen
 $('bjP').innerHTML=p.length?`<p style="margin:4px 0"><b>${p.length} nova(s)</b> · ${money(t)} por importar</p><button class="b" onclick="bjRev()">Rever e importar</button>`:'<p class="empty" style="margin:4px 0">Sem retiradas novas da Bejoma Gestão.</p>'}
 {const n=foraOk();$('foT').innerHTML=n.length?`<div class="item" style="border:2px solid var(--accent);border-radius:14px;padding:10px;margin:10px 0"><div><b>📤 ${n.length} retirada(s) por avisar à Bejoma Gestão</b><small>${money(n.reduce((q,i)=>q+i.valor,0))} · a Bejoma Gestão ainda não sabe</small></div></div><button class="b" onclick="foraEnviar()">Enviar à Bejoma Gestão</button>`:''}
 $('pbT').textContent='Enviado à Bejoma Gestão este mês: '+money(D.valores.filter(v=>pB(v)&&v.data.slice(0,7)===h.slice(0,7)).reduce((q,v)=>q+v.valor,0));
-$('rtT').textContent='Retiradas este mês: '+money(D.valores.filter(v=>v.origem==='bejoma'&&v.data.slice(0,7)===h.slice(0,7)).reduce((q,v)=>q+v.valor,0));$('pnT').textContent=D.pin?'PIN ligado. É pedido ao abrir e depois de 1 minuto fora da app.':'PIN desligado.';$('pnB').textContent=D.pin?'Mudar ou desligar o PIN':'Definir PIN';$('rX').innerHTML=resumo();
+$('rtT').textContent='Recebido da Bejoma Gestão este mês: '+money(D.valores.filter(v=>v.origem==='bejoma'&&v.data.slice(0,7)===h.slice(0,7)).reduce((q,v)=>q+v.valor,0));$('pnT').textContent=D.pin?'PIN ligado. É pedido ao abrir e depois de 1 minuto fora da app.':'PIN desligado.';$('pnB').textContent=D.pin?'Mudar ou desligar o PIN':'Definir PIN';$('rX').innerHTML=resumo();
 {const g=gastoDia(h),L=D.limite||0;$('lmT').textContent=L>0?'Hoje gastou '+money(g)+' de '+money(L)+'.':'Sem limite definido.';if(!$('lmV').value&&L)$('lmV').value=L;
 $('lm').innerHTML=L>0?`<div class="card"><h2>Gasto de hoje</h2><div style="display:flex;justify-content:space-between"><b class="${g>L?'bad':''}">${money(g)}</b><span>limite ${money(L)}</span></div><div class="bar"><i style="width:${Math.min(100,Math.round(g/L*100))}%;background:${g>L?'var(--bad)':g>L*.8?'#e0a000':'var(--good)'}"></i></div><small class="${g>L?'bad':''}">${g>L?'Passou '+money(g-L)+' do limite.':'Ainda pode gastar '+money(L-g)+'.'}</small></div>`:''}
 {const atr=D.tarefas.filter(t=>!t.feita&&t.prazo&&t.prazo<h).length,hj=D.tarefas.filter(t=>!t.feita&&t.prazo===h).length,am=D.tarefas.filter(t=>!t.feita&&t.prazo===add(h,1)).length,hn=D.habitos.filter(x=>x.freq!=='vezes'&&hDue(x,h)&&!feito(x.id,h)).length,Ls=[];
@@ -808,13 +906,11 @@ if(atr)Ls.push(`<span class="bad">⚠️ ${atr} tarefa(s) atrasada(s)</span>`);i
 D.dividas.filter(d=>rest(d)>0.005&&d.prazo&&d.prazo<=h).forEach(d=>Ls.push(`<span class="${d.prazo<h?'bad':''}">🤝 ${d.tipo==='devo'?'Pagar a ':'Cobrar a '}${esc(d.quem)}: ${money(rest(d))} (${d.prazo<h?'atrasada':'hoje'})</span>`));
 if(hn&&new Date().getHours()>=18)Ls.push(`🔥 Faltam ${hn} hábito(s) de hoje`);if(am)Ls.push(`📅 Amanhã: ${am} tarefa(s)`);if(foraOk().length)Ls.push(`📤 ${foraOk().length} retirada(s) por avisar à Bejoma Gestão`);
 {const cc=D.compras.filter(c=>!c.feito&&c.dia&&c.dia<=h);if(cc.length)Ls.push('🛒 '+cc.length+' item(ns) para comprar ('+money(cc.reduce((q,c)=>q+c.preco,0))+')');
-D.contas.forEach(c=>{if(c.pago===h.slice(0,7))return;const ds=ctDue(c,h),df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1);if(df<=3)Ls.push(`<span class="${df<0?'bad':''}">🏠 ${esc(c.nome)} ${df<0?'atrasada':df===0?'vence hoje':'vence em '+df+' dia(s)'}: ${money(c.valor)}</span>`)})}
+cpAvisos().forEach(a=>Ls.push(a));
+D.contas.forEach(c=>{if(c.fim&&ctProx(c,h)>c.fim)return;const ds=ctDue(c,h),df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1);if(df<=3)Ls.push(`<span class="${df<0?'bad':''}">🏠 ${esc(c.nome)} ${df<0?'atrasada':df===0?'vence hoje':'vence em '+df+' dia(s)'}: ${money(c.valor)}</span>`)})}
 $('rm').innerHTML=D.lemb!==false&&!RM_OFF&&Ls.length?`<div class="card" style="border:2px solid var(--accent)"><h2>Lembretes</h2>${Ls.map(l=>'<div class="item">'+l+'</div>').join('')}<button class="mini" style="margin-top:8px" onclick="rmOff()">Ok, vi</button></div>`:'';
 $('lbT').textContent=D.lemb!==false?'Ligados (tocar para desligar)':'Desligados (tocar para ligar)'}
-{const ab=D.dividas.filter(d=>rest(d)>0.005).sort((a,b)=>(a.prazo||'9')<(b.prazo||'9')?-1:1),sd=D.dividas.filter(d=>rest(d)<=0.005).slice(-5).reverse(),sm=t=>ab.filter(d=>d.tipo===t).reduce((a,d)=>a+rest(d),0);
-$('dD').textContent=money(sm('devo'));$('dM').textContent=money(sm('devem'));
-const it=d=>{const ab=rest(d)>0.005,at=ab&&d.prazo&&d.prazo<h;return `<div class="item"><div><b>${d.tipo==='devo'?'Devo a ':'Deve-me: '}${esc(d.quem)}</b><small class="${at?'bad':''}">${ab?'Falta '+money(rest(d))+(d.pago?' de '+money(d.valor):'')+(d.prazo?' · prazo '+fmt(d.prazo)+(at?' · atrasada':''):''):'✓ Saldada · '+money(d.valor)}</small></div><div class="bt">${ab?`<button class="mini" onclick="dPag('${d.id}')">${d.tipo==='devo'?'Pagar':'Receber'}</button>`:''}${eb('dividas',d.id)}<button class="mini dng" onclick="dDel('${d.id}')">✕</button></div></div>`};
-$('dL').innerHTML=ab.length||sd.length?ab.concat(sd).map(it).join(''):'<div class="empty">Sem dívidas registadas.</div>'}
+DVR();CASA();
 {const t=bkTxt();$('bk').innerHTML=t?`<div class="card" style="border:2px solid var(--accent)"><b>💾 Hora de guardar uma cópia</b><p class="empty">${t}</p><button class="b" onclick="exp()">Guardar cópia agora</button></div>`:'';
 $('uc').innerHTML=D.ultCopia?'<b>Última cópia:</b> '+fmt(D.ultCopia)+(D.alt?' · '+D.alt+' alteração(ões) desde então':' · tudo guardado'):'<b>Ainda sem cópia.</b>';
 $('lx').innerHTML=D.lixo.length?D.lixo.slice().reverse().map(e=>`<div class="item"><div><b>${esc(e.item.t||e.item.desc||e.item.nome||e.item.quem||e.item.cat)}</b><small>${LB[e.k]}${e.k==='valores'||e.k==='dividas'||e.k==='trocas'?' · '+money(e.item.valor):''} · apagado a ${fmt(e.em)}</small></div><div class="bt"><button class="mini" onclick="lRest('${e.id}')">↩ Restaurar</button><button class="mini dng" onclick="lPerm('${e.id}')">✕</button></div></div>`).join(''):'<div class="empty">Nada apagado.</div>'}
@@ -826,7 +922,77 @@ const vc=vCat(mes),mx2=vc.length?vc[0][1]:1;
 $('vR').innerHTML=vc.length?vc.map(c=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${esc(c[0])}</span><b>${money(c[1])}</b></div><div class="bar"><i style="width:${Math.round(c[1]/mx2*100)}%"></i></div></div>`).join(''):'<div class="empty">Sem saídas este mês.</div>';
 const vl=D.valores.slice().reverse().sort((a,b)=>a.data<b.data?1:a.data>b.data?-1:0).slice(0,20);
 $('vL').innerHTML=vl.length?vl.map(v=>`<div class="item"><div><b>${esc(v.desc)}</b><small>${esc(v.cat)} · ${fmt(v.data)} · ${FN[v.forma]}</small></div><div style="text-align:right"><b class="${v.tipo==='entrada'?'good':'bad'}">${v.tipo==='entrada'?'+':'−'}${money(v.valor)}</b><br><span class="bt" style="justify-content:flex-end;margin-top:4px">${eb('valores',v.id)}<button class="mini dng" onclick="vDel('${v.id}')">✕</button></span></div></div>`).join(''):'<div class="empty">Sem movimentos.</div>'}
+fdChips();
 }
+
+/* ---- pastas dentro de cada secção ---- */
+const PC=['Comida','Bebidas','Limpeza','Higiene','Casa','Outros'];
+const ST={};
+const FD={
+hab:[['lista','Hoje'],['novo','＋ Novo hábito','nw']],
+agd:[['ver','Agenda'],['novo','＋ Novo bloco','nw']],
+tar:[['lista','Por fazer',()=>D.tarefas.filter(t=>!t.feita).length],['conc','Concluídas'],['novo','＋ Nova tarefa','nw']],
+ati:[['reg','Registos'],['met','Metas'],['novo','＋ Registar','nw']],
+cx:[['res','Resumo'],['novo','＋ Novo valor','nw'],['troca','Trocar'],['lim','Limite']],
+cp:[['lista','🛒 A comprar',()=>D.compras.filter(c=>!c.feito).length],['casa','🏠 Em casa',()=>cpEmCasa().length],['novo','＋ Novo item','nw']],
+dv:[['devo','Eu devo',()=>D.dividas.filter(d=>d.tipo==='devo'&&rest(d)>0.005).length],['devem','Devem-me',()=>D.dividas.filter(d=>d.tipo==='devem'&&rest(d)>0.005).length],['nova','＋ Nova dívida','nw']],
+ct:[['lista','A pagar',()=>D.contas.length],['nova','＋ Nova conta','nw']],
+bj:[['pedir','Pedir'],['pedidos','Pedidos',()=>D.ped.length?null:null],['enviar','Enviar'],['lig','Ligação']]
+};
+function fd(g,k){ST[g]=k;fdApply(g);window.scrollTo(0,0)}
+function fdApply(g){const k=ST[g]||FD[g][0][0];document.querySelectorAll('.ip[data-g="'+g+'"]').forEach(e=>e.classList.toggle('on',e.dataset.k===k));document.querySelectorAll('#fd-'+g+' button').forEach(b=>b.classList.toggle('on',b.dataset.k===k))}
+function fdChips(){Object.keys(FD).forEach(g=>{const e=$('fd-'+g);if(!e)return;e.innerHTML=FD[g].map(x=>{let n='';try{n=x[2]?x[2]():''}catch(_){}return `<button data-k="${x[0]}" class="${x[3]||''}" onclick="fd('${g}','${x[0]}')">${x[1]}${n?` <b>${n}</b>`:''}</button>`}).join('');fdApply(g)})}
+function dNovo(t){$('dT').value=t;fd('dv','nova')}
+
+/* ---- em casa: data de entrada, data de fim, duração ---- */
+const cpTrk=c=>c.trk!==undefined?!!c.trk:c.cat!=='Outros';
+const cpDif=(a,b)=>Math.max(0,Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/864e5));
+const cpDias=n=>n===1?'1 dia':n+' dias';
+const cpEmCasa=()=>D.compras.filter(c=>c.feito&&c.fim&&cpTrk(c)&&!c.acab);
+function cpMed(){const m={};D.compras.filter(c=>c.feito&&c.fim&&c.acab).forEach(c=>{const k=norm(c.t).trim(),d=cpDif(c.fim,c.acab),o=m[k]=m[k]||{nome:c.t,n:0,s:0,mn:1e9,mx:0};o.n++;o.s+=d;o.mn=Math.min(o.mn,d);o.mx=Math.max(o.mx,d);o.nome=c.t});return m}
+function cpAvisos(){const h=td(),M=cpMed(),r=[];cpEmCasa().forEach(c=>{const m=M[norm(c.t).trim()];if(!m)return;const avg=Math.round(m.s/m.n),d=cpDif(c.fim,h);if(avg>0&&d>=avg)r.push('🏠 '+esc(c.t)+' já está em casa há '+cpDias(d)+' (costuma durar ~'+cpDias(avg)+')')});return r}
+function cpAcabou(id){const c=D.compras.find(x=>x.id===id);if(!c)return;c.acab=td();save();R();toast(esc(c.t)+' acabou. Durou '+cpDias(cpDif(c.fim,c.acab))+'.',"cpReabrir('"+id+"')")}
+function cpReabrir(id){const c=D.compras.find(x=>x.id===id);if(!c)return;c.acab='';save();R();$('ts').classList.remove('on')}
+function cpTrkSet(id,v){const c=D.compras.find(x=>x.id===id);if(!c)return;c.trk=v;if(!v)c.acab='';save();eClose();R()}
+function cpRepor(id){const c=D.compras.find(x=>x.id===id);if(!c)return;if(D.compras.some(x=>!x.feito&&norm(x.t).trim()===norm(c.t).trim()))return toast('"'+c.t+'" já está na lista de compras.');D.compras.push({id:uid(),t:c.t,qtd:c.qtd,preco:c.preco,dia:'',cat:c.cat,rep:'',trk:cpTrk(c),sel:false,feito:false});save();R();toast('Adicionado à lista de compras.',"fd('cp','lista')",'Ver lista')}
+function cpDatas(id){const c=D.compras.find(x=>x.id===id);if(!c)return;EI=id;$('edB').innerHTML=`<h2>${esc(c.t)}</h2><label>Entrou em casa (data da compra)</label><input id="cdA" type="date" value="${esc(c.fim||'')}"><label>Acabou em (deixe vazio se ainda há)</label><input id="cdB" type="date" value="${esc(c.acab||'')}"><button class="b" onclick="cpDatasOk()">Guardar datas</button>${cpTrk(c)?`<button class="b sec" onclick="cpTrkSet('${id}',false)">Não acompanhar a duração deste item</button>`:`<button class="b sec" onclick="cpTrkSet('${id}',true)">Acompanhar a duração deste item</button>`}${c.vid&&D.valores.some(v=>v.id===c.vid)?`<button class="b sec" onclick="eClose();cpDesf('${c.vid}')">Desfazer compra (o valor volta à caixa)</button>`:`<button class="b sec" onclick="cpVolta('${id}')">Voltar para a lista de compras</button>`}<button class="b sec dng" onclick="cpApagar('${id}')">Apagar este item</button><button class="b sec" onclick="eClose()">Cancelar</button>`;$('ed').classList.add('on')}
+function cpUnbuy(c){c.feito=false;c.fim='';c.acab='';c.sel=false;const r=c.rid;c.vid='';c.rid='';if(r)D.compras=D.compras.filter(x=>x.id!==r||x.feito)}
+function cpVolta(id){const c=D.compras.find(x=>x.id===id);if(!c)return;cpUnbuy(c);save();eClose();R();toast(c.t+' voltou à lista de compras.',"fd('cp','lista')",'Ver lista')}
+function cpApagar(id){if(!D.compras.some(x=>x.id===id))return;eClose();lix('compras',id)}
+{const lo=lix;window.lix=function(k,id,ex){let n=0;if(k==='valores')D.compras.filter(c=>c.feito&&c.vid===id).forEach(c=>{cpUnbuy(c);n++});return lo(k,id,n?(it=>(ex?ex(it):'')+' '+n+' item(ns) voltaram à lista de compras.'):ex)}}
+function cpDatasOk(){const c=D.compras.find(x=>x.id===EI);if(!c)return eClose();const a=$('cdA').value,b=$('cdB').value;if(!a)return alert('Indique a data de entrada.');if(b&&b<a)return alert('A data de fim não pode ser antes da entrada.');c.fim=a;c.acab=b;save();eClose();R()}
+var csModo='com';function csSet(m){csModo=m;CASA()}
+function CASA(){const h=td(),M=cpMed(),all=D.compras.filter(c=>c.feito&&c.fim),
+em=cpEmCasa().sort((a,b)=>a.fim<b.fim?-1:1),
+fe=all.filter(c=>c.acab).sort((a,b)=>a.acab<b.acab?1:-1),
+tot=fe.reduce((q,c)=>q+cpDif(c.fim,c.acab),0);
+$('csN').textContent=em.length;$('csF').textContent=fe.length;$('csM').textContent=fe.length?cpDias(Math.round(tot/fe.length)):'—';
+$('csL').innerHTML=em.length?em.map(c=>{const m=M[norm(c.t).trim()],d=cpDif(c.fim,h),avg=m?Math.round(m.s/m.n):0,pct=avg?Math.min(100,Math.round(d/avg*100)):0;
+return `<div class="item" style="flex-wrap:wrap"><div style="flex:1;min-width:0"><b>${esc(c.t)}</b>${c.qtd?' · '+esc(c.qtd):''}<small>Entrou ${fmt(c.fim)} · ${d===0?'hoje':'há '+cpDias(d)}${avg?' · costuma durar ~'+cpDias(avg)+' ('+(d>=avg?'⏳ já passou':'faltam ~'+cpDias(avg-d))+')':' · ainda sem média'}</small>${avg?`<div class="bar"><i class="${d>avg?'over':''}" style="width:${pct}%"></i></div>`:''}</div><div class="bt"><button class="mini" onclick="cpAcabou('${c.id}')">Acabou</button><button class="mini" onclick="cpDatas('${c.id}')">✎</button></div></div>`}).join(''):'<div class="empty">Nada em casa de momento. Quando marcar uma compra como "Comprei", o item aparece aqui.</div>';
+$('csA').innerHTML=fe.length?fe.slice(0,20).map(c=>`<div class="item"><div><b>${esc(c.t)}</b>${c.qtd?' · '+esc(c.qtd):''}<small>${fmt(c.fim)} → ${fmt(c.acab)} · durou ${cpDias(cpDif(c.fim,c.acab))}</small></div><div class="bt"><button class="mini" onclick="cpRepor('${c.id}')">Repor</button><button class="mini" onclick="cpDatas('${c.id}')">✎</button></div></div>`).join(''):'<div class="empty">Ainda nada acabou. Toque em "Acabou" quando um item terminar.</div>';
+const ms=Object.keys(M).map(k=>M[k]).sort((a,b)=>a.nome<b.nome?-1:1);
+$('csD').innerHTML=ms.length?ms.map(m=>`<div class="item"><div><b>${esc(m.nome)}</b><small>${m.n} vez(es) · mais curto ${cpDias(m.mn)} · mais longo ${cpDias(m.mx)}</small></div><b>~${cpDias(Math.round(m.s/m.n))}</b></div>`).join(''):'<div class="empty">Quando um item acabar, a duração média aparece aqui.</div>';
+const lim=30,ro=m=>`<div class="item"><div><b>${esc(m.nome)}</b><small>${m.n} vez(es) · mais curto ${cpDias(m.mn)} · mais longo ${cpDias(m.mx)}</small></div><b>~${cpDias(Math.round(m.s/m.n))}</b></div>`;
+$('csCu').innerHTML=ms.filter(m=>m.s/m.n<=lim).sort((a,b)=>a.s/a.n-b.s/b.n).map(ro).join('')||'<div class="empty">Ainda sem dados. Aparece aqui quando itens acabarem.</div>';
+$('csLo').innerHTML=ms.filter(m=>m.s/m.n>lim).sort((a,b)=>a.s/a.n-b.s/b.n).map(ro).join('')||'<div class="empty">Ainda sem dados. Aparece aqui quando itens acabarem.</div>';
+const pr=em.map(c=>{const m=M[norm(c.t).trim()],avg=m?Math.round(m.s/m.n):0;return{c,avg,d:cpDif(c.fim,h)}}).filter(x=>x.avg>0&&x.d>=x.avg*0.8).sort((a,b)=>(a.avg-a.d)-(b.avg-b.d));
+$('csP').innerHTML=pr.length?pr.map(x=>`<div class="item"><div><b>${esc(x.c.t)}</b>${x.c.qtd?' · '+esc(x.c.qtd):''}<small class="${x.d>=x.avg?'bad':''}">${x.d>=x.avg?'⏳ já passou da duração habitual (~'+cpDias(x.avg)+')':'faltam ~'+cpDias(x.avg-x.d)+' (costuma durar ~'+cpDias(x.avg)+')'}</small></div><div class="bt"><button class="mini" onclick="cpAcabou('${x.c.id}')">Acabou</button></div></div>`).join(''):'<div class="empty">Nada perto de acabar por agora.</div>';
+const sem=all.filter(c=>!cpTrk(c)).sort((a,b)=>a.fim<b.fim?1:-1),gs={};sem.forEach(c=>{(gs[c.cat||'Outros']=gs[c.cat||'Outros']||[]).push(c)});
+$('csSN').textContent=sem.length;$('csST').textContent=money(sem.reduce((q,c)=>q+(+c.preco||0),0));
+$('csSL').innerHTML=sem.length?Object.keys(gs).sort().map(k=>`<div class="empty" style="margin:10px 0 2px"><b>${esc(k)}</b> · ${gs[k].length} · ${money(gs[k].reduce((q,c)=>q+(+c.preco||0),0))}</div>`+gs[k].map(c=>`<div class="item"><div><b>${esc(c.t)}</b>${c.qtd?' · '+esc(c.qtd):''}<small>Comprado ${fmt(c.fim)} · ${money(+c.preco||0)}</small></div><div class="bt"><button class="mini" onclick="cpTrkSet('${c.id}',true)">Acompanhar</button><button class="mini" onclick="cpDatas('${c.id}')">✎</button></div></div>`).join('')).join(''):'<div class="empty">Nada aqui ainda. Ao comprar um item sem acompanhamento, ele aparece aqui.</div>';
+$('csCom').style.display=csModo==='com'?'':'none';$('csSem').style.display=csModo==='sem'?'':'none';$('csB1').className='b'+(csModo==='com'?'':' sec');$('csB2').className='b'+(csModo==='sem'?'':' sec');
+$('csH').textContent=csModo==='com'?'Itens que acabam (comida, sabão, gás…). Mostra quanto duram e o que comprar a seguir.':'Itens que ficam em casa. Mostra o que já comprou para a casa.'}
+function cpCatCh(){$('cpK').value=$('cpC').value==='Outros'?'0':'1'}
+
+/* ---- dívidas: uma pasta para cada lado ---- */
+function DVR(){const h=td(),ab=D.dividas.filter(d=>rest(d)>0.005).sort((a,b)=>(a.prazo||'9')<(b.prazo||'9')?-1:1),sd=D.dividas.filter(d=>rest(d)<=0.005),sm=t=>ab.filter(d=>d.tipo===t).reduce((a,d)=>a+rest(d),0);
+$('dD').textContent=money(sm('devo'));$('dM').textContent=money(sm('devem'));
+const it=d=>{const o=rest(d)>0.005,at=o&&d.prazo&&d.prazo<h,df=o&&d.prazo?cpDif(h,d.prazo):0;return `<div class="item"><div><b>${esc(d.quem)}</b><small class="${at?'bad':''}">${o?'Falta '+money(rest(d))+(d.pago?' de '+money(d.valor):'')+(d.prazo?' · prazo '+fmt(d.prazo)+(at?' · atrasada':d.prazo===h?' · hoje':' · em '+cpDias(df)):''):'✓ Saldada · '+money(d.valor)}</small></div><div class="bt">${o?`<button class="mini" onclick="dPag('${d.id}')">${d.tipo==='devo'?'Pagar':'Receber'}</button>`:''}${eb('dividas',d.id)}<button class="mini dng" onclick="dDel('${d.id}')">✕</button></div></div>`};
+const pane=(t,id,vz)=>{const a=ab.filter(d=>d.tipo===t),s=sd.filter(d=>d.tipo===t).slice(-5).reverse();$(id).innerHTML=(a.length?a.map(it).join(''):'<div class="empty">'+vz+'</div>')+(s.length?'<span class="sub">Saldadas</span>'+s.map(it).join(''):'')};
+pane('devo','dLd','Não deve nada a ninguém. 🎉');pane('devem','dLm','Ninguém lhe deve nada.')}
+
+/* ---- aviso depois de guardar numa pasta de criação ---- */
+[['tAdd','tar','lista','Tarefa guardada.','Ver tarefas'],['hAdd','hab','lista','Hábito guardado.','Ver hábitos'],['bAdd','agd','ver','Bloco guardado.','Ver agenda'],['aAdd','ati','reg','Atividade guardada.','Ver registos'],['ctAdd','ct','lista','Conta guardada.','Ver contas'],['cpAdd','cp','lista','Item adicionado à lista de compras.','Ver lista'],['dAdd','dv','$','Dívida guardada.','Ver dívidas']].forEach(a=>{const o=window[a[0]];if(typeof o!=='function')return;window[a[0]]=function(){const n=D.alt;const r=o.apply(this,arguments);if(D.alt>n)toast(a[3],a[2]==='$'?"fd('dv',$('dT').value)":"fd('"+a[1]+"','"+a[2]+"')",a[4]);return r}});
 $('hNF').innerHTML=hFrm('hn');
 $('agNF').innerHTML=bFrm('bn');bRp('bn');
 navBuild();R();agTick();hashIn();window.addEventListener('hashchange',hashIn);bkInit();
