@@ -10,12 +10,13 @@
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<script>try{var f=localStorage.getItem('rotina_fs')||'m';document.documentElement.style.fontSize={p:'11.5px',m:'12.5px',g:'14px'}[f]||'12.5px'}catch(e){}</script>
 <style>
 :root{--bg:#f2f3f5;--card:#fff;--text:#241a14;--sub:#6b625a;--line:#e4e1dc;--soft:#f5efe6;--accent:#c27a00;--pri:#9e2630;--good:#16834a;--bad:#c83b32}
 html[data-t=dark]{--bg:#14110f;--card:#1e1916;--text:#f1e9df;--sub:#b3a89b;--line:#352d27;--soft:#2a221c;--accent:#e0a030;--pri:#c2323d;--good:#3ecf86;--bad:#ff7066}
 *{box-sizing:border-box}
 html{background:var(--bg)}
-body{margin:0 auto;max-width:640px;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:0 12px calc(84px + env(safe-area-inset-bottom,0px))}
+body{margin:0 auto;max-width:640px;background:var(--bg);color:var(--text);font:.9375rem/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:0 12px calc(84px + env(safe-area-inset-bottom,0px))}
 button,input,select,textarea{font-family:inherit}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--pri);color:#fff;margin:0 -12px;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 14px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
@@ -94,6 +95,16 @@ button.sec{background:var(--soft);color:var(--text)}
 #sp .spp i{display:block;height:100%;background:linear-gradient(90deg,#ffc15a,#fff);transform-origin:left;animation:spBar 1.9s cubic-bezier(.5,0,.2,1) both}
 @keyframes spIn{from{opacity:0;transform:scale(.6)}}@keyframes spUp{from{opacity:0;transform:translateY(10px)}}@keyframes spSpin{to{transform:rotate(360deg)}}@keyframes spPulse{50%{transform:scale(1.05)}}@keyframes spBar{from{transform:scaleX(0)}}@keyframes spOut{to{opacity:0;visibility:hidden;transform:scale(1.04)}}
 @media(prefers-reduced-motion:reduce){#sp *{animation:none!important}}
+.pasta{border:1px solid var(--line);border-radius:14px;margin:10px 0;background:var(--card);overflow:hidden}
+.pasta>summary{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;font-weight:700;cursor:pointer;list-style:none;background:var(--soft)}
+.pasta>summary::-webkit-details-marker{display:none}
+.pasta>summary small{font-weight:500;color:var(--sub);font-size:.78rem;text-align:right;margin-left:auto}
+.pasta>summary::after{content:"▾";color:var(--sub)}
+.pasta:not([open])>summary::after{content:"▸"}
+.pasta>*:not(summary){margin-left:12px;margin-right:12px}
+.pasta>:last-child{margin-bottom:6px}
+.dia{font-size:.78rem;font-weight:700;color:var(--sub);padding:10px 0 2px}
+.tb button,.cx small,.dd,.cxc .two small,.stat .k,.sn2 button b,.dia,.pasta>summary small{font-size:max(.72rem,10px)}
 </style>
 </head>
 <body>
@@ -101,6 +112,7 @@ button.sec{background:var(--soft);color:var(--text)}
 <header class="top"><div class="brand"><div class="logo">B</div><div><b>Bejoma Pessoal</b><small id="hd"></small></div></div><button class="cx" id="cxB" onclick="go('din','caixa')"><small>Caixa pessoal</small><b id="cxTop"></b></button></header>
 <main>
 <div class="pg on" id="p-hoje">
+<div id="boasV"></div>
 <div id="agH"></div>
 <div id="pgH"></div>
 <div id="bk"></div>
@@ -211,7 +223,9 @@ button.sec{background:var(--soft);color:var(--text)}
 <div class="stat"><div class="k">Entrou este mês</div><div class="v good" id="vM1"></div></div>
 <div class="stat"><div class="k">Saiu este mês</div><div class="v bad" id="vM2"></div></div>
 </div></div>
-<div class="card"><h2>Movimentos recentes</h2><div id="vL"></div></div>
+<div class="card"><h2>📥 Entradas (movimentos positivos)</h2><div id="vLE"></div></div>
+<div class="card"><h2>📤 Saídas (movimentos negativos)</h2><div id="vLS"></div></div>
+<div id="orR"></div>
 <div class="card"><h2>Saídas deste mês</h2><div id="vR"></div></div>
 </div>
 <div class="ip" data-g="cx" data-k="novo">
@@ -236,6 +250,20 @@ button.sec{background:var(--soft);color:var(--text)}
 <div class="card"><h2>Limite diário de gastos</h2><p class="empty" id="lmT"></p>
 <label>Limite por dia (Kz). Deixe vazio para desligar</label><input id="lmV" type="text" inputmode="decimal" placeholder="ex.: 3000">
 <button class="b sec" onclick="lmSave()">Guardar limite</button></div>
+</div>
+<div class="ip" data-g="cx" data-k="orc">
+<div class="card"><h2>📊 Orçamento do mês</h2><div id="orB"></div></div>
+<div class="card"><h2>Definir orçamento por categoria</h2><p class="empty">Quanto quer gastar por mês em cada categoria (Kz). Deixe vazio para não ter orçamento nessa categoria.</p><div id="orE"></div><button class="b" onclick="orSave()">Guardar orçamento</button></div>
+</div>
+<div class="ip" data-g="cx" data-k="poup">
+<div class="card"><h2>🎯 Objetivos de poupança</h2><p class="empty" id="poT"></p><div id="poL"></div></div>
+<div class="card"><h2>Novo objetivo</h2>
+<label>O que quer juntar?</label><input id="poN" placeholder="ex.: Telemóvel novo">
+<label>Valor do objetivo (Kz)</label><input id="poM" type="text" inputmode="decimal" placeholder="ex.: 150000">
+<label>Já tem guardado (Kz, opcional; não mexe na Caixa)</label><input id="poI" type="text" inputmode="decimal" placeholder="ex.: 20000">
+<label>Prazo (opcional)</label><input id="poP" type="date">
+<button class="b" onclick="poAdd()">Criar objetivo</button>
+<p class="empty">Ao juntar ou retirar, escolhe se o dinheiro sai ou volta à Caixa. O dinheiro guardado não conta como gasto, nem para o limite diário nem para o orçamento.</p></div>
 </div>
 </div>
 <div class="sp" id="s-din-compras">
@@ -376,6 +404,8 @@ button.sec{background:var(--soft);color:var(--text)}
 <button class="b sec" onclick="agNotif()">Ativar notificações</button><button class="b sec" onclick="agIcs()">📅 Exportar para o calendário</button>
 <label>Máximo de horas de trabalho por dia (0 = sem limite)</label><input id="agMx" type="text" inputmode="decimal" placeholder="ex.: 10" onchange="D.maxTrab=parseFloat(String(this.value).replace(',','.'))||0;save(1);R()"></div>
 </div>
+<div class="card"><h2>🔠 Tamanho do texto</h2><label>Letra</label><select id="fsS" onchange="fsSet(this.value)"><option value="p">Pequeno</option><option value="m">Médio</option><option value="g">Grande</option></select><p class="empty">Muda o tamanho de todo o texto da app. A escolha fica guardada neste telemóvel.</p></div>
+<div class="card"><h2>💬 Mensagem de boas-vindas</h2><label>No ecrã Hoje</label><select id="bvS" onchange="bvSet(this.value)"><option value="1">Mostrar</option><option value="0">Não mostrar</option></select><p class="empty">Aparece no ecrã Hoje: uma saudação e uma frase para a manhã, a tarde ou a noite, mais 2 alertas importantes (🎯 Foco agora). Muda ao longo do dia.</p></div>
 </div>
 </main>
 <nav class="tb" id="tb"></nav>
@@ -406,7 +436,7 @@ const fmt=ds=>ds?ds.split('-').reverse().join('/'):'';
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const hm=m=>m<60?m+'min':Math.floor(m/60)+'h'+(m%60?' '+m%60+'min':'');
 let D={};try{D=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
-const DEF=()=>({tarefas:[],ativ:[],habitos:[],feitos:{},valores:[],cats:['Trabalho','Estudos','Casa','Saúde','Família','Lazer','Outros'],vcats:['Comida','Transporte','Casa','Saúde','Estudos','Lazer','Outros'],lixo:[],ultCopia:'',alt:0,dividas:[],limite:0,lemb:true,metas:[],cron:null,trocas:[],tema:'auto',bj:[],fora:[],ped:[],apr:[],blocos:[],dia:{},maxTrab:0,compras:[],contas:[],pedS:[],aprG:[],urlG:''});
+const DEF=()=>({tarefas:[],ativ:[],habitos:[],feitos:{},valores:[],cats:['Trabalho','Estudos','Casa','Saúde','Família','Lazer','Outros'],vcats:['Comida','Transporte','Casa','Saúde','Estudos','Lazer','Outros'],lixo:[],ultCopia:'',alt:0,dividas:[],limite:0,lemb:true,metas:[],cron:null,trocas:[],tema:'auto',bj:[],fora:[],ped:[],apr:[],blocos:[],dia:{},maxTrab:0,compras:[],contas:[],pedS:[],aprG:[],urlG:'',orc:{},poup:[]});
 D=Object.assign(DEF(),D);D.lixo=(D.lixo||[]).filter(e=>e.em>=add(td(),-30));
 const money=n=>{n=Math.round(n*100)/100;const a=Math.abs(n).toFixed(2).split('.');return (n<0?'-':'')+a[0].replace(/\B(?=(\d{3})+(?!\d))/g,' ')+(a[1]==='00'?'':','+a[1])+' Kz'};
 const save=q=>{if(!q)D.alt=(D.alt||0)+1;try{localStorage.setItem(K,JSON.stringify(D))}catch(e){alert('Não foi possível guardar neste navegador.')}};
@@ -425,7 +455,7 @@ document.querySelectorAll('#tb button').forEach(b=>b.classList.toggle('on',b.dat
 function navBuild(){$('tb').innerHTML=NAV.map(n=>`<button data-p="${n[0]}" onclick="go('${n[0]}')"><svg viewBox="0 0 24 24">${n[3]}</svg>${n[1]}</button>`).join('');go('hoje')}
 /* ---- caixa pessoal ---- */
 const cxTot=()=>sf('din')+sf('mcx'),cxMsg=()=>' · Caixa: '+money(cxTot());
-function CX(){const h=td(),S=cxTot(),hj=D.valores.filter(v=>v.data===h),sa=hj.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((q,v)=>q+v.valor,0),en=hj.filter(v=>v.tipo==='entrada').reduce((q,v)=>q+v.valor,0);
+function CX(){const h=td(),S=cxTot(),hj=D.valores.filter(v=>v.data===h),sa=hj.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((q,v)=>q+v.valor,0),en=hj.filter(v=>v.tipo==='entrada'&&v.origem!=='poupanca').reduce((q,v)=>q+v.valor,0);
 $('cxTop').textContent=money(S);$('cxB').classList.toggle('neg',S<0);
 $('cxH').innerHTML=`<div class="card cxc"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Caixa pessoal</h2><button class="mini" onclick="go('din','caixa')">Abrir</button></div><div class="big ${S<0?'bad':''}">${money(S)}</div><div class="two"><div><small>💵 Dinheiro</small><b>${money(sf('din'))}</b></div><div><small>📱 Express</small><b>${money(sf('mcx'))}</b></div></div><div class="item" style="margin-top:10px"><span>Hoje entrou <b class="good">${money(en)}</b></span><span>saiu <b class="bad">${money(sa)}</b></span></div>${hj.slice(-4).reverse().map(v=>`<div class="item"><div>${esc(v.desc)}<small>${esc(v.cat)} · ${FN[v.forma]}</small></div><b class="${v.tipo==='entrada'?'good':'bad'}">${v.tipo==='entrada'?'+':'−'}${money(v.valor)}</b></div>`).join('')}</div>`}
 function cpPrev(){const sel=D.compras.filter(c=>!c.feito&&c.sel),es=sel.reduce((q,c)=>q+c.preco,0),tx=String($('cpPg').value).replace(',','.').trim(),v=tx===''?es:parseFloat(tx),f=$('cpF').value,s=sf(f);
@@ -474,14 +504,14 @@ const sem=()=>D.ativ.filter(a=>a.data>=add(td(),-6)&&a.data<=td());
 function porCat(l){const m={};l.forEach(a=>m[a.cat]=(m[a.cat]||0)+a.min);return Object.keys(m).map(k=>[k,m[k]]).sort((a,b)=>b[1]-a[1])}
 
 /* ---- apagados / editar / lembrete ---- */
-const LB={tarefas:'Tarefa',ativ:'Atividade',valores:'Valor',habitos:'Hábito',dividas:'Dívida',metas:'Meta',trocas:'Troca',blocos:'Bloco',compras:'Compra',contas:'Conta'};let tmr,EK,EI,EL;
+const LB={tarefas:'Tarefa',ativ:'Atividade',valores:'Valor',habitos:'Hábito',dividas:'Dívida',metas:'Meta',trocas:'Troca',blocos:'Bloco',compras:'Compra',contas:'Conta',poup:'Objetivo'};let tmr,EK,EI,EL;
 function toast(m,u,lb){const e=$('ts');e.innerHTML='<span>'+esc(m)+'</span>'+(u?'<button onclick="'+u+'">'+(lb||'Desfazer')+'</button>':'');e.classList.add('on');clearTimeout(tmr);tmr=setTimeout(()=>e.classList.remove('on'),10000)}
 function lix(k,id,ex){const i=D[k].findIndex(x=>x.id===id);if(i<0)return;const it=D[k].splice(i,1)[0],lid=uid();D.lixo.push({id:lid,k,item:it,em:td()});save();R();toast(LB[k]+' movido para Apagados.'+(ex?' '+ex(it):''),"lRest('"+lid+"')")}
 function lRest(id){const i=D.lixo.findIndex(x=>x.id===id);if(i<0)return;const e=D.lixo.splice(i,1)[0];D[e.k].push(e.item);save();R();$('ts').classList.remove('on')}
 function lPerm(id){if(!confirm('Apagar para sempre? Não dá para recuperar.'))return;D.lixo=D.lixo.filter(x=>x.id!==id);save();R()}
 function lVaz(){if(!D.lixo.length||!confirm('Esvaziar Apagados? Não dá para recuperar.'))return;D.lixo=[];save();R()}
 const eb=(k,id)=>`<button class="mini" onclick="${k==='habitos'?'hEdit':'eOpen'}('${k==='habitos'?'':k+"','"}${id}')">✎</button>`;
-const EF={tarefas:[['t','O que tenho de fazer?','text'],['cat','Categoria','cat'],['prazo','Prazo (opcional)','date'],['hora','Hora (opcional)','time'],['rep','Repetir','rep'],['pri','Prioridade','pri']],ativ:[['t','O que fiz?','text'],['cat','Categoria','cat'],['data','Data','date'],['min','Duração (minutos)','number']],valores:[['desc','Descrição','text'],['valor','Valor (Kz)','money'],['forma','Onde está o dinheiro','forma'],['cat','Categoria','vcat'],['data','Data','date']],habitos:[['nome','Nome do hábito','text']],dividas:[['quem','Nome','text'],['valor','Valor total (Kz)','money'],['prazo','Prazo (opcional)','date']],compras:[['t','Item','text'],['qtd','Quantidade (opcional)','opt'],['preco','Preço estimado (Kz)','money'],['dia','Comprar no dia (opcional)','date'],['cat','Categoria','pcat'],['trk','Acompanhar duração em casa','sn']],contas:[['nome','Nome','text'],['valor','Valor (Kz)','money'],['dia','Dia do mês (1 a 31)','number'],['ini','Começa a pagar em (mês)','mes'],['fim','Deixa de pagar em (opcional)','mes'],['pagoAte','Já pago até (mês, opcional)','mes']]};
+const EF={tarefas:[['t','O que tenho de fazer?','text'],['cat','Categoria','cat'],['prazo','Prazo (opcional)','date'],['hora','Hora (opcional)','time'],['rep','Repetir','rep'],['pri','Prioridade','pri']],ativ:[['t','O que fiz?','text'],['cat','Categoria','cat'],['data','Data','date'],['min','Duração (minutos)','number']],valores:[['desc','Descrição','text'],['valor','Valor (Kz)','money'],['forma','Onde está o dinheiro','forma'],['cat','Categoria','vcat'],['data','Data','date']],habitos:[['nome','Nome do hábito','text']],dividas:[['quem','Nome','text'],['valor','Valor total (Kz)','money'],['prazo','Prazo (opcional)','date']],compras:[['t','Item','text'],['qtd','Quantidade (opcional)','opt'],['preco','Preço estimado (Kz)','money'],['dia','Comprar no dia (opcional)','date'],['cat','Categoria','pcat'],['trk','Acompanhar duração em casa','sn']],poup:[['nome','Nome do objetivo','text'],['meta','Valor do objetivo (Kz)','money'],['prazo','Prazo (opcional)','date']],contas:[['nome','Nome','text'],['valor','Valor (Kz)','money'],['dia','Dia do mês (1 a 31)','number'],['ini','Começa a pagar em (mês)','mes'],['fim','Deixa de pagar em (opcional)','mes'],['pagoAte','Já pago até (mês, opcional)','mes']]};
 function fld(f,x,i){const v=x[f[0]],sel=a=>`<select id="e${i}">`+a.map(o=>`<option value="${esc(o[0])}"${String(o[0])===String(v)?' selected':''}>${esc(o[1])}</option>`).join('')+'</select>';
 if(f[2]==='cat')return sel([...new Set(D.cats.concat(v))].map(c=>[c,c]));
 if(f[2]==='pcat')return sel([...new Set(PC.concat(v))].map(c=>[c,c]));
@@ -515,7 +545,7 @@ function dPagOk(){const d=D.dividas.find(x=>x.id===EI);if(!d)return eClose();con
 if(!(v>0))return alert('Indique o valor.');if(v>rest(d)+0.005)return alert('O valor é maior do que o que falta ('+money(rest(d))+').');
 if($('pR').value==='1'){if(sai){const s=sf(f);if(v>s+0.005&&!confirm('Em '+FN[f]+' só tem '+money(s)+'. Registar mesmo assim?'))return}
 D.valores.push({id:uid(),tipo:sai?'saida':'entrada',desc:(sai?'Paguei a ':'Recebi de ')+d.quem,valor:v,cat:sai?(D.vcats.indexOf('Outros')>=0?'Outros':D.vcats[0]):'Entrada',data:td(),forma:f})}
-d.pago=(d.pago||0)+v;save();eClose();R();toast(rest(d)<0.005?'Dívida saldada. ✓':'Pagamento registado.')}
+d.pago=(d.pago||0)+v;if(rest(d)<0.005)d.fim=td();save();eClose();R();toast(rest(d)<0.005?'Dívida saldada. ✓':'Pagamento registado.')}
 /* ---- resumo ---- */
 const PN={'7':'Últimos 7 dias',m:'Este mês',p:'Mês passado'};
 const mS=(ds,k)=>addM(ds.slice(0,8)+'01',k),nd=(a,b)=>Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/864e5)+1;
@@ -525,7 +555,7 @@ if(v==='p'){const i=mS(h,-1);return [i,add(mS(h,0),-1),mS(h,-2),add(i,-1)]}
 return [add(h,-6),h,add(h,-13),add(h,-7)]}
 function est(a,b){const A=D.ativ.filter(x=>x.data>=a&&x.data<=b),V=D.valores.filter(x=>x.data>=a&&x.data<=b),ids=D.habitos.map(x=>x.id),n=nd(a,b);let hf=0,dl=0,ex=0,hv=[];
 for(let i=0;i<n;i++){const d=add(a,i);if(D.limite>0&&gastoDia(d)>D.limite)dl++;if(D.dia[d]&&D.dia[d].hum)hv.push(D.dia[d].hum);D.habitos.forEach(x=>{if(x.freq==='vezes')ex+=(x.n||3)/7;else if(hDue(x,d))ex++;if(feito(x.id,d)&&(x.freq==='vezes'||hDue(x,d)))hf++})}
-return{min:A.reduce((q,x)=>q+x.min,0),pc:porCat(A),tf:D.tarefas.filter(t=>t.feita&&t.fim>=a&&t.fim<=b).length,hp:ex?Math.min(100,Math.round(hf/ex*100)):0,e:V.filter(x=>x.tipo==='entrada').reduce((q,x)=>q+x.valor,0),s:V.filter(x=>x.tipo==='saida'&&!pB(x)).reduce((q,x)=>q+x.valor,0),av:hv.length?hv.reduce((q,x)=>q+x,0)/hv.length:0,pb:V.filter(pB).reduce((q,x)=>q+x.valor,0),vc:vCat(V),dl,rt:V.filter(x=>x.origem==='bejoma').reduce((q,x)=>q+x.valor,0)}}
+return{min:A.reduce((q,x)=>q+x.min,0),pc:porCat(A),tf:D.tarefas.filter(t=>t.feita&&t.fim>=a&&t.fim<=b).length,hp:ex?Math.min(100,Math.round(hf/ex*100)):0,e:V.filter(x=>x.tipo==='entrada'&&x.origem!=='poupanca').reduce((q,x)=>q+x.valor,0),s:V.filter(x=>x.tipo==='saida'&&!pB(x)).reduce((q,x)=>q+x.valor,0),av:hv.length?hv.reduce((q,x)=>q+x,0)/hv.length:0,pb:V.filter(pBj).reduce((q,x)=>q+x.valor,0),vc:vCat(V),dl,rt:V.filter(x=>x.origem==='bejoma').reduce((q,x)=>q+x.valor,0),pq:V.filter(x=>x.origem==='poupanca').reduce((q,x)=>q+(x.tipo==='saida'?x.valor:-x.valor),0)}}
 const dlt=(c,p,f,up)=>{const d=c-p;if(!c&&!p)return '';if(!d)return 'igual ao período anterior';return `<span class="${(d>0)===up?'good':'bad'}">${d>0?'▲ ':'▼ '}${f(Math.abs(d))}</span> vs período anterior`};
 const rw=(l,v,d)=>`<div class="item"><div>${l}<small>${d||''}</small></div><b>${v}</b></div>`;
 const br=(l,v,m,f)=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${esc(l)}</span><b>${f(v)}</b></div><div class="bar"><i style="width:${Math.round(v/m*100)}%"></i></div></div>`;
@@ -534,7 +564,7 @@ const fr=(PN[$('rP').value]||PN['7'])+': '+(c.min?hm(c.min)+' de atividades':'se
 return `<div class="card"><h2>Em resumo</h2><p style="margin:0 0 6px">${fr}</p><small class="empty">${fmt(a)} a ${fmt(b)} · comparado com ${fmt(pa)} a ${fmt(pb)}</small></div>
 <div class="card"><h2>Atividades</h2>${rw('Tempo total',hm(c.min),dlt(c.min,p.min,hm,true))}${c.pc.map(x=>br(x[0],x[1],c.pc[0][1],hm)).join('')}</div>
 <div class="card"><h2>Tarefas e hábitos</h2>${rw('Tarefas concluídas',c.tf,dlt(c.tf,p.tf,String,true))}${rw('Tarefas atrasadas agora',`<span class="${ts?'bad':''}">${ts}</span>`)}${c.av?rw('Avaliação média dos dias',c.av.toFixed(1)+' / 5',p.av?dlt(+c.av.toFixed(1),+p.av.toFixed(1),x=>x.toFixed(1),true):''):''}${rw('Hábitos cumpridos',c.hp+'%',dlt(c.hp,p.hp,x=>x+'%',true))}</div>
-<div class="card"><h2>Valores</h2>${rw('Entrou',`<span class="good">${money(c.e)}</span>`,dlt(c.e,p.e,money,true))}${rw('Saiu',`<span class="bad">${money(c.s)}</span>`,dlt(c.s,p.s,money,false))}${c.pb||p.pb?rw('Enviado à Bejoma Gestão',money(c.pb),dlt(c.pb,p.pb,money,false)):''}${c.rt||p.rt?rw('Retiradas da Bejoma Gestão',money(c.rt),dlt(c.rt,p.rt,money,true)):''}${rw('Diferença (entrou − saiu)',`<span class="${c.e>=c.s?'good':'bad'}">${money(c.e-c.s)}</span>`)}${D.limite>0?rw('Dias acima do limite',c.dl,dlt(c.dl,p.dl,String,false)):''}${c.vc.length?'<label>Saídas por categoria</label>'+c.vc.map(x=>br(x[0],x[1],c.vc[0][1],money)).join(''):''}</div>
+<div class="card"><h2>Valores</h2>${rw('Entrou',`<span class="good">${money(c.e)}</span>`,dlt(c.e,p.e,money,true))}${rw('Saiu',`<span class="bad">${money(c.s)}</span>`,dlt(c.s,p.s,money,false))}${c.pb||p.pb?rw('Enviado à Bejoma Gestão',money(c.pb),dlt(c.pb,p.pb,money,false)):''}${c.pq||p.pq?rw('Guardado em poupança',money(c.pq),dlt(c.pq,p.pq,money,false)):''}${c.rt||p.rt?rw('Retiradas da Bejoma Gestão',money(c.rt),dlt(c.rt,p.rt,money,true)):''}${rw('Diferença (entrou − saiu)',`<span class="${c.e>=c.s?'good':'bad'}">${money(c.e-c.s)}</span>`)}${D.limite>0?rw('Dias acima do limite',c.dl,dlt(c.dl,p.dl,String,false)):''}${c.vc.length?'<label>Saídas por categoria</label>'+c.vc.map(x=>br(x[0],x[1],c.vc[0][1],money)).join(''):''}</div>
 <div class="card"><h2>Dívidas agora</h2>${rw('Eu devo',`<span class="bad">${money(dv)}</span>`)}${rw('Devem-me',`<span class="good">${money(dm)}</span>`)}</div>`}
 /* ---- PIN ---- */
 let HID=0;
@@ -783,7 +813,7 @@ if(!ok){try{const u=URL.createObjectURL(new Blob([j],{type:'application/json'}))
 try{const q=JSON.parse(localStorage.getItem('bejoma_inbox')||'[]')||[];it.forEach(i=>{if(!q.some(y=>y&&y.id===i.id))q.push(i)});localStorage.setItem('bejoma_inbox',JSON.stringify(q))}catch(e){}
 D.fora=[];save();R();toast('Enviado à Bejoma Gestão: '+it.length+' retirada(s). Na Bejoma Gestão, importe em Caixa.')}
 /* ---- enviar dinheiro para a Bejoma Gestão ---- */
-function pB(v){return v.origem==='paraBejoma'}
+function pB(v){return v.origem==='paraBejoma'||(v.origem==='poupanca'&&v.tipo==='saida')}const pBj=v=>v.origem==='paraBejoma';
 async function pbEnviar(){const v=parseFloat(String($('pbV').value).replace(',','.')),f=$('pbF').value,d=$('pbD').value.trim().slice(0,50);if(!(v>0))return alert('Indique o valor.');
 const sd=sf(f);if(v>sd+0.005&&!confirm('Em '+FN[f]+' só tem '+money(sd)+'.\n\nEnviar mesmo assim?'))return;
 const it={id:'r'+uid(),data:td(),desc:d||'Da Bejoma Pessoal',valor:v,forma:f},nm='pessoal-para-gestao-'+td()+'.json',j=JSON.stringify({bejTransfer:1,de:'rotina',criado:td(),itens:[it]});let ok=false;
@@ -835,7 +865,7 @@ function imp(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onl
 
 /* ---- relatório PDF ---- */
 function pdf(){const ini=add(td(),-6),fim=td(),A=sem().sort((a,b)=>a.data<b.data?-1:1),pc=porCat(A),tot=A.reduce((q,a)=>q+a.min,0),E=est(ini,fim),agora=new Date();
-const sg=v=>v.tipo==='entrada'?v.valor:-v.valor,V=D.valores.filter(v=>v.data>=ini&&v.data<=fim),vE=V.filter(v=>v.tipo==='entrada').reduce((q,v)=>q+v.valor,0),vS=V.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((q,v)=>q+v.valor,0),vP=V.filter(v=>v.tipo==='saida'&&pB(v)).reduce((q,v)=>q+v.valor,0),vR=V.filter(v=>v.tipo==='entrada'&&v.origem==='bejoma').reduce((q,v)=>q+v.valor,0),vc=vCat(V),
+const sg=v=>v.tipo==='entrada'?v.valor:-v.valor,V=D.valores.filter(v=>v.data>=ini&&v.data<=fim),vE=V.filter(v=>v.tipo==='entrada'&&v.origem!=='poupanca').reduce((q,v)=>q+v.valor,0),vS=V.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((q,v)=>q+v.valor,0),vP=V.filter(v=>v.tipo==='saida'&&pBj(v)).reduce((q,v)=>q+v.valor,0),vR=V.filter(v=>v.tipo==='entrada'&&v.origem==='bejoma').reduce((q,v)=>q+v.valor,0),vQ=V.filter(v=>v.origem==='poupanca').reduce((q,v)=>q+(v.tipo==='saida'?v.valor:-v.valor),0),vc=vCat(V),
 sI=D.valores.filter(v=>v.data<ini).reduce((q,v)=>q+sg(v),0),sF=D.valores.filter(v=>v.data>fim).reduce((q,v)=>q+sg(v),0),sT=sf('din')+sf('mcx');
 const tf=D.tarefas.filter(t=>t.feita&&t.fim>=ini),tp=D.tarefas.filter(t=>!t.feita).sort(ord),dias=[0,1,2,3,4,5,6].map(i=>add(ini,i)),rw2=(l,v,b)=>`<tr><td>${b?'<b>'+l+'</b>':l}</td><td>${b?'<b>'+v+'</b>':v}</td></tr>`;
 const ag=dias.map(d=>({d,s:agSum(d)})).filter(x=>x.s.n),hab=h=>{if(h.freq==='vezes')return[dias.filter(d=>feito(h.id,d)).length,h.n||3];const pr=dias.filter(d=>hDue(h,d));return[pr.filter(d=>feito(h.id,d)).length,pr.length]};
@@ -849,7 +879,7 @@ ${D.metas.length?`<h3>Metas</h3><table><tr><th>Meta</th><th>Feito</th><th>Objeti
 <h3>Tarefas concluídas (${tf.length})</h3>${tf.length?`<table>${tf.map(t=>`<tr><td>${esc(t.t)}</td><td>${fmt(t.fim)}</td></tr>`).join('')}</table>`:'<p>—</p>'}
 <h3>Tarefas por fazer (${tp.length})</h3>${tp.length?`<table>${tp.map(t=>`<tr><td>${esc(t.t)}${t.hora?' · '+t.hora:''}</td><td>${t.prazo?fmt(t.prazo):'sem prazo'}</td></tr>`).join('')}</table>`:'<p>—</p>'}
 <h3>Hábitos (feitos / previstos)</h3>${D.habitos.length?`<table>${D.habitos.map(h=>{const r=hab(h);return`<tr><td>${esc(h.nome)}</td><td>${r[0]} de ${r[1]}</td></tr>`}).join('')}</table>`:'<p>—</p>'}
-<h3>Valores</h3><table>${rw2('Saldo no início (antes de '+fmt(ini)+')',money(sI))}${rw2('+ Entradas',money(vE))}${vR?rw2('&nbsp;&nbsp;das quais retiradas da Bejoma Gestão',money(vR)):''}${rw2('− Saídas',money(vS))}${vP?rw2('− Enviado à Bejoma Gestão',money(vP)):''}${sF?rw2('± Movimentos com data futura',money(sF)):''}${rw2('= Saldo atual (Dinheiro + Express)',money(sT),1)}</table>
+<h3>Valores</h3><table>${rw2('Saldo no início (antes de '+fmt(ini)+')',money(sI))}${rw2('+ Entradas',money(vE))}${vR?rw2('&nbsp;&nbsp;das quais retiradas da Bejoma Gestão',money(vR)):''}${rw2('− Saídas',money(vS))}${vP?rw2('− Enviado à Bejoma Gestão',money(vP)):''}${vQ?rw2(vQ>0?'− Guardado em poupança':'+ Devolvido da poupança',money(Math.abs(vQ))):''}${sF?rw2('± Movimentos com data futura',money(sF)):''}${rw2('= Saldo atual (Dinheiro + Express)',money(sT),1)}</table>
 <table>${rw2('Em Dinheiro',money(sf('din')))}${rw2('Em Multicaixa Express',money(sf('mcx')))}</table>${vc.length?`<table><tr><th>Saídas por categoria</th><th>Valor</th></tr>${vc.map(c=>`<tr><td>${esc(c[0])}</td><td>${money(c[1])}</td></tr>`).join('')}</table>`:''}
 <h3>Dívidas em aberto</h3>${dv.length?`<table>${dv.map(d=>`<tr><td>${d.tipo==='devo'?'Devo a':'Deve-me'} ${esc(d.quem)}${d.prazo?' · prazo '+fmt(d.prazo):''}</td><td>${money(rest(d))}</td></tr>`).join('')}${rw2('Total que devo',money(dvD),1)}${rw2('Total que me devem',money(dvM),1)}</table>`:'<p>—</p>'}
 ${rv.length?`<h3>Revisão dos dias</h3><table>${rv.map(d=>`<tr><td>${fmt(d)}</td><td>${['','😞','🙁','😐','🙂','😄'][D.dia[d].hum||0]}</td><td>${esc((D.dia[d].nota||'').slice(0,90))}</td></tr>`).join('')}</table>`:''}
@@ -897,7 +927,7 @@ $('crH').innerHTML=D.cron?`<div class="card" style="border:2px solid var(--accen
 {const p=bjPend(),t=p.reduce((q,i)=>q+i.valor,0);$('bjH').innerHTML=p.length?`<div class="card" style="border:2px solid var(--accent)"><b>💼 ${p.length} retirada(s) nova(s) da Bejoma Gestão</b><p class="empty">${money(t)} por importar.</p><button class="b" onclick="bjRev()">Rever e importar</button></div>`:'';
 $('bjP').innerHTML=p.length?`<p style="margin:4px 0"><b>${p.length} nova(s)</b> · ${money(t)} por importar</p><button class="b" onclick="bjRev()">Rever e importar</button>`:'<p class="empty" style="margin:4px 0">Sem retiradas novas da Bejoma Gestão.</p>'}
 {const n=foraOk();$('foT').innerHTML=n.length?`<div class="item" style="border:2px solid var(--accent);border-radius:14px;padding:10px;margin:10px 0"><div><b>📤 ${n.length} retirada(s) por avisar à Bejoma Gestão</b><small>${money(n.reduce((q,i)=>q+i.valor,0))} · a Bejoma Gestão ainda não sabe</small></div></div><button class="b" onclick="foraEnviar()">Enviar à Bejoma Gestão</button>`:''}
-$('pbT').textContent='Enviado à Bejoma Gestão este mês: '+money(D.valores.filter(v=>pB(v)&&v.data.slice(0,7)===h.slice(0,7)).reduce((q,v)=>q+v.valor,0));
+$('pbT').textContent='Enviado à Bejoma Gestão este mês: '+money(D.valores.filter(v=>pBj(v)&&v.data.slice(0,7)===h.slice(0,7)).reduce((q,v)=>q+v.valor,0));
 $('rtT').textContent='Recebido da Bejoma Gestão este mês: '+money(D.valores.filter(v=>v.origem==='bejoma'&&v.data.slice(0,7)===h.slice(0,7)).reduce((q,v)=>q+v.valor,0));$('pnT').textContent=D.pin?'PIN ligado. É pedido ao abrir e depois de 1 minuto fora da app.':'PIN desligado.';$('pnB').textContent=D.pin?'Mudar ou desligar o PIN':'Definir PIN';$('rX').innerHTML=resumo();
 {const g=gastoDia(h),L=D.limite||0;$('lmT').textContent=L>0?'Hoje gastou '+money(g)+' de '+money(L)+'.':'Sem limite definido.';if(!$('lmV').value&&L)$('lmV').value=L;
 $('lm').innerHTML=L>0?`<div class="card"><h2>Gasto de hoje</h2><div style="display:flex;justify-content:space-between"><b class="${g>L?'bad':''}">${money(g)}</b><span>limite ${money(L)}</span></div><div class="bar"><i style="width:${Math.min(100,Math.round(g/L*100))}%;background:${g>L?'var(--bad)':g>L*.8?'#e0a000':'var(--good)'}"></i></div><small class="${g>L?'bad':''}">${g>L?'Passou '+money(g-L)+' do limite.':'Ainda pode gastar '+money(L-g)+'.'}</small></div>`:''}
@@ -910,18 +940,19 @@ cpAvisos().forEach(a=>Ls.push(a));
 D.contas.forEach(c=>{if(c.fim&&ctProx(c,h)>c.fim)return;const ds=ctDue(c,h),df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1);if(df<=3)Ls.push(`<span class="${df<0?'bad':''}">🏠 ${esc(c.nome)} ${df<0?'atrasada':df===0?'vence hoje':'vence em '+df+' dia(s)'}: ${money(c.valor)}</span>`)})}
 $('rm').innerHTML=D.lemb!==false&&!RM_OFF&&Ls.length?`<div class="card" style="border:2px solid var(--accent)"><h2>Lembretes</h2>${Ls.map(l=>'<div class="item">'+l+'</div>').join('')}<button class="mini" style="margin-top:8px" onclick="rmOff()">Ok, vi</button></div>`:'';
 $('lbT').textContent=D.lemb!==false?'Ligados (tocar para desligar)':'Desligados (tocar para ligar)'}
-DVR();CASA();
+DVR();CASA();BV();
 {const t=bkTxt();$('bk').innerHTML=t?`<div class="card" style="border:2px solid var(--accent)"><b>💾 Hora de guardar uma cópia</b><p class="empty">${t}</p><button class="b" onclick="exp()">Guardar cópia agora</button></div>`:'';
 $('uc').innerHTML=D.ultCopia?'<b>Última cópia:</b> '+fmt(D.ultCopia)+(D.alt?' · '+D.alt+' alteração(ões) desde então':' · tudo guardado'):'<b>Ainda sem cópia.</b>';
 $('lx').innerHTML=D.lixo.length?D.lixo.slice().reverse().map(e=>`<div class="item"><div><b>${esc(e.item.t||e.item.desc||e.item.nome||e.item.quem||e.item.cat)}</b><small>${LB[e.k]}${e.k==='valores'||e.k==='dividas'||e.k==='trocas'?' · '+money(e.item.valor):''} · apagado a ${fmt(e.em)}</small></div><div class="bt"><button class="mini" onclick="lRest('${e.id}')">↩ Restaurar</button><button class="mini dng" onclick="lPerm('${e.id}')">✕</button></div></div>`).join(''):'<div class="empty">Nada apagado.</div>'}
 // valores
-{const S=sf('din')+sf('mcx'),mes=D.valores.filter(v=>v.data.slice(0,7)===h.slice(0,7)),me=mes.filter(v=>v.tipo==='entrada').reduce((a,v)=>a+v.valor,0),ms=mes.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((a,v)=>a+v.valor,0);
+{const S=sf('din')+sf('mcx'),mes=D.valores.filter(v=>v.data.slice(0,7)===h.slice(0,7)),me=mes.filter(v=>v.tipo==='entrada'&&v.origem!=='poupanca').reduce((a,v)=>a+v.valor,0),ms=mes.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((a,v)=>a+v.valor,0);
 $('vSS').textContent=money(S);$('vSS').className='v '+(S<0?'bad':'');$('vSD').textContent=money(sf('din'));$('vSD').className='v '+(sf('din')<0?'bad':'');$('vSE').textContent=money(sf('mcx'));$('vSE').className='v '+(sf('mcx')<0?'bad':'');
 $('vM1').textContent=money(me);$('vM2').textContent=money(ms);
 const vc=vCat(mes),mx2=vc.length?vc[0][1]:1;
 $('vR').innerHTML=vc.length?vc.map(c=>`<div style="margin:8px 0"><div style="display:flex;justify-content:space-between"><span>${esc(c[0])}</span><b>${money(c[1])}</b></div><div class="bar"><i style="width:${Math.round(c[1]/mx2*100)}%"></i></div></div>`).join(''):'<div class="empty">Sem saídas este mês.</div>';
-const vl=D.valores.slice().reverse().sort((a,b)=>a.data<b.data?1:a.data>b.data?-1:0).slice(0,20);
-$('vL').innerHTML=vl.length?vl.map(v=>`<div class="item"><div><b>${esc(v.desc)}</b><small>${esc(v.cat)} · ${fmt(v.data)} · ${FN[v.forma]}</small></div><div style="text-align:right"><b class="${v.tipo==='entrada'?'good':'bad'}">${v.tipo==='entrada'?'+':'−'}${money(v.valor)}</b><br><span class="bt" style="justify-content:flex-end;margin-top:4px">${eb('valores',v.id)}<button class="mini dng" onclick="vDel('${v.id}')">✕</button></span></div></div>`).join(''):'<div class="empty">Sem movimentos.</div>'}
+const vRow=v=>`<div class="item"><div><b>${esc(v.desc)}</b><small>${esc(v.cat)} · ${fmt(v.data)} · ${FN[v.forma]}</small></div><div style="text-align:right"><b class="${v.tipo==='entrada'?'good':'bad'}">${v.tipo==='entrada'?'+':'−'}${money(v.valor)}</b><br><span class="bt" style="justify-content:flex-end;margin-top:4px">${eb('valores',v.id)}<button class="mini dng" onclick="vDel('${v.id}')">✕</button></span></div></div>`;{const E=D.valores.filter(v=>v.tipo==='entrada').reverse(),S2=D.valores.filter(v=>v.tipo==='saida').reverse();
+$('vLE').innerHTML=E.length?pastas(E,v=>v.data,vRow,l=>'+'+money(l.reduce((q,v)=>q+v.valor,0))):'<div class="empty">Ainda sem entradas.</div>';
+$('vLS').innerHTML=S2.length?pastas(S2,v=>v.data,vRow,l=>'−'+money(l.filter(v=>!pB(v)).reduce((q,v)=>q+v.valor,0))):'<div class="empty">Ainda sem saídas.</div>'}}
 fdChips();
 }
 
@@ -933,7 +964,7 @@ hab:[['lista','Hoje'],['novo','＋ Novo hábito','nw']],
 agd:[['ver','Agenda'],['novo','＋ Novo bloco','nw']],
 tar:[['lista','Por fazer',()=>D.tarefas.filter(t=>!t.feita).length],['conc','Concluídas'],['novo','＋ Nova tarefa','nw']],
 ati:[['reg','Registos'],['met','Metas'],['novo','＋ Registar','nw']],
-cx:[['res','Resumo'],['novo','＋ Novo valor','nw'],['troca','Trocar'],['lim','Limite']],
+cx:[['res','Resumo'],['novo','＋ Novo valor','nw'],['orc','Orçamento'],['poup','Poupança',()=>D.poup.filter(p=>p.guardado<p.meta).length],['troca','Trocar'],['lim','Limite']],
 cp:[['lista','🛒 A comprar',()=>D.compras.filter(c=>!c.feito).length],['casa','🏠 Em casa',()=>cpEmCasa().length],['novo','＋ Novo item','nw']],
 dv:[['devo','Eu devo',()=>D.dividas.filter(d=>d.tipo==='devo'&&rest(d)>0.005).length],['devem','Devem-me',()=>D.dividas.filter(d=>d.tipo==='devem'&&rest(d)>0.005).length],['nova','＋ Nova dívida','nw']],
 ct:[['lista','A pagar',()=>D.contas.length],['nova','＋ Nova conta','nw']],
@@ -985,17 +1016,79 @@ $('csH').textContent=csModo==='com'?'Itens que acabam (comida, sabão, gás…).
 function cpCatCh(){$('cpK').value=$('cpC').value==='Outros'?'0':'1'}
 
 /* ---- dívidas: uma pasta para cada lado ---- */
+const MESN=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+function pastas(L,dt,rd,sm,aberto){L=L.slice().sort((a,b)=>{const x=String(dt(a)||''),y=String(dt(b)||'');return x<y?1:x>y?-1:0});const g=[],ix={};L.forEach(x=>{const k=String(dt(x)||'').slice(0,7)||'0000-00';if(!(k in ix)){ix[k]=g.length;g.push({k:k,l:[]})}g[ix[k]].l.push(x)});
+return g.map((q,i)=>{const a=q.k.slice(0,4),m=+q.k.slice(5,7),nm=m>=1&&m<=12?MESN[m-1]+' '+a:'Sem data';let dia=null,h='';
+q.l.forEach(x=>{const d=String(dt(x)||'').slice(0,10);if(d!==dia){dia=d;h+='<div class="dia">'+(d?fmt(d):'Sem data')+'</div>'}h+=rd(x)});
+return '<details class="pasta"'+((aberto===true||(aberto!==false&&i===0))?' open':'')+'><summary><span>📁 '+nm+'</span><small>'+q.l.length+' registo(s)'+(sm?' · '+sm(q.l):'')+'</small></summary>'+h+'</details>'}).join('')}
+const BVM=['Bom começo: respira fundo e dá o primeiro passo do dia.','Hoje é um bom dia para dar um passo, mesmo que pequeno.','Começa o dia com calma e escolhe o que mais importa.','Cada manhã é uma nova oportunidade de fazer melhor.','Coragem não é não ter medo. É avançar com ele.','Primeiro o mais importante: o resto encaixa depois.','Um bom plano de manhã poupa muito esforço à tarde.','Tudo o que é grande começou pequeno. Começa hoje.','Não compares o teu começo com o meio de ninguém.','Quem planeia o dia não é apanhado de surpresa.','Hoje podes ser um pouco melhor do que ontem. Isso chega.','O teu esforço silencioso de hoje será visível amanhã.','Um hábito pequeno feito todos os dias muda uma vida.','Metas grandes, passos pequenos, todos os dias.','Olha para a tua lista de hoje: é mais pequena do que parece.','Tens mais força do que pensas. Avança.','A disciplina de hoje paga a liberdade de amanhã.','Um dia de cada vez, uma tarefa de cada vez.','Faz primeiro o que mais te custa. O resto fica leve.','Hoje, escolhe fazer bem feito o que está à tua frente.','Quem acorda com um objetivo já está a meio do caminho.','A confiança em ti constrói-se cumprindo o que prometes a ti mesmo.','Fé no caminho, atenção aos detalhes e coragem para continuar.','Ontem já passou. Hoje é a tua folha em branco.','Não esperes pelo momento perfeito: começa com o que tens.','Organização de manhã, tranquilidade à noite.','Cuida do teu tempo como cuidas do teu dinheiro.','Quando o caminho apertar, lembra-te de por que começaste.','Pequenos passos feitos todos os dias levam longe.','Respira, planeia e avança: o dia é teu.'],BVT=['Mantém o foco: o dia ainda tem muito para dar.','Continua. A constância vence o cansaço.','Cada tarefa feita hoje é um peso a menos amanhã.','Se a manhã correu mal, a tarde é uma nova chance.','Não pares agora: o esforço de hoje paga amanhã.','Regista o que gastas assim que acontece: as contas agradecem.','Trabalha com calma, mas não pares.','Errar faz parte. O que conta é corrigir e seguir.','Devagar também é caminho. O importante é não parar.','A pressa estraga contas. A calma acerta-as.','Cuida do teu dinheiro: cada Kz tem um destino.','Quem cumpre prazos ganha respeito, também de si mesmo.','A meio do dia, respira fundo e volta ao essencial.','Cada Kz bem registado é um Kz bem guardado.','Pequenas poupanças, somadas com paciência, tornam-se grandes resultados.','Tens vontade, tens capacidade. Avança.','O que registas, controlas. O que controlas, melhoras.','Uma vida organizada cresce com paciência e constância.','A tua coragem de hoje abre portas que o medo mantém fechadas.','Paga o que deves a tempo e cobra o que te devem com educação.','Quem aprende todos os dias nunca fica parado.','Se o cansaço apertar, lembra-te do que já conseguiste hoje.','Atenção aos detalhes: é neles que o dinheiro se esconde.','Contas claras mantêm a cabeça leve.','Um problema de cada vez: assim todos se resolvem.','A honestidade com os números é a base de qualquer plano.','Ninguém consegue tudo sem cair e levantar-se algumas vezes.','Ainda há tempo de fazer a tarde valer a pena.','Um hábito feito agora é uma vitória que ninguém te tira.','Faz uma pausa curta e volta com mais energia.'],BVN=['O dia está a acabar: regista o que falta e descansa de consciência tranquila.','Valoriza o que já conseguiste hoje. Foi preciso coragem.','Se hoje foi pouco, amanhã podes fazer mais. O que importa é voltares.','Organizar as contas hoje é dormir descansado amanhã.','Um dia difícil não apaga o teu esforço.','Fizeste o teu melhor? Então já ganhaste o dia.','Descansar também faz parte do caminho.','Faz a revisão do dia e fecha-o em paz.','Amanhã é uma nova oportunidade. Descansa para a agarrar.','Quem poupa um pouco todos os dias constrói muito ao fim do ano.','Termina o dia com as contas em dia e a cabeça leve.','Não deixes para amanhã o que podes registar hoje.','Reconhece o teu esforço: poucos aguentam o que tu aguentas.','Aprende com o dia, mas não o leves contigo para a cama.','O sucesso é feito de dias comuns bem vividos.','Hoje semeaste: dá tempo ao tempo para colher.','Faz um balanço simples: o que correu bem e o que melhorar.','Recomeçar também é uma forma de vencer.','A tua história ainda está a ser escrita. Amanhã há mais um capítulo.','Tens mais força do que pensas. Descansa e volta amanhã.','Uma cópia de segurança feita hoje é sossego amanhã.','Quem sabe onde gasta sabe onde pode poupar.','Agradece o dia, mesmo o difícil: ele ensinou-te algo.','Fecha o dia com o que aprendeste e abre o amanhã com coragem.','Hoje ficou feito. Amanhã faz-se o resto.','A disciplina de hoje paga a liberdade de amanhã.','Ninguém constrói tudo num só dia. Fizeste a tua parte.','O que fazes todos os dias vale mais do que o que prometes um dia.','Descansa a mente: amanhã tens energia nova.','Boa noite: o teu esforço de hoje já está a trabalhar por ti.'];
+function fsGet(){try{return localStorage.getItem('rotina_fs')||'m'}catch(e){return'm'}}
+function fsSet(v){try{localStorage.setItem('rotina_fs',v)}catch(e){}document.documentElement.style.fontSize={p:'11.5px',m:'12.5px',g:'14px'}[v]||'12.5px'}
+function bvOn(){try{return localStorage.getItem('rotina_bv')!=='0'}catch(e){return true}}
+function bvSet(v){try{localStorage.setItem('rotina_bv',v)}catch(e){}BV()}
+function bvAl(per){const h=td(),hd=D.habitos.filter(x=>x.freq!=='vezes'&&hDue(x,h)&&!feito(x.id,h)).length,tA=D.tarefas.filter(t=>!t.feita&&t.prazo&&t.prazo<h).length,tH=D.tarefas.filter(t=>!t.feita&&t.prazo===h).length,
+dA=D.dividas.filter(d=>rest(d)>0.005&&d.prazo&&d.prazo<h).length,dV=D.dividas.filter(d=>rest(d)>0.005&&d.prazo&&d.prazo>=h&&d.prazo<=add(h,2)).length,cc=D.compras.filter(c=>!c.feito&&c.dia&&c.dia<=h).length;let cA=0,cV=0;
+D.contas.forEach(c=>{if(c.fim&&ctProx(c,h)>c.fim)return;const ds=ctDue(c,h),df=ds>=h?nd(h,ds)-1:-(nd(ds,h)-1);if(df<0)cA++;else if(df<=3)cV++});
+const A={tA:tA?{t:'⚠️ '+tA+' tarefa(s) atrasada(s)',g:"go('plan','tarefas')"}:null,
+tH:tH?{t:'📝 '+tH+' tarefa(s) para hoje',g:"go('plan','tarefas')"}:null,
+dA:dA?{t:'⚠️ '+dA+' dívida(s) em atraso',g:"go('din','div')"}:null,
+dV:dV?{t:'🤝 '+dV+' dívida(s) a vencer em breve',g:"go('din','div')"}:null,
+cA:cA?{t:'⚠️ '+cA+' conta(s) da casa em atraso',g:"go('din','contas')"}:null,
+cV:cV?{t:'🏠 '+cV+' conta(s) da casa a vencer em breve',g:"go('din','contas')"}:null,
+hb:hd?{t:'🔁 Faltam '+hd+' hábito(s) de hoje',g:"go('hoje','habitos')"}:null,
+cp:cc?{t:'🛒 '+cc+' item(ns) para comprar',g:"go('din','compras')"}:null,
+or:orAl(),bk:bkTxt()?{t:'💾 Hora de guardar uma cópia',g:"go('mais','dados')"}:null};
+const O={m:['tA','dA','cA','or','tH','cV','dV','cp','bk'],t:['tA','tH','dA','cA','or','hb','cV','dV','cp'],n:['hb','tA','bk','dA','cA','or','cV','dV','tH']}[per];
+return O.map(k=>A[k]).filter(Boolean).slice(0,2)}
+function BV(){const b=$('boasV');if(!b)return;if($('bvS'))$('bvS').value=bvOn()?'1':'0';if($('fsS'))$('fsS').value=fsGet();
+if(!bvOn()){b.innerHTML='';return}
+const h=new Date().getHours(),per=h<12?'m':h<18?'t':'n',sd=per==='m'?'☀️ Bom dia!':per==='t'?'🌤️ Boa tarde!':'🌙 Boa noite!',L=per==='m'?BVM:per==='t'?BVT:BVN,dn=Math.floor(new Date(td()+'T12:00:00').getTime()/864e5),fr=L[((dn%L.length)+L.length)%L.length],al=bvAl(per);
+b.innerHTML='<div class="card" style="background:var(--soft)"><b style="font-size:1.05rem">'+sd+'</b><p style="margin:8px 0 10px;font-size:1rem;line-height:1.45">“'+fr+'”</p><div style="font-size:.78rem;font-weight:700;color:var(--sub);margin-bottom:2px">🎯 Foco agora</div>'+(al.length?al.map(a=>'<div class="item"><div>'+esc(a.t)+'</div><button class="mini" style="margin:0;width:auto" onclick="'+a.g+'">Abrir</button></div>').join(''):'<div class="item"><div>Tudo em ordem. Bom trabalho!</div></div>')+'</div>'}
 function DVR(){const h=td(),ab=D.dividas.filter(d=>rest(d)>0.005).sort((a,b)=>(a.prazo||'9')<(b.prazo||'9')?-1:1),sd=D.dividas.filter(d=>rest(d)<=0.005),sm=t=>ab.filter(d=>d.tipo===t).reduce((a,d)=>a+rest(d),0);
 $('dD').textContent=money(sm('devo'));$('dM').textContent=money(sm('devem'));
 const it=d=>{const o=rest(d)>0.005,at=o&&d.prazo&&d.prazo<h,df=o&&d.prazo?cpDif(h,d.prazo):0;return `<div class="item"><div><b>${esc(d.quem)}</b><small class="${at?'bad':''}">${o?'Falta '+money(rest(d))+(d.pago?' de '+money(d.valor):'')+(d.prazo?' · prazo '+fmt(d.prazo)+(at?' · atrasada':d.prazo===h?' · hoje':' · em '+cpDias(df)):''):'✓ Saldada · '+money(d.valor)}</small></div><div class="bt">${o?`<button class="mini" onclick="dPag('${d.id}')">${d.tipo==='devo'?'Pagar':'Receber'}</button>`:''}${eb('dividas',d.id)}<button class="mini dng" onclick="dDel('${d.id}')">✕</button></div></div>`};
-const pane=(t,id,vz)=>{const a=ab.filter(d=>d.tipo===t),s=sd.filter(d=>d.tipo===t).slice(-5).reverse();$(id).innerHTML=(a.length?a.map(it).join(''):'<div class="empty">'+vz+'</div>')+(s.length?'<span class="sub">Saldadas</span>'+s.map(it).join(''):'')};
-pane('devo','dLd','Não deve nada a ninguém. 🎉');pane('devem','dLm','Ninguém lhe deve nada.')}
+const pane=(t,id,vz,tq,tp,te)=>{const a=ab.filter(d=>d.tipo===t),sv=sd.filter(d=>d.tipo===t),tot=a.reduce((q,d)=>q+rest(d),0);
+$(id).innerHTML='<details class="pasta" open><summary><span>👥 '+tq+' ('+a.length+')</span><small>em falta '+money(tot)+'</small></summary><div>'+(a.length?a.map(it).join(''):'<div class="empty">'+vz+'</div>')+'</div></details><details class="pasta"><summary><span>✔ '+tp+' ('+sv.length+')</span><small>'+money(sv.reduce((q,d)=>q+d.valor,0))+'</small></summary>'+(sv.length?pastas(sv,d=>d.fim||d.data,it,l=>money(l.reduce((q,d)=>q+d.valor,0))):'<div class="empty">'+te+'</div>')+'</details>'};
+pane('devo','dLd','Não deve nada a ninguém. 🎉','Quem eu devo','Já paguei','Ainda não pagou nenhuma dívida.');pane('devem','dLm','Ninguém lhe deve nada.','Quem me deve','Já pagaram','Ainda ninguém pagou.')}
 
 /* ---- aviso depois de guardar numa pasta de criação ---- */
 [['tAdd','tar','lista','Tarefa guardada.','Ver tarefas'],['hAdd','hab','lista','Hábito guardado.','Ver hábitos'],['bAdd','agd','ver','Bloco guardado.','Ver agenda'],['aAdd','ati','reg','Atividade guardada.','Ver registos'],['ctAdd','ct','lista','Conta guardada.','Ver contas'],['cpAdd','cp','lista','Item adicionado à lista de compras.','Ver lista'],['dAdd','dv','$','Dívida guardada.','Ver dívidas']].forEach(a=>{const o=window[a[0]];if(typeof o!=='function')return;window[a[0]]=function(){const n=D.alt;const r=o.apply(this,arguments);if(D.alt>n)toast(a[3],a[2]==='$'?"fd('dv',$('dT').value)":"fd('"+a[1]+"','"+a[2]+"')",a[4]);return r}});
+/* ---- orçamento mensal por categoria e objetivos de poupança ---- */
+const orMes=()=>{const m={},ym=td().slice(0,7);D.valores.filter(v=>v.tipo==='saida'&&!pB(v)&&v.data.slice(0,7)===ym).forEach(v=>m[v.cat]=(m[v.cat]||0)+v.valor);return m};
+const orCol=p=>p>100?'var(--bad)':p>=80?'#e0a000':'var(--good)';
+function orLinhas(){const g=orMes(),o=D.orc||{};return D.vcats.filter(c=>o[c]>0).map(c=>({c,l:o[c],g:g[c]||0,p:Math.round((g[c]||0)/o[c]*100)}))}
+const orDias=()=>{const d=new Date(td()+'T12:00:00');return new Date(d.getFullYear(),d.getMonth()+1,0).getDate()-d.getDate()+1};
+function orRow(x){return `<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(x.c)}</span><b class="${x.p>100?'bad':''}">${x.p}%</b></div><div class="bar"><i style="width:${Math.min(100,x.p)}%;background:${orCol(x.p)}"></i></div><div class="${x.p>100?'bad':''}" style="font-size:.8rem;color:${x.p>100?'':'var(--sub)'};margin-top:2px">Gastou ${money(x.g)} de ${money(x.l)} · ${x.g>x.l?'passou '+money(x.g-x.l):'faltam '+money(x.l-x.g)}</div>${x.g<x.l?`<div style="font-size:.8rem;margin-top:2px">👉 Pode gastar <b>${money(Math.floor((x.l-x.g)/orDias()))}</b> por dia até ao fim do mês</div>`:''}</div>`}
+function orAl(){const x=orLinhas().filter(a=>a.p>=80).sort((a,b)=>b.p-a.p)[0];if(!x)return null;return{t:x.p>100?'⚠️ '+x.c+': passou o orçamento do mês ('+x.p+'%)':'💸 '+x.c+': já gastou '+x.p+'% do orçamento',g:"go('din','caixa');fd('cx','orc')"}}
+function orSave(){const o={};for(let i=0;i<D.vcats.length;i++){const e=$('orI'+i);if(!e)continue;const t=String(e.value).replace(/\s/g,'').replace(',','.');if(t==='')continue;const n=parseFloat(t);if(!(n>0))return alert('Valor inválido em "'+D.vcats[i]+'".');o[D.vcats[i]]=n}
+Object.keys(D.orc||{}).forEach(c=>{if(D.vcats.indexOf(c)<0)o[c]=D.orc[c]});D.orc=o;save();R();toast('Orçamento guardado.')}
+function orAviso(v){if(!v||v.tipo!=='saida'||pB(v)||v.data.slice(0,7)!==td().slice(0,7))return;const l=(D.orc||{})[v.cat];if(!(l>0))return;const g=orMes()[v.cat]||0,a=g/l,b=(g-v.valor)/l;
+if(a>1&&b<=1)toast('⚠️ '+v.cat+': passou o orçamento do mês ('+Math.round(a*100)+'%).');else if(a>=.8&&b<.8)toast('💸 '+v.cat+': já gastou '+Math.round(a*100)+'% do orçamento.')}
+['vAdd','qAdd'].forEach(n=>{const o=window[n];if(typeof o!=='function')return;window[n]=function(){const k=D.valores.length,r=o.apply(this,arguments);if(D.valores.length>k)try{orAviso(D.valores[D.valores.length-1])}catch(e){}return r}});
+function orRender(){const L=orLinhas().sort((a,b)=>b.p-a.p),tl=L.reduce((q,x)=>q+x.l,0),tg=L.reduce((q,x)=>q+x.g,0),tp=tl?Math.round(tg/tl*100):0;
+$('orR').innerHTML=L.length?`<div class="card"><h2>📊 Orçamento do mês</h2>${L.map(orRow).join('')}<small style="color:var(--sub)">Total: ${money(tg)} de ${money(tl)} (${tp}%)</small></div>`:'';
+$('orB').innerHTML=L.length?`<div style="display:flex;justify-content:space-between"><span>Total orçamentado</span><b>${money(tl)}</b></div><div style="display:flex;justify-content:space-between"><span>Já gasto</span><b class="${tg>tl?'bad':''}">${money(tg)} (${tp}%)</b></div>${L.map(orRow).join('')}`:'<div class="empty">Ainda não definiu nenhum orçamento. Preencha abaixo.</div>';
+const E=$('orE');if(!(document.activeElement&&E.contains(document.activeElement)))E.innerHTML=D.vcats.map((c,i)=>`<label>${esc(c)}</label><input id="orI${i}" type="text" inputmode="decimal" placeholder="sem orçamento" value="${(D.orc||{})[c]>0?D.orc[c]:''}">`).join('')}
+function poAdd(){const n=$('poN').value.trim(),m=parseFloat(String($('poM').value).replace(/\s/g,'').replace(',','.')),t=String($('poI').value).replace(/\s/g,'').replace(',','.'),i=t===''?0:parseFloat(t);if(!n)return alert('Escreva o nome do objetivo.');if(!(m>0))return alert('Indique o valor do objetivo.');if(isNaN(i)||i<0)return alert('Valor já guardado inválido.');
+D.poup.push({id:uid(),nome:n,meta:m,guardado:i,prazo:$('poP').value,data:td(),mov:i>0?[{data:td(),valor:i}]:[]});['poN','poM','poI','poP'].forEach(x=>$(x).value='');save();R();toast('Objetivo criado.')}
+function poDel(id){lix('poup',id)}
+let POS=1;
+function poOpen(id,sg){const p=D.poup.find(x=>x.id===id);if(!p)return;EI=id;POS=sg;$('edB').innerHTML=`<h2>${sg>0?'Juntar para: ':'Retirar de: '}${esc(p.nome)}</h2><p class="empty">Juntou ${money(p.guardado)} de ${money(p.meta)}</p><label>Valor (Kz)</label><input id="poV" type="text" inputmode="decimal" placeholder="ex.: 5000"><label>${sg>0?'Tirar este dinheiro da Caixa?':'Devolver este dinheiro à Caixa?'}</label><select id="poC"><option value="1">Sim (atualiza o saldo da Caixa)</option><option value="0">Não, só acompanhar o objetivo</option></select><label>${sg>0?'De onde sai o dinheiro':'Onde entra o dinheiro'}</label><select id="poF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select><button class="b" onclick="poOk()">Confirmar</button><button class="b sec" onclick="eClose()">Cancelar</button>`;$('ed').classList.add('on');setTimeout(()=>{try{$('poV').focus()}catch(e){}},80)}
+function poOk(){const p=D.poup.find(x=>x.id===EI);if(!p)return eClose();const v=parseFloat(String($('poV').value).replace(/\s/g,'').replace(',','.')),cx=$('poC').value==='1',f=$('poF').value;if(!(v>0))return alert('Indique o valor.');if(POS<0&&v>p.guardado+0.005)return alert('Só tem '+money(p.guardado)+' neste objetivo.');
+if(cx&&POS>0){const s=sf(f);if(v>s+0.005&&!confirm('Em '+FN[f]+' só tem '+money(s)+'. Registar mesmo assim?'))return}
+const antes=p.guardado<p.meta;p.guardado=Math.max(0,p.guardado+POS*v);(p.mov=p.mov||[]).push({data:td(),valor:POS*v,cx:cx});
+if(cx)D.valores.push({id:uid(),tipo:POS>0?'saida':'entrada',desc:(POS>0?'Guardado para: ':'Devolvido de: ')+p.nome,valor:v,cat:'Poupança',data:td(),forma:f,origem:'poupanca',pid:p.id});
+save();eClose();R();toast(antes&&p.guardado>=p.meta?'🎉 Objetivo alcançado: '+p.nome+'!':(POS>0?'Valor juntado':'Valor retirado')+(cx?' e Caixa atualizada.':'.'))}
+function poRow(p){const pc=Math.min(100,Math.round(p.guardado/p.meta*100)),f=p.meta-p.guardado,ok=f<=0.005,h=td();let dica='';
+if(!ok&&p.prazo){const d=Math.round((new Date(p.prazo+'T12:00:00')-new Date(h+'T12:00:00'))/864e5);dica=d<0?' · prazo '+fmt(p.prazo)+' já passou':' · até '+fmt(p.prazo)+': '+money(f/Math.max(1,Math.ceil(d/30)))+' por mês'}
+return `<div class="item" style="flex-wrap:wrap"><div style="flex:1 1 100%;min-width:0"><b>${ok?'🎉 ':''}${esc(p.nome)}</b><div class="bar"><i style="width:${pc}%;background:${ok?'var(--good)':'var(--accent)'}"></i></div><small>${ok?'Objetivo alcançado! ':''}Juntou ${money(p.guardado)} de ${money(p.meta)} (${pc}%)${ok?'':' · falta '+money(f)}${dica}</small></div><div class="bt" style="margin-top:6px"><button class="mini" onclick="poOpen('${p.id}',1)">＋ Juntar</button>${p.guardado>0?`<button class="mini" onclick="poOpen('${p.id}',-1)">− Retirar</button>`:''}${eb('poup',p.id)}<button class="mini dng" onclick="poDel('${p.id}')">✕</button></div></div>`}
+function poRender(){const L=D.poup,tg=L.reduce((q,p)=>q+p.guardado,0),tm=L.reduce((q,p)=>q+p.meta,0);$('poT').textContent=L.length?'Total juntado: '+money(tg)+' de '+money(tm)+'.':'Ainda não tem objetivos. Crie o primeiro abaixo.';
+$('poL').innerHTML=L.slice().sort((a,b)=>(a.guardado>=a.meta)-(b.guardado>=b.meta)).map(poRow).join('')}
+{const _R=R;R=function(){_R.apply(this,arguments);try{orRender();poRender()}catch(e){console.error(e)}}}
 $('hNF').innerHTML=hFrm('hn');
 $('agNF').innerHTML=bFrm('bn');bRp('bn');
 navBuild();R();agTick();hashIn();window.addEventListener('hashchange',hashIn);bkInit();
+setInterval(()=>{try{BV()}catch(e){}},60000);
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 document.addEventListener('visibilitychange',()=>{if(document.hidden){HID=Date.now();return}if(D.pin&&HID&&Date.now()-HID>30000)lock();RM_OFF=false;agTick();R()});
 if(D.pin)lock();
