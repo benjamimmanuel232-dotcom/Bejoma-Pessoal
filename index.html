@@ -271,6 +271,7 @@ button.sec{background:var(--soft);color:var(--text)}
 <div class="ip" data-g="cp" data-k="lista">
 <div class="card"><h2>Lista de compras</h2><div id="cpT"></div><div id="cpL" style="margin-top:8px"></div></div>
 <div class="card"><h2>Registar compra</h2><p class="empty" id="cpSel"></p><p class="empty" id="cpAf"></p><label>Total pago (Kz)</label><input id="cpPg" type="text" inputmode="decimal" oninput="cpPrev()"><label>Pagou com</label><select id="cpF" onchange="cpPrev()"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select>
+<label>Contar no orçamento de</label><select id="cpCt" onchange="CPM=1;cpPrev()"></select><p class="empty" id="cpCtH" style="margin:4px 0 0"></p>
 <button class="b" onclick="cpComprar()">Registar compra dos itens marcados</button><p class="empty">Desconta o total pago da caixa pessoal e passa os itens para "comprados".</p></div>
 </div>
 <div class="ip" data-g="cp" data-k="casa">
@@ -458,12 +459,16 @@ const cxTot=()=>sf('din')+sf('mcx'),cxMsg=()=>' · Caixa: '+money(cxTot());
 function CX(){const h=td(),S=cxTot(),hj=D.valores.filter(v=>v.data===h),sa=hj.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((q,v)=>q+v.valor,0),en=hj.filter(v=>v.tipo==='entrada'&&v.origem!=='poupanca').reduce((q,v)=>q+v.valor,0);
 $('cxTop').textContent=money(S);$('cxB').classList.toggle('neg',S<0);
 $('cxH').innerHTML=`<div class="card cxc"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Caixa pessoal</h2><button class="mini" onclick="go('din','caixa')">Abrir</button></div><div class="big ${S<0?'bad':''}">${money(S)}</div><div class="two"><div><small>💵 Dinheiro</small><b>${money(sf('din'))}</b></div><div><small>📱 Express</small><b>${money(sf('mcx'))}</b></div></div><div class="item" style="margin-top:10px"><span>Hoje entrou <b class="good">${money(en)}</b></span><span>saiu <b class="bad">${money(sa)}</b></span></div>${hj.slice(-4).reverse().map(v=>`<div class="item"><div>${esc(v.desc)}<small>${esc(v.cat)} · ${FN[v.forma]}</small></div><b class="${v.tipo==='entrada'?'good':'bad'}">${v.tipo==='entrada'?'+':'−'}${money(v.valor)}</b></div>`).join('')}</div>`}
-function cpPrev(){const sel=D.compras.filter(c=>!c.feito&&c.sel),es=sel.reduce((q,c)=>q+c.preco,0),tx=String($('cpPg').value).replace(',','.').trim(),v=tx===''?es:parseFloat(tx),f=$('cpF').value,s=sf(f);
+var CPM=0;
+const cpOc=c=>D.vcats.indexOf(c.cat)>=0?c.cat:(c.cat==='Bebidas'&&D.vcats.indexOf('Comida')>=0?'Comida':catCasa());
+function cpCatAuto(it){const m={};it.forEach(c=>{const k=cpOc(c);m[k]=(m[k]||0)+c.preco});const ks=Object.keys(m).sort((x,y)=>m[y]-m[x]);return ks[0]||catCasa()}
+function orInfoV(vid){const v=D.valores.find(x=>x.id===vid);if(!v)return '';const l=(D.orc||{})[v.cat];if(!(l>0))return '';return ' · '+v.cat+': '+Math.round((orMes()[v.cat]||0)/l*100)+'% do orçamento'}
+function cpPrev(){const _s=D.compras.filter(c=>!c.feito&&c.sel),_e=$('cpCt');if(_e){const o=D.vcats.map(c=>'<option>'+esc(c)+'</option>').join('');if(_e.dataset.o!==o){_e.dataset.o=o;_e.innerHTML=o}if(!CPM||D.vcats.indexOf(_e.value)<0)_e.value=cpCatAuto(_s);const mix=new Set(_s.map(cpOc)).size>1;$('cpCtH').textContent=mix?'Compra mista (itens de categorias diferentes): escolha onde contar o total.':'Vem da categoria dos itens marcados. Pode mudar.'}const _c=$('cpC');if(_c){const ol=pcAll(),sg=ol.join('|');if(_c.dataset.o!==sg){const cur=_c.value;_c.dataset.o=sg;_c.innerHTML=ol.map(c=>'<option>'+esc(c)+'</option>').join('');if(ol.indexOf(cur)>=0)_c.value=cur}}const sel=D.compras.filter(c=>!c.feito&&c.sel),es=sel.reduce((q,c)=>q+c.preco,0),tx=String($('cpPg').value).replace(',','.').trim(),v=tx===''?es:parseFloat(tx),f=$('cpF').value,s=sf(f);
 $('cpAf').innerHTML=v>0?`Caixa em ${FN[f]}: ${money(s)} → depois da compra: <b class="${s-v<0?'bad':'good'}">${money(s-v)}</b>`:`Caixa pessoal: <b>${money(cxTot())}</b>`}
-function cpUm(id){const c=D.compras.find(x=>x.id===id);if(!c)return;EI=id;$('edB').innerHTML=`<h2>Comprei: ${esc(c.t)}</h2><p class="empty">Caixa pessoal agora: ${money(cxTot())}</p><label>Preço pago (Kz)</label><input id="cuV" type="text" inputmode="decimal" value="${c.preco}"><label>Pagou com</label><select id="cuF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select><button class="b" onclick="cpUmOk()">Descontar da caixa</button><button class="b sec" onclick="eClose()">Cancelar</button>`;$('ed').classList.add('on')}
+function cpUm(id){const c=D.compras.find(x=>x.id===id);if(!c)return;EI=id;$('edB').innerHTML=`<h2>Comprei: ${esc(c.t)}</h2><p class="empty">Caixa pessoal agora: ${money(cxTot())}</p><label>Preço pago (Kz)</label><input id="cuV" type="text" inputmode="decimal" value="${c.preco}"><label>Pagou com</label><select id="cuF"><option value="din">💵 Dinheiro</option><option value="mcx">📱 Multicaixa Express</option></select><label>Contar no orçamento de</label><select id="cuC">${D.vcats.map(k=>`<option${k===cpCatAuto([c])?' selected':''}>${esc(k)}</option>`).join('')}</select><button class="b" onclick="cpUmOk()">Descontar da caixa</button><button class="b sec" onclick="eClose()">Cancelar</button>`;$('ed').classList.add('on')}
 function cpUmOk(){const c=D.compras.find(x=>x.id===EI);if(!c)return eClose();const v=parseFloat(String($('cuV').value).replace(',','.'));if(!(v>0))return alert('Indique o preço pago.');
-if(!confirm('Registar a compra de '+money(v)+' ('+FN[$('cuF').value]+')?\n\n'+c.t))return;const vid=saidaRapida('Compras: '+c.t,v,catCasa(),$('cuF').value);if(!vid)return;
-c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,trk:c.trk,sel:false,feito:false})}save();eClose();R();toast('Compra registada: −'+money(v)+cxMsg(),"cpDesf('"+vid+"')")}
+if(!confirm('Registar a compra de '+money(v)+' ('+FN[$('cuF').value]+')?\n\n'+c.t))return;const vid=saidaRapida('Compras: '+c.t,v,($('cuC')&&$('cuC').value)||catCasa(),$('cuF').value);if(!vid)return;
+c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,trk:c.trk,sel:false,feito:false})}save();eClose();R();toast('Compra registada: −'+money(v)+cxMsg()+orInfoV(vid),"cpDesf('"+vid+"')")}
 
 /* ---- tarefas ---- */
 const ord=(a,b)=>((a.prazo||'9')<(b.prazo||'9')?-1:(a.prazo||'9')>(b.prazo||'9')?1:b.pri-a.pri);
@@ -514,7 +519,7 @@ const eb=(k,id)=>`<button class="mini" onclick="${k==='habitos'?'hEdit':'eOpen'}
 const EF={tarefas:[['t','O que tenho de fazer?','text'],['cat','Categoria','cat'],['prazo','Prazo (opcional)','date'],['hora','Hora (opcional)','time'],['rep','Repetir','rep'],['pri','Prioridade','pri']],ativ:[['t','O que fiz?','text'],['cat','Categoria','cat'],['data','Data','date'],['min','Duração (minutos)','number']],valores:[['desc','Descrição','text'],['valor','Valor (Kz)','money'],['forma','Onde está o dinheiro','forma'],['cat','Categoria','vcat'],['data','Data','date']],habitos:[['nome','Nome do hábito','text']],dividas:[['quem','Nome','text'],['valor','Valor total (Kz)','money'],['prazo','Prazo (opcional)','date']],compras:[['t','Item','text'],['qtd','Quantidade (opcional)','opt'],['preco','Preço estimado (Kz)','money'],['dia','Comprar no dia (opcional)','date'],['cat','Categoria','pcat'],['trk','Acompanhar duração em casa','sn']],poup:[['nome','Nome do objetivo','text'],['meta','Valor do objetivo (Kz)','money'],['prazo','Prazo (opcional)','date']],contas:[['nome','Nome','text'],['valor','Valor (Kz)','money'],['dia','Dia do mês (1 a 31)','number'],['ini','Começa a pagar em (mês)','mes'],['fim','Deixa de pagar em (opcional)','mes'],['pagoAte','Já pago até (mês, opcional)','mes']]};
 function fld(f,x,i){const v=x[f[0]],sel=a=>`<select id="e${i}">`+a.map(o=>`<option value="${esc(o[0])}"${String(o[0])===String(v)?' selected':''}>${esc(o[1])}</option>`).join('')+'</select>';
 if(f[2]==='cat')return sel([...new Set(D.cats.concat(v))].map(c=>[c,c]));
-if(f[2]==='pcat')return sel([...new Set(PC.concat(v))].map(c=>[c,c]));
+if(f[2]==='pcat')return sel([...new Set(pcAll().concat(v))].map(c=>[c,c]));
 if(f[2]==='sn'){const t=cpTrk(x)?'1':'0';return `<select id="e${i}"><option value="1"${t==='1'?' selected':''}>Sim</option><option value="0"${t==='0'?' selected':''}>Não</option></select>`}
 if(f[2]==='vcat')return sel([...new Set(D.vcats.concat(v))].map(c=>[c,c]));
 if(f[2]==='rep')return sel([['','Não repete'],['dia','🔁 Todos os dias'],['sem','🔁 Todas as semanas'],['mes','🔁 Todos os meses']]);
@@ -669,8 +674,8 @@ function cpAdd(){const t=$('cpN').value.trim(),p=parseFloat(String($('cpP').valu
 function cpSel(id){const c=D.compras.find(x=>x.id===id);if(!c)return;c.sel=!c.sel;save(1);R()}
 function cpDel(id){lix('compras',id)}
 function cpComprar(){const sel=D.compras.filter(c=>!c.feito&&c.sel);if(!sel.length)return alert('Marque os itens que comprou.');const es=sel.reduce((q,c)=>q+c.preco,0),tx=String($('cpPg').value).replace(',','.').trim(),v=tx===''?es:parseFloat(tx);if(!(v>0))return alert('Indique o total pago.');
-const d='Compras: '+sel.map(c=>c.t).join(', ').slice(0,60);if(!confirm('Registar a compra de '+money(v)+' ('+FN[$('cpF').value]+')?\n\n'+sel.map(c=>c.t).join(', ')))return;const vid=saidaRapida(d,v,catCasa(),$('cpF').value);if(!vid)return;
-sel.forEach(c=>{c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,trk:c.trk,sel:false,feito:false})}});$('cpPg').value='';save();R();toast('Compra registada: −'+money(v)+cxMsg(),"cpDesf('"+vid+"')")}
+const d='Compras: '+sel.map(c=>c.t).join(', ').slice(0,60);if(!confirm('Registar a compra de '+money(v)+' ('+FN[$('cpF').value]+')?\n\n'+sel.map(c=>c.t).join(', ')))return;const vid=saidaRapida(d,v,($('cpCt')&&$('cpCt').value)||catCasa(),$('cpF').value);if(!vid)return;
+sel.forEach(c=>{c.feito=true;c.sel=false;c.fim=td();c.vid=vid;if(c.rep){c.rid=uid();D.compras.push({id:c.rid,t:c.t,qtd:c.qtd,preco:c.preco,dia:add(c.dia||td(),7),cat:c.cat,rep:c.rep,trk:c.trk,sel:false,feito:false})}});$('cpPg').value='';CPM=0;save();R();toast('Compra registada: −'+money(v)+cxMsg()+orInfoV(vid),"cpDesf('"+vid+"')")}
 const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const ctMes=m=>MESES[+m.slice(5,7)-1]+' '+m.slice(0,4);
 const ctMais=(m,k)=>{const t=+m.slice(5,7)-1+k;return (+m.slice(0,4)+Math.floor(t/12))+'-'+pad(t%12+1)};
@@ -966,7 +971,7 @@ fdChips();
 }
 
 /* ---- pastas dentro de cada secção ---- */
-const PC=['Comida','Bebidas','Limpeza','Higiene','Casa','Outros'];
+const PC=['Comida','Bebidas','Limpeza','Higiene','Casa','Outros'];const pcAll=()=>[...new Set(PC.concat(D.vcats))];
 const ST={};
 const FD={
 hab:[['lista','Hoje'],['novo','＋ Novo hábito','nw']],
@@ -1024,7 +1029,7 @@ $('csSN').textContent=sem.length;$('csST').textContent=money(sem.reduce((q,c)=>q
 $('csSL').innerHTML=sem.length?Object.keys(gs).sort().map(k=>`<div class="empty" style="margin:10px 0 2px"><b>${esc(k)}</b> · ${gs[k].length} · ${money(gs[k].reduce((q,c)=>q+(+c.preco||0),0))}</div>`+gs[k].map(c=>`<div class="item"><div><b>${esc(c.t)}</b>${c.qtd?' · '+esc(c.qtd):''}<small>Comprado ${fmt(c.fim)} · ${money(+c.preco||0)}</small></div><div class="bt"><button class="mini" onclick="cpTrkSet('${c.id}',true)">Acompanhar</button><button class="mini" onclick="cpDatas('${c.id}')">✎</button></div></div>`).join('')).join(''):'<div class="empty">Nada aqui ainda. Ao comprar um item sem acompanhamento, ele aparece aqui.</div>';
 $('csCom').style.display=csModo==='com'?'':'none';$('csSem').style.display=csModo==='sem'?'':'none';$('csB1').className='b'+(csModo==='com'?'':' sec');$('csB2').className='b'+(csModo==='sem'?'':' sec');
 $('csH').textContent=csModo==='com'?'Itens que acabam (comida, sabão, gás…). Mostra quanto duram e o que comprar a seguir.':'Itens que ficam em casa. Mostra o que já comprou para a casa.'}
-function cpCatCh(){$('cpK').value=$('cpC').value==='Outros'?'0':'1'}
+function cpCatCh(){const c=$('cpC').value;$('cpK').value=(c==='Outros'||PC.indexOf(c)<0)?'0':'1'}
 
 /* ---- dívidas: uma pasta para cada lado ---- */
 const MESN=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
