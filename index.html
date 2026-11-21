@@ -401,9 +401,11 @@ button.sec{background:var(--soft);color:var(--text)}
 <p class="empty">Atividades, tarefas e hábitos dos últimos 7 dias. Na janela que abrir, escolha "Guardar como PDF".</p>
 <button class="b" onclick="pdf()">Guardar em PDF</button></div>
 <div class="card"><h2>Cópia de segurança</h2>
-<p class="empty">Guarde uma cópia de vez em quando. Se trocar de telemóvel, importe-a.</p><p class="empty" id="uc"><b></b></p>
-<button class="b" onclick="exp()">Exportar cópia</button>
+<p class="empty">Guarde uma cópia de vez em quando. Se trocar de telemóvel, importe-a.</p><p class="empty" id="uc"><b></b></p><p class="empty" id="stUso"></p>
+<button class="b" onclick="expCfg()">🔒 Exportar cópia cifrada</button>
+<button class="b sec" onclick="exp()">Exportar sem senha</button>
 <button class="b sec" onclick="$('imp').click()">Importar ficheiro</button>
+<button class="b sec" id="cpVb" style="display:none" onclick="cpVoltar()">↩️ Voltar atrás (antes da última importação)</button>
 <input id="imp" type="file" style="display:none" onchange="imp(this)"></div>
 <div class="card"><h2>Apagados</h2><p class="empty">Ficam aqui 30 dias. Pode restaurar o que apagou por engano.</p><div id="lx"></div>
 <button class="b sec" onclick="lVaz()">Esvaziar Apagados</button></div>
@@ -580,6 +582,7 @@ function dvOrcInfo(){const s=$('pC'),i=$('pCi');if(!s||!i)return;const c=s.value
 function dPagOk(){const d=D.dividas.find(x=>x.id===EI);if(!d)return eClose();const v=parseFloat(String($('pV').value).replace(',','.')),f=$('pF').value,sai=d.tipo==='devo',k0=D.valores.length;let vid=null;
 if(!(v>0))return alert('Indique o valor.');if(v>rest(d)+0.005)return alert('O valor é maior do que o que falta ('+money(rest(d))+').');
 if($('pR').value==='1'){if(sai){const s=sf(f);if(v>s+0.005&&!confirm('Em '+FN[f]+' só tem '+money(s)+'. Registar mesmo assim?'))return}
+if(!dupOk(sai?'saida':'entrada',v,f,td(),(sai?'Paguei a ':'Recebi de ')+d.quem))return;
 vid=uid();D.valores.push({id:vid,tipo:sai?'saida':'entrada',desc:(sai?'Paguei a ':'Recebi de ')+d.quem,valor:v,cat:sai?dvCatSel():'Entrada',data:td(),forma:f})}
 const pr0=d.prazo,np0=d.np||0;d.pago=(d.pago||0)+v;if(d.parc>0&&d.prazo&&FQ[d.freq]){const nt=Math.floor((d.pago+0.001)/d.parc);let k=nt-np0;while(k-->0&&rest(d)>0.005)d.prazo=dvAv(d.prazo,d.freq);d.np=nt}(d.pags=d.pags||[]).push({data:td(),valor:v,vid:vid,pr:pr0,np:np0});if(rest(d)<0.005)d.fim=td();save();eClose();R();toast(rest(d)<0.005?'Dívida saldada. ✓':'Pagamento registado.');try{if(sai&&D.valores.length>k0)orAviso(D.valores[D.valores.length-1])}catch(e){}if(sai&&rest(d)<0.005&&d.cat&&d.tot)setTimeout(()=>dvFim(d,!!vid),80)}
 function dvFim(d,reg){const ct=d.cat,l=(D.orc||{})[ct]||0,g=orMes()[ct]||0;let m='Compra paga por completo ✓\n\n'+(d.item||'Compra')+': '+money(d.tot)+'\nCategoria: '+ct+'\n\n';if(!reg)m+='Este último pagamento não foi registado em Valores, por isso não contou no orçamento.';else m+=l>0?'Orçamento de '+ct+' este mês: '+Math.round(g/l*100)+'% (gasto '+money(g)+' de '+money(l)+')'+(g>l?' · passou '+money(g-l):' · restam '+money(l-g)):'Sem orçamento definido para '+ct+'. Defina em Dinheiro → Caixa → Orçamento.';if(reg&&d.data&&d.data.slice(0,7)!==td().slice(0,7))m+='\n\nA compra começou em '+fmt(d.data)+': a primeira parte contou no orçamento desse mês e o resto conta neste mês.';alert(m)}
@@ -668,6 +671,12 @@ D.habitos.forEach(x=>{if(norm(x.nome).indexOf(q)>=0)L.push(['habitos',x.id,x.nom
 $('qR').innerHTML=L.length?'<div class="empty">'+L.length+' resultado(s)'+(L.length>30?' (mostro 30)':'')+'</div>'+L.slice(0,30).map(i=>`<div class="item"><div><b>${esc(i[2])}</b><small>${LB[i[0]]}${i[3]?' · '+esc(i[3]):''}</small></div><div class="bt">${eb(i[0],i[1])}</div></div>`).join(''):'<div class="empty">Nada encontrado.</div>'}
 function tema(){const t=D.tema||'auto',dk=t==='escuro'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.t=dk?'dark':'light';const m=document.querySelector('meta[name=theme-color]');if(m)m.content=dk?'#14110f':'#9e2630'}
 /* ---- pedidos de dinheiro da Bejoma Gestão (precisam de aprovação) ---- */
+function storPct(){try{let t=0;for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);t+=k.length+(localStorage.getItem(k)||'').length}return Math.round(t/5000000*100)}catch(e){return 0}}
+function stUso(){const u=Math.min(storPct(),100),e=$('stUso');if(e)e.innerHTML='<b>Espaço usado: '+u+'%</b> (estimativa; o navegador não diz o limite exato)'+(u>=70?'. Faça uma cópia e apague o que não precisa.':'.');const b=$('cpVb');if(b)try{b.style.display=localStorage.getItem('rotina_snap')?'':'none'}catch(x){}}
+function stBanner(){const u=storPct();return u<70?'':`<div class="card" style="border:2px solid var(--accent)"><b>⚠️ O espaço está a acabar (${Math.min(u,100)}% usado)</b><p class="empty" style="margin:4px 0 8px">Quando encher, deixa de guardar. Faça uma cópia de segurança e apague o que não precisa (Apagados, atividade antiga).</p><button class="mini" onclick="expCfg()">Exportar cópia</button></div>`}
+function trPend(){let a=[],b=[];try{a=JSON.parse(localStorage.getItem('bejoma_inbox')||'[]')||[]}catch(e){}try{b=JSON.parse(localStorage.getItem('bejoma_aprov')||'[]')||[]}catch(e){}const ids=new Set(a.concat(b).map(x=>x&&x.id));return D.valores.filter(v=>v.origem==='paraBejoma'&&v.bid&&ids.has(v.bid))}
+function trBanner(){const L=trPend();if(!L.length)return '';const t=L.reduce((q,v)=>q+v.valor,0);return `<div class="card" style="border:2px solid var(--accent)"><b>⏳ ${money(t)} à espera da Bejoma Gestão</b><p class="empty" style="margin:4px 0 0">${L.length} envio(s) já saíram do seu saldo, mas a Gestão ainda não os recebeu. Na Gestão, escreva o código de cada um. Se já recebeu e isto continua, ignore: só é certo quando as duas apps estão no mesmo endereço.</p></div>`}
+function dupOk(t,v,f,d,ds){const k=x=>String(x||'').trim().toLowerCase(),e=D.valores.find(x=>!x.origem&&x.tipo===t&&x.data===d&&x.forma===f&&Math.abs(x.valor-v)<0.005&&k(x.desc)===k(ds));if(!e)return true;return confirm('Já registou '+(t==='saida'?'uma saída':'uma entrada')+' igual ('+money(v)+', "'+(ds||'sem descrição')+'") em '+fmt(d)+'.\n\nRegistar outra vez?\n\nCancelar evita o duplicado.')}
 function pdClean(a){return(Array.isArray(a)?a:[]).filter(i=>i&&typeof i.id==='string'&&i.id&&i.id.length<40&&+i.valor>0&&/^\d{4}-\d\d-\d\d$/.test(i.data||'')).map(i=>({id:i.id,data:i.data,desc:String(i.desc||'').slice(0,60),valor:+i.valor,forma:i.forma==='mcx'?'mcx':'din'}))}
 function pdIn(){try{return pdClean(JSON.parse(localStorage.getItem('rotina_pedidos')))}catch(e){return[]}}
 function pdPut(a){try{localStorage.setItem('rotina_pedidos',JSON.stringify(a))}catch(e){}}
@@ -676,13 +685,14 @@ function pdLoad(x){const a=pdIn(),novos=pdClean(x.pedidos).filter(i=>!a.some(y=>
 function PD(){const L=pdPend(),tot=L.reduce((q,i)=>q+i.valor,0);
 $('pdL').innerHTML=L.length?L.map(i=>`<div class="item"><div><b>${esc(i.desc||'Pedido da Bejoma Gestão')}</b><small>${fmt(i.data)} · entra na Bejoma Gestão em ${FN[i.forma]}</small></div><div style="text-align:right"><b>${money(i.valor)}</b><br><span class="bt" style="justify-content:flex-end;margin-top:4px"><button class="mini" onclick="pdAbrir('${i.id}')">Aprovar</button><button class="mini dng" onclick="pdNao('${i.id}')">Recusar</button></span></div></div>`).join(''):'<div class="empty">Sem pedidos por aprovar.</div>';
 $('apL').innerHTML=D.apr.length?D.apr.slice(-5).reverse().map(a=>`<div class="item"><div><b>${money(a.valor)} · ${esc(a.desc)}</b><small>${fmt(a.data)} · código <b>${esc(a.code)}</b>${a.env?'':' · por enviar'}</small></div>${a.env?'':'<div class="bt"><button class="mini" data-i="'+a.id+'" onclick="aprAbrir(this.dataset.i)">Abrir Gestão</button></div>'}</div>`).join(''):'<div class="empty">Ainda não aprovou nada.</div>';
-$('pdH').innerHTML=L.length?`<div class="card" style="border:2px solid var(--accent)"><b>🔔 ${L.length} pedido(s) de dinheiro da Bejoma Gestão</b><p class="empty" style="margin:4px 0 8px">${money(tot)} · precisa da sua aprovação</p><button class="mini" onclick="go('valores')">Ver pedidos</button></div>`:''}
+$('pdH').innerHTML=L.length?`<div class="card" style="border:2px solid var(--accent)"><b>🔔 ${L.length} pedido(s) de dinheiro da Bejoma Gestão</b><p class="empty" style="margin:4px 0 8px">${money(tot)} · precisa da sua aprovação</p><button class="mini" onclick="go('valores')">Ver pedidos</button></div>`:'';$('pdH').innerHTML+=trBanner()+stBanner()}
 var PDI='';
 function pdAbrir(id){const p=pdPend().find(x=>x.id===id);if(!p)return;PDI=id;$('edB').innerHTML=`<h2>Aprovar pedido</h2><p>A Bejoma Gestão pede <b>${money(p.valor)}</b>${p.desc?' ('+esc(p.desc)+')':''}.</p><label>De onde sai o dinheiro</label><select id="paF"><option value="din"${p.forma==='din'?' selected':''}>💵 Dinheiro</option><option value="mcx"${p.forma==='mcx'?' selected':''}>📱 Multicaixa Express</option></select>${D.pin?'<label>Escreva o seu PIN para aprovar</label><input id="paP" type="password" inputmode="numeric" maxlength="6" autocomplete="off">':''}<button class="b" onclick="pdAprovar()">Aprovar e gerar código</button><button class="b sec" onclick="eClose()">Cancelar</button><p class="empty">O dinheiro sai do seu saldo agora. A Bejoma Gestão só o recebe quando escrever o código.</p>`;$('ed').classList.add('on')}
 async function pdAprovar(){const p=pdPend().find(x=>x.id===PDI);if(!p)return eClose();const de=$('paF').value;
 if(D.pin&&!(await chk($('paP').value)))return alert('PIN errado.');
 const sd=sf(de);if(p.valor>sd+0.005&&!confirm('Em '+FN[de]+' só tem '+money(sd)+'.\n\nAprovar mesmo assim?'))return;
 let c;try{c=1000+(crypto.getRandomValues(new Uint32Array(1))[0]%9000)}catch(e){c=1000+Math.floor(Math.random()*9000)}const code=String(c),h=await hp(code,'ap'+p.id),ap={id:p.id,valor:p.valor,forma:p.forma,desc:p.desc||'Pedido da Bejoma Gestão',data:td(),h,code,env:false};
+if(D.ped.indexOf(p.id)>=0)return eClose();
 D.valores.push({id:uid(),tipo:'saida',desc:'Enviado para a Bejoma Gestão · '+ap.desc,valor:p.valor,cat:'Bejoma',data:td(),forma:de,origem:'paraBejoma',bid:p.id});D.ped.push(p.id);D.apr.push(ap);
 try{const q=JSON.parse(localStorage.getItem('bejoma_aprov')||'[]')||[];if(!q.some(y=>y&&y.id===ap.id))q.push({id:ap.id,valor:ap.valor,forma:ap.forma,h:ap.h});localStorage.setItem('bejoma_aprov',JSON.stringify(q))}catch(e){}
 save();R();$('edB').innerHTML=`<h2>Aprovado</h2><p class="empty" style="text-align:center">Código de aprovação</p><div style="font-size:2.6rem;font-weight:800;letter-spacing:.25em;text-align:center;margin:6px 0">${code}</div><p class="empty">Guarde este código. Na Bejoma Gestão vai escrevê-lo para o dinheiro entrar na Caixa. Também fica na lista "Aprovações dadas".</p><button class="b" onclick="aprAbrir('${p.id}')">Abrir a Bejoma Gestão e escrever o código</button><button class="b sec" onclick="aprEnviar()">Enviar por ficheiro</button><button class="b sec" onclick="eClose()">Fechar</button>`;$('ed').classList.add('on')}
@@ -700,6 +710,7 @@ it.forEach(a=>a.env=true);save();eClose();R();toast('Aprovação enviada. Na Bej
 const catCasa=()=>D.vcats.indexOf('Casa')>=0?'Casa':D.vcats[0];
 function saidaRapida(desc,v,cat,f,data){data=data||td();const sd=sf(f);if(v>sd+0.005&&!confirm('Em '+FN[f]+' só tem '+money(sd)+'.\n\nRegistar mesmo assim?'))return false;
 if(D.limite>0){const g=gastoDia(data);if(g+v>D.limite&&!confirm('Com esta saída, o gasto de '+fmt(data)+' fica em '+money(g+v)+', acima do limite de '+money(D.limite)+'.\n\nRegistar mesmo assim?'))return false}
+if(!dupOk('saida',v,f,data,desc))return false;
 const id=uid();D.valores.push({id,tipo:'saida',desc,valor:v,cat,data,forma:f});return id}
 function qAdd(){const v=parseFloat(String($('qV').value).replace(',','.'));if(!(v>0))return alert('Indique o valor.');const d=$('qD').value.trim()||'Despesa';const id=saidaRapida(d,v,$('qC').value||catCasa(),$('qF').value);if(id){$('qV').value='';$('qD').value='';save();R();toast('Despesa registada: −'+money(v)+cxMsg(),"vUndo('"+id+"')")}}
 /* ===== Quantidade com unidade (kg, g, L, ml, pacotes...) ===== */
@@ -742,7 +753,7 @@ function rsSel(i){RS=i;RSO.forEach((o,j)=>{const e=$('rso'+j);if(!e)return;e.cla
 async function rsGo(){
 if(($('rsT').value||'').trim().toUpperCase()!=='LIMPAR')return alert('Escreva LIMPAR para confirmar. Nada foi apagado.');
 if(D.pin){const p=prompt('Escreva o seu PIN para continuar:');if(p===null)return;if(!(await chk(p)))return alert('PIN errado.')}
-if(RS===3){['rotina_al','rotina_pedidos','rotina_inbox','rotina_bloq'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});try{localStorage.setItem(K,JSON.stringify(DEF()))}catch(e){return alert('Não foi possível apagar neste navegador.')}alert('Pronto. A app foi reiniciada do zero.');location.reload();return}
+if(RS===3){['rotina_al','rotina_pedidos','rotina_inbox','rotina_bloq','rotina_snap','rotina_trl'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});try{localStorage.setItem(K,JSON.stringify(DEF()))}catch(e){return alert('Não foi possível apagar neste navegador.')}alert('Pronto. A app foi reiniciada do zero.');location.reload();return}
 const F=DEF();
 if(RS===0||RS===2){['rotina_al','rotina_pedidos','rotina_inbox'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
 ['tarefas','ativ','valores','trocas','compras','dividas','feitos','dia','lixo','fora','ped','pedS','aprG'].forEach(k=>{D[k]=F[k]});D.cron=null;D.alt=0}
@@ -875,7 +886,8 @@ try{const q=JSON.parse(localStorage.getItem('bejoma_inbox')||'[]')||[];it.forEac
 D.fora=[];save();R();toast('Enviado à Bejoma Gestão: '+it.length+' retirada(s). Na Bejoma Gestão, importe em Caixa.')}
 /* ---- enviar dinheiro para a Bejoma Gestão ---- */
 function pB(v){return v.origem==='paraBejoma'||(v.origem==='poupanca'&&v.tipo==='saida')}const pBj=v=>v.origem==='paraBejoma';
-async function pbEnviar(){const v=parseFloat(String($('pbV').value).replace(',','.')),f=$('pbF').value,d=$('pbD').value.trim().slice(0,50);if(!(v>0))return alert('Indique o valor.');
+var PBL=0;async function pbEnviar(){if(PBL)return;PBL=1;try{await pbEnviar0()}finally{PBL=0}}
+async function pbEnviar0(){const v=parseFloat(String($('pbV').value).replace(',','.')),f=$('pbF').value,d=$('pbD').value.trim().slice(0,50);if(!(v>0))return alert('Indique o valor.');
 const sd=sf(f);if(v>sd+0.005&&!confirm('Em '+FN[f]+' só tem '+money(sd)+'.\n\nEnviar mesmo assim?'))return;
 const code=genCod(),lote=uid(),it={id:'r'+uid(),lote,h:await hp(code,'tr'+lote),data:td(),desc:d||'Da Bejoma Pessoal',valor:v,forma:f},nm='pessoal-para-gestao-'+td()+'.json',j=JSON.stringify({bejTransfer:1,de:'rotina',criado:td(),itens:[it]});let ok=false;
 try{const fl=new File([j],nm,{type:'text/plain'});if(navigator.canShare&&navigator.canShare({files:[fl]})){await navigator.share({files:[fl],title:nm});ok=true}}catch(e){if(e&&e.name==='AbortError')return}
@@ -884,7 +896,7 @@ try{const a=JSON.parse(localStorage.getItem('bejoma_inbox')||'[]')||[];a.push(it
 D.valores.push({id:uid(),tipo:'saida',desc:'Enviado para a Bejoma'+(d?' · '+d:''),valor:v,cat:'Bejoma',data:td(),forma:f,origem:'paraBejoma',bid:it.id,cod:code});
 $('pbV').value='';$('pbD').value='';save();R();trMostra(code,v)}
 const genCod=()=>{try{return String(1000+crypto.getRandomValues(new Uint32Array(1))[0]%9000)}catch(e){return String(1000+Math.floor(Math.random()*9000))}};
-var TRL={n:0,until:0};
+var TRL=(()=>{try{return JSON.parse(localStorage.getItem('rotina_trl'))||{n:0,until:0}}catch(e){return{n:0,until:0}}})();const trlS=()=>{try{localStorage.setItem('rotina_trl',JSON.stringify(TRL))}catch(e){}};
 function trMostra(code,v){$('edB').innerHTML=`<h2>Enviado: ${money(v)}</h2><p class="empty" style="text-align:center">Código de confirmação</p><div style="font-size:2.6rem;font-weight:800;letter-spacing:.25em;text-align:center;margin:6px 0">${code}</div><p class="empty">Na Bejoma Gestão, ao importar este valor, escreva este código. Sem ele o dinheiro não entra lá. Fica guardado em Enviar → Códigos dos últimos envios.</p><button class="b" onclick="eClose()">Fechar</button>`;$('ed').classList.add('on')}
 function pbCod(){const L=D.valores.filter(v=>v.origem==='paraBejoma'&&v.cod).slice(-5).reverse();$('pbC').innerHTML=L.length?L.map(v=>`<div class="item"><div><b>${money(v.valor)}</b><small>${fmt(v.data)} · ${esc(v.desc)}</small></div><b style="letter-spacing:.15em">${esc(v.cod)}</b></div>`).join(''):'<div class="empty">Ainda não enviou nada com código.</div>'}
 /* ---- ligação à Bejoma Gestão ---- */
@@ -902,8 +914,9 @@ async function bjOk(){const w=Math.ceil((TRL.until-Date.now())/1000);if(w>0)retu
 const sel=BJL.filter((i,k)=>{const e=$('bq'+k);return e&&e.checked&&!e.disabled});if(!sel.length)return alert('Nenhuma retirada marcada.');
 const c=String($('bjC').value).trim();if(!c)return alert('Escreva o código de confirmação.');
 const ok=[],mau=[];for(const i of sel)((await hp(c,'tr'+i.lote))===i.h?ok:mau).push(i);
-if(!ok.length){TRL.n++;if(TRL.n>=3){TRL.n=0;TRL.until=Date.now()+30000;return alert('Código errado 3 vezes. Aguarde 30 s.')}return alert('Código errado. Veja o código na Bejoma Gestão e tente de novo.')}
-TRL.n=0;let t=0;const ids=[];ok.forEach(i=>{D.valores.push({id:uid(),tipo:'entrada',desc:'Retirada Bejoma'+(i.desc&&i.desc!=='Retirada'?' · '+i.desc:''),valor:i.valor,cat:'Retirada Bejoma',data:i.data,forma:i.forma,origem:'bejoma',bid:i.id});ids.push(i.id);t+=i.valor});
+{const nn=ok.filter(i=>!D.valores.some(v=>v.bid===i.id&&v.origem==='bejoma'));if(ok.length&&!nn.length){bjSeen(ok.map(i=>i.id));save();eClose();R();return}ok.length=0;nn.forEach(i=>ok.push(i))}
+if(!ok.length){TRL.n++;trlS();if(TRL.n>=3){TRL.n=0;TRL.until=Date.now()+30000;trlS();return alert('Código errado 3 vezes. Aguarde 30 s.')}return alert('Código errado. Veja o código na Bejoma Gestão e tente de novo.')}
+TRL.n=0;trlS();let t=0;const ids=[];ok.forEach(i=>{D.valores.push({id:uid(),tipo:'entrada',desc:'Retirada Bejoma'+(i.desc&&i.desc!=='Retirada'?' · '+i.desc:''),valor:i.valor,cat:'Retirada Bejoma',data:i.data,forma:i.forma,origem:'bejoma',bid:i.id});ids.push(i.id);t+=i.valor});
 bjSeen(ids);save();eClose();R();toast(ok.length+' retirada(s) importada(s): +'+money(t)+(mau.length?'. '+mau.length+' ficaram por importar (código diferente).':''))}
 function bjIgn(){if(!confirm('Ignorar estas retiradas? Não voltam a aparecer.'))return;bjSeen(BJL.map(i=>i.id));save();eClose();R()}
 /* ---- categorias / cópia ---- */
@@ -920,17 +933,29 @@ function vAdd(){const t=$('vT').value,v=parseFloat(String($('vV').value).replace
 if(!(v>0))return alert('Indique o valor.');
 if(t==='saida'){const s=sf(f);if(v>s+0.005&&!confirm('Em '+FN[f]+' só tem '+money(s)+' e esta saída é de '+money(v)+'.\n\nRegistar mesmo assim? (o saldo ficaria negativo)'))return}
 if(t==='saida'&&D.limite>0){const d=$('vDt').value||td(),g=gastoDia(d);if(g+v>D.limite&&!confirm('Com esta saída, o gasto de '+fmt(d)+' fica em '+money(g+v)+', acima do limite de '+money(D.limite)+'.\n\nRegistar mesmo assim?'))return}
+if(!dupOk(t,v,f,$('vDt').value||td(),$('vDs').value.trim()||(t==='saida'?'Saída':'Entrada')))return;
 const nid=uid();D.valores.push({id:nid,tipo:t,desc:$('vDs').value.trim()||(t==='saida'?'Saída':'Entrada'),valor:v,cat:t==='saida'?$('vC').value:'Entrada',data:$('vDt').value||td(),forma:f});
 $('vDs').value='';$('vV').value='';save();R();toast((t==='saida'?'Saída registada: −':'Entrada registada: +')+money(v)+cxMsg(),"vUndo('"+nid+"')")}
 function vDel(id){lix('valores',id,v=>'O saldo '+(v.tipo==='entrada'?'desce ':'sobe ')+money(v.valor)+'.')}
 function vCat(l){const m={};l.filter(v=>v.tipo==='saida'&&!pB(v)).forEach(v=>m[v.cat]=(m[v.cat]||0)+v.valor);return Object.keys(m).map(k=>[k,m[k]]).sort((a,b)=>b[1]-a[1])}
 function bkOk(){D.ultCopia=td();D.alt=0;save(1);R()}
 function bkDl(j,nm){try{const u=URL.createObjectURL(new Blob([j],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download=nm;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},4000);bkOk();toast('Cópia enviada para Transferências.')}catch(e){alert('Não foi possível guardar o ficheiro neste navegador.')}}
-function exp(){const nm='bejoma-pessoal-'+td()+'.json',j=JSON.stringify(Object.assign({},D,{pin:undefined,cron:undefined}));
+function exp(j0){const nm='bejoma-pessoal-'+td()+(j0?'-cifrada':'')+'.json',j=j0||JSON.stringify(Object.assign({},D,{pin:undefined,cron:undefined}));
 if(navigator.share&&window.File){let f;try{f=new File([j],nm,{type:'text/plain'})}catch(e){}
 if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:nm}).then(bkOk).catch(e=>{if(!e||e.name!=='AbortError')bkDl(j,nm)});return}}
 bkDl(j,nm)}
-function ld(t){try{const x=JSON.parse(String(t).trim());if(!x||!Array.isArray(x.tarefas)||!Array.isArray(x.ativ))throw 0;if(!confirm('Substituir os dados atuais pela cópia?'))return;limpaX(x);const pn=D.pin,cr=D.cron;D=Object.assign(DEF(),x);delete D.pin;D.cron=cr||null;if(pn)D.pin=pn;D.lixo=D.lixo||[];dvInit();save();eClose();R()}catch(e){alert('Ficheiro ou texto inválido.')}}
+function ld(t){try{const x=JSON.parse(String(t).trim());if(x&&x.bejEnc===1){ldC(x);return}if(!x||!Array.isArray(x.tarefas)||!Array.isArray(x.ativ))throw 0;if((x.valores!==undefined&&!Array.isArray(x.valores))||(x.dividas!==undefined&&!Array.isArray(x.dividas)))throw 0;if(!confirm('Substituir os dados atuais pela cópia?\n\nO app guarda antes uma cópia dos dados atuais, para poder voltar atrás.'))return;try{localStorage.setItem('rotina_snap',JSON.stringify({t:Date.now(),d:D}))}catch(e){if(!confirm('Não foi possível guardar a cópia dos dados atuais (memória cheia). Continuar mesmo assim?'))return}limpaX(x);const pn=D.pin,cr=D.cron;D=Object.assign(DEF(),x);delete D.pin;D.cron=cr||null;if(pn)D.pin=pn;D.lixo=D.lixo||[];dvInit();save();eClose();R()}catch(e){alert('Ficheiro ou texto inválido.')}}
+function cpVoltar(){let s=null;try{s=JSON.parse(localStorage.getItem('rotina_snap')||'null')}catch(e){}if(!s||!s.d)return alert('Não há nada para desfazer.');if(!confirm('Voltar aos dados de antes da última importação ('+new Date(s.t).toLocaleString('pt-PT')+')?\n\nO que registou depois perde-se.'))return;D=Object.assign(DEF(),s.d);try{localStorage.removeItem('rotina_snap')}catch(e){}save();R();toast('Dados anteriores repostos.')}
+const u8b=u=>{let q='';for(let i=0;i<u.length;i+=8192)q+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(q)};
+const b8u=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+async function cfK(p,sl,it){const m=await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:sl,iterations:it,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function cfEnc(txt,p){const sl=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),it=250000,k=await cfK(p,sl,it),c=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},k,new TextEncoder().encode(txt)));return JSON.stringify({bejEnc:1,v:1,it,s:u8b(sl),iv:u8b(iv),c:u8b(c)})}
+async function cfDec(x,p){const it=+x.it;if(!(it>=100000&&it<=2000000))throw 0;const k=await cfK(p,b8u(x.s),it);return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b8u(x.iv)},k,b8u(x.c)))}
+function expCfg(){$('edB').innerHTML='<h2>Cópia cifrada</h2><p class="empty">Escolha uma palavra-passe para esta cópia. Sem ela ninguém abre o ficheiro, nem você. Guarde-a num sítio seguro.</p><label>Palavra-passe (mínimo 8 caracteres)</label><input id="cfA" type="password" autocomplete="new-password"><label>Repita a palavra-passe</label><input id="cfB" type="password" autocomplete="new-password"><p id="cfE" class="bad" style="min-height:1.2em;margin:8px 0 0"></p><button class="b" onclick="expCgo()">🔒 Exportar cópia cifrada</button><button class="b sec" onclick="eClose()">Cancelar</button>';$('ed').classList.add('on')}
+async function expCgo(){const a=$('cfA').value,E=$('cfE');if(a.length<8){E.textContent='Mínimo 8 caracteres.';return}if(a!==$('cfB').value){E.textContent='As duas palavras-passe não são iguais.';return}if(!(window.crypto&&crypto.subtle)){E.textContent='Este navegador não permite cifrar.';return}E.textContent='A cifrar…';try{const j=await cfEnc(JSON.stringify(Object.assign({},D,{pin:undefined,cron:undefined})),a);eClose();exp(j)}catch(e){E.textContent='Não foi possível cifrar.'}}
+var LDX=null;
+function ldC(x){LDX=x;$('edB').innerHTML='<h2>Cópia cifrada</h2><p class="empty">Escreva a palavra-passe que usou ao exportar esta cópia.</p><label>Palavra-passe</label><input id="cfA" type="password" autocomplete="off"><p id="cfE" class="bad" style="min-height:1.2em;margin:8px 0 0"></p><button class="b" onclick="ldCgo()">Abrir cópia</button><button class="b sec" onclick="eClose()">Cancelar</button>';$('ed').classList.add('on')}
+async function ldCgo(){const E=$('cfE'),p=$('cfA').value;if(!p||!LDX)return;E.textContent='A abrir…';let t;try{t=await cfDec(LDX,p)}catch(e){E.textContent='Palavra-passe errada, ou ficheiro danificado.';return}LDX=null;eClose();ld(t)}
 function imp(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{ld(r.result);el.value=''};r.readAsText(f)}
 
 /* ---- relatório PDF ---- */
@@ -1010,7 +1035,7 @@ $('rm').innerHTML=D.lemb!==false&&!RM_OFF&&Ls.length?`<div class="card" style="b
 $('lbT').textContent=D.lemb!==false?'Ligados (tocar para desligar)':'Desligados (tocar para ligar)'}
 DVR();CASA();BV();
 {const t=bkTxt();$('bk').innerHTML=t?`<div class="card" style="border:2px solid var(--accent)"><b>💾 Hora de guardar uma cópia</b><p class="empty">${t}</p><button class="b" onclick="exp()">Guardar cópia agora</button></div>`:'';
-$('uc').innerHTML=D.ultCopia?'<b>Última cópia:</b> '+fmt(D.ultCopia)+(D.alt?' · '+D.alt+' alteração(ões) desde então':' · tudo guardado'):'<b>Ainda sem cópia.</b>';
+stUso();$('uc').innerHTML=D.ultCopia?'<b>Última cópia:</b> '+fmt(D.ultCopia)+(D.alt?' · '+D.alt+' alteração(ões) desde então':' · tudo guardado'):'<b>Ainda sem cópia.</b>';
 $('lx').innerHTML=D.lixo.length?D.lixo.slice().reverse().map(e=>`<div class="item"><div><b>${esc(e.item.t||e.item.desc||e.item.nome||e.item.quem||e.item.cat)}</b><small>${LB[e.k]}${e.k==='valores'||e.k==='dividas'||e.k==='trocas'?' · '+money(e.item.valor):''} · apagado a ${fmt(e.em)}</small></div><div class="bt"><button class="mini" onclick="lRest('${e.id}')">↩ Restaurar</button><button class="mini dng" onclick="lPerm('${e.id}')">✕</button></div></div>`).join(''):'<div class="empty">Nada apagado.</div>'}
 // valores
 {const S=sf('din')+sf('mcx'),mes=D.valores.filter(v=>v.data.slice(0,7)===h.slice(0,7)),me=mes.filter(v=>v.tipo==='entrada'&&v.origem!=='poupanca').reduce((a,v)=>a+v.valor,0),ms=mes.filter(v=>v.tipo==='saida'&&!pB(v)).reduce((a,v)=>a+v.valor,0);
@@ -1218,6 +1243,7 @@ $('hNF').innerHTML=hFrm('hn');
 $('agNF').innerHTML=bFrm('bn');bRp('bn');
 navBuild();R();agTick();hashIn();window.addEventListener('hashchange',hashIn);bkInit();
 setInterval(()=>{try{BV();ctlRender()}catch(e){}},60000);
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 document.addEventListener('visibilitychange',()=>{if(document.hidden){HID=Date.now();return}if(D.pin&&HID&&Date.now()-HID>30000)lock();RM_OFF=false;agTick();R()});
 if(D.pin)lock();
